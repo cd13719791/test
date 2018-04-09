@@ -56,7 +56,6 @@ public class UserServiceImpl implements UserService {
 	public AccountProfile login(String username, String password) {
 		UserPO po = userDao.findByUsername(username);
 		AccountProfile u = null;
-
 		Assert.notNull(po, "账户不存在");
 
 //		Assert.state(po.getStatus() != Const.STATUS_CLOSED, "您的账户已被封禁");
