@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="moyouXRms-api" />
+        <module name="moyouXRms-biz" />
+        <module name="moyouXRms-core" />
+        <module name="moyouXRms-dao" />
+        <module name="moyouXRms-htmlanalysis" />
+        <module name="moyouXRms-model" />
+        <module name="moyouXRms-operation" />
+        <module name="moyouXRms-servcie" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="moyouXRms" target="1.5" />
+      <module name="moyouXRms-api" target="1.8" />
+      <module name="moyouXRms-biz" target="1.8" />
+      <module name="moyouXRms-core" target="1.8" />
+      <module name="moyouXRms-dao" target="1.8" />
+      <module name="moyouXRms-htmlanalysis" target="1.8" />
+      <module name="moyouXRms-model" target="1.8" />
+      <module name="moyouXRms-operation" target="1.8" />
+      <module name="moyouXRms-servcie" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

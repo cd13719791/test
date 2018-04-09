@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/moyouXRms.iml" filepath="$PROJECT_DIR$/moyouXRms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/moyouXRms-api/moyouXRms-api.iml" filepath="$PROJECT_DIR$/moyouXRms-api/moyouXRms-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/moyouXRms-biz/moyouXRms-biz.iml" filepath="$PROJECT_DIR$/moyouXRms-biz/moyouXRms-biz.iml" />
+      <module fileurl="file://$PROJECT_DIR$/moyouXRms-core/moyouXRms-core.iml" filepath="$PROJECT_DIR$/moyouXRms-core/moyouXRms-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/moyouXRms-dao/moyouXRms-dao.iml" filepath="$PROJECT_DIR$/moyouXRms-dao/moyouXRms-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/moyouXRms-htmlanalysis/moyouXRms-htmlanalysis.iml" filepath="$PROJECT_DIR$/moyouXRms-htmlanalysis/moyouXRms-htmlanalysis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/moyouXRms-model/moyouXRms-model.iml" filepath="$PROJECT_DIR$/moyouXRms-model/moyouXRms-model.iml" />
+      <module fileurl="file://$PROJECT_DIR$/moyouXRms-operation/moyouXRms-operation.iml" filepath="$PROJECT_DIR$/moyouXRms-operation/moyouXRms-operation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/moyouXRms-servcie/moyouXRms-servcie.iml" filepath="$PROJECT_DIR$/moyouXRms-servcie/moyouXRms-servcie.iml" />
+    </modules>
+  </component>
+</project>

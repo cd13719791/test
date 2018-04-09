@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/moyouXRms-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/moyouXRms-biz" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/moyouXRms-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/moyouXRms-dao" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/moyouXRms-htmlanalysis" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/moyouXRms-model" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/moyouXRms-operation" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/moyouXRms-servcie" charset="UTF-8" />
+  </component>
+</project>
