@@ -1,0 +1,683 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.talk.TalkMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.talk.Talk">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="longitude" property="longitude" jdbcType="DOUBLE" />
+		<result column="latitude" property="latitude" jdbcType="DOUBLE" />
+		<result column="read_total" property="readTotal" jdbcType="INTEGER" />
+		<result column="comment_total" property="commentTotal"
+			jdbcType="INTEGER" />
+		<result column="support_total" property="supportTotal"
+			jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="creator_id" property="creatorId" jdbcType="INTEGER" />
+		<result column="reward_total" property="rewardTotal" jdbcType="INTEGER" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="picCount" property="picCount" jdbcType="INTEGER" />
+		<result column="media_type" property="mediaType" jdbcType="INTEGER" />
+		<result column="reference_type" property="referenceType"
+			jdbcType="INTEGER" />
+		<result column="reference_id" property="referenceId" jdbcType="INTEGER" />
+	</resultMap>
+	<!-- 发布一条说说 -->
+	<insert id="insertTalk" parameterType="com.moyou.moyouRms.model.talk.Talk"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_talk (
+		content,
+		address,
+		longitude,
+		latitude,
+		creator_id,
+		comment_total,
+		support_total,
+		create_time,
+		update_time,
+		state,
+		reward_total,media_type,
+		city,relate_talk_id,relate_state)
+		VALUES
+		(#{content},#{address},#{longitude},#{latitude},#{creatorId},#{commentTotal},#{supportTotal},
+		#{createTime},#{updateTime},#{state},#{rewardTotal},#{mediaType},#{city},#{relateTalkId},#{relateState})
+	</insert>
+	<!-- 插入说说图片 -->
+	<insert id="insertTalkResouce" parameterType="com.moyou.moyouRms.model.talk.TalkResource">
+		INSERT INTO t_talk_resource
+		(talk_id,media_type,url,user_id,pic_order,create_time)
+		VALUES
+		<foreach collection="list" item="item" index="" open="" close=""
+			separator=",">
+			(#{item.talkId},#{item.mediaTypes},#{item.url},#{item.userId},#{item.picOrder},#{item.createTime})
+		</foreach>
+	</insert>
+	<!-- 用户说说统计+1 -->
+	<update id="updateTalkAddOne" parameterType="java.lang.Integer">
+		UPDATE t_user_count
+		SET user_talk_count=user_talk_count+1 WHERE user_id=#{userId}
+	</update>
+	<update id="updateTalkAddWithCount">
+		UPDATE t_user_count
+		SET
+		user_talk_count=#{count} WHERE
+		user_id=#{userId}
+	</update>
+	<select id="queryCountTalkByUserId" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+		SELECT
+		count(id)
+		FROM
+		t_talk
+		WHERE
+		creator_id = #{userId}
+		AND
+		state = 0
+		AND reference_type = 0
+	</select>
+	<!-- 说说管理模块——初始化4个总量——今日新增总数查询 -->
+	<select id="queryNewCountTalk" resultType="java.lang.Integer">
+		SELECT
+		COUNT(tt.id) AS
+		newTalkCount
+		FROM
+		t_talk tt
+		LEFT join t_user tu on
+		tu.user_id=tt.creator_id
+		WHERE
+		tt.state = 0
+		AND DATEDIFF(tt.create_time,
+		NOW()) = 0
+		and tu.type=0
+	</select>
+	<!-- 说说管理模块——初始化4个总量——说说总数 -->
+	<select id="queryCountTalk" resultType="java.lang.Integer">
+		SELECT
+		COUNT(tt.id) AS
+		countTalk
+		FROM
+		t_talk tt
+		LEFT JOIN t_user tu ON tu.user_id =
+		tt.creator_id
+		WHERE
+		tt.state = 0
+		AND tu.type = 0
+	</select>
+	<!-- 说说管理模块——初始化4个总量——说说图片总数 -->
+	<select id="queryCountPicTalk" resultType="java.lang.Integer">
+		SELECT COUNT(id) AS
+		countPicTalk FROM t_talk WHERE media_type=3 AND state=0
+	</select>
+	<select id="queryCountTalkPic" resultType="java.lang.Integer">
+		SELECT
+		COUNT(tt.id) AS
+		countPicTalk
+		FROM
+		t_talk tt
+		LEFT JOIN t_user tu on
+		tu.user_id=tt.creator_id
+		WHERE
+		tt.media_type = 3
+		AND tt.state = 0
+		and
+		tu.type=0
+	</select>
+	<!-- 说说管理模块——初始化4个总量——说说视频总数 -->
+	<select id="queryCountVideoTalk" resultType="java.lang.Integer">
+		SELECT
+		COUNT(tt.id)
+		AS countPicTalk
+		FROM
+		t_talk tt
+		LEFT JOIN t_user tu on
+		tu.user_id=tt.creator_id
+		WHERE
+		tt.media_type = 2
+		AND tt.state = 0
+		and
+		tu.type=0
+	</select>
+	<!-- 说说模块初始化数据 -->
+	<select id="queryTalkList" resultType="com.moyou.moyouRms.model.talk.Talk"
+		parameterType="PageBean">
+		SELECT
+		t.address,
+		t.city,
+		t.comment_total AS commentTotal,
+		t.read_total AS
+		readTotal,
+		t.support_total AS supportTotal,
+		t.reward_total AS
+		rewardTotal,
+		t.id AS talkId,
+		t.content,
+		ui.avatar,
+		ui.nickname,
+		ui.moyou_id AS moyouId,
+		t.create_time AS createTime,
+		u.type,
+		t.creator_id AS creatorId,
+		t.relate_state relateState,
+		t.relate_talk_id
+		relateTalkId
+		FROM
+		t_talk t
+		LEFT JOIN t_user u ON t.creator_id = u.user_id
+		LEFT JOIN t_user_info ui ON t.creator_id = ui.user_id
+		<where>
+			t.state=0 and t.reference_type=0
+			<if test="conditions.mediaType !=null and conditions.mediaType != ''">
+				AND t.media_Type=#{conditions.mediaType}
+			</if>
+			<if test="conditions.content!=null and conditions.content!= ''">
+				AND t.content LIKE CONCAT(CONCAT('%',
+				#{conditions.content}), '%')
+			</if>
+			<if test="conditions.nickname !=null and conditions.nickname!= ''">
+				AND ui.nickname LIKE CONCAT(CONCAT('%',
+				#{conditions.nickname}), '%')
+			</if>
+			<if test="conditions.starttime != null and conditions.starttime!= ''">
+	<![CDATA[   and DATE_FORMAT(t.create_time, '%Y-%m-%d')>=  DATE_FORMAT(#{conditions.starttime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="conditions.endtime!=null and conditions.endtime!=''">
+		<![CDATA[  and DATE_FORMAT(t.create_time, '%Y-%m-%d') <= DATE_FORMAT(#{conditions.endtime}, '%Y-%m-%d')    ]]>
+			</if>
+			<if test="conditions.city !=null and conditions.city!= ''">
+				AND t.city LIKE CONCAT(CONCAT('%',
+				#{conditions.city}),
+				'%')
+			</if>
+			<if
+				test="conditions.startcomment != null and conditions.startcomment!= ''">
+	<![CDATA[   and t.comment_total >= #{conditions.startcomment}   ]]>
+			</if>
+			<if test="conditions.endcomment!=null and conditions.endcomment!=''">
+		<![CDATA[  and t.comment_total <= #{conditions.endcomment}   ]]>
+			</if>
+			<if
+				test="conditions.startSupport != null and conditions.startSupport!= ''">
+	<![CDATA[   and t.support_total >= #{conditions.startSupport}   ]]>
+			</if>
+			<if test="conditions.endSupport !=null and conditions.endSupport !=''">
+		<![CDATA[  and t.support_total <= #{conditions.endSupport}   ]]>
+			</if>
+			<if test="conditions.type !=null and conditions.type!= ''">
+				and u.type =#{conditions.type}
+			</if>
+			<if test="conditions.relateTalkId !=null and conditions.relateTalkId!= ''">
+				and t.relateTalkId =0
+			</if>
+		</where>
+		<choose>
+			<when test="conditions.rand == true">
+				ORDER BY rand()
+			</when>
+			<otherwise>
+				ORDER BY t.create_time DESC
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 根据说说ID查询说说详情 -->
+	<select id="queryTalkInfo" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.talk.Talk">
+		SELECT
+		t.creator_id AS creatorId,
+		t.address as address,
+		t.comment_total AS commentTotal,
+		t.read_total AS readTotal,
+		t.support_total AS supportTotal,
+		t.reward_total AS rewardTotal,
+		t.support_total AS supportTotal,
+		t.id AS talkId,
+		t.content,
+		ui.avatar,
+		ui.nickname,
+		ui.sig,
+		ui.birthday,
+		ui.gender,
+		ui.user_id AS userId,
+		ui.push_chat_id AS pushChatId,
+		t.create_time AS createTime,
+			ui.moyou_id moyouId,
+		(SELECT
+		COUNT(id)
+		FROM
+		t_talk_resource ttr
+		WHERE ttr.talk_id = t.id) picCount
+		FROM
+		t_talk t
+		LEFT JOIN
+		t_user_info ui
+		ON t.creator_id = ui.user_id
+		WHERE
+		t.id = #{talkId}
+	</select>
+	<!-- 根据说说ID查询说说的评论 -->
+	<select id="comentList" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.talk.ComentTwo">
+		SELECT
+		tc.id AS talkCommentId,
+		i.nickname AS commentNickName,
+		i.avatar AS commentAvatar,
+		tc.content commentContent,
+		i.user_id AS
+		userId,
+		tc.state
+		FROM
+		t_talk_comment tc
+		LEFT JOIN
+		t_user_info i
+		ON i.user_id
+		= tc.user_id
+		WHERE tc.talk_id = #{talkId} AND tc.state = 1 ORDER BY
+		tc.create_time
+	</select>
+	<!-- 根据说说ID删除一条说说（假删除） -->
+	<update id="deleteTalk" parameterType="java.lang.Integer">
+		UPDATE t_talk t SET
+		t.state=1 WHERE t.id=#{talkId}
+	</update>
+	<!-- 根据说说评论Id删除一条评论(假删除) -->
+	<update id="deleteTalkComment" parameterType="java.lang.Integer">
+		UPDATE
+		t_talk_comment t SET t.state=0 WHERE t.id=#{talkCommentId}
+	</update>
+	<!-- 根据说说ID，说说评论量在删除的时候减一 -->
+	<update id="TalkCommentJian1" parameterType="java.lang.Integer">
+		UPDATE t_talk t SET
+		t.comment_total=t.comment_total-1 WHERE t.id=#{talkId}
+	</update>
+	<!-- 根据说说ID，说说评论量在删除的时候加一 -->
+	<update id="TalkCommentjiayi1" parameterType="java.lang.Integer">
+		UPDATE t_talk t SET
+		t.comment_total=t.comment_total+1 WHERE t.id=#{talkId}
+	</update>
+	<select id="queryDelTalkByUserId" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		SELECT
+		t.address,
+		t.comment_total AS commentTotal,
+		t.read_total AS readTotal,
+		t.support_total AS supportTotal,
+		t.reward_total AS rewardTotal,
+		t.id ,
+		t.content,
+		t.create_time AS
+		createTime,
+		ttr.url,
+		(SELECT count(ttr.talk_id) from t_talk_resource ttr
+		where
+		ttr.talk_id=t.id)picCount,ttr.media_type
+		FROM
+		t_talk t
+
+		LEFT JOIN
+		t_user u ON t.creator_id = u.user_id
+		left join t_talk_resource ttr on
+		ttr.talk_id=t.id
+		where  t.state =1
+		GROUP BY t.id
+	</select>
+	<select id="queryRealUserTalkByDateLimit" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		SELECT * FROM t_talk tt LEFT JOIN t_user tu ON
+		tt.creator_id=tu.user_id
+		where tt.state=0
+		order by tt.create_time desc
+		<!-- WHERE tt.create_time BETWEEN -->
+		<!-- #{startTime} AND #{endTime} -->
+		<!-- 随机取一条 -->
+		<!-- order by rand() -->
+		<if test="limitCount > 0">
+			LIMIT 0,#{limitCount}
+		</if>
+	</select>
+	<!-- 根据用户Id初始化说说 -->
+	<select id="queryTalkByUserId" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		SELECT
+		t.address,
+		t.comment_total AS commentTotal,
+		IFNULL(t.read_total ,0),
+		t.support_total AS supportTotal,
+		t.reward_total AS rewardTotal,
+		t.id ,
+		t.content,
+		t.create_time AS
+		createTime,
+		ttr.url,
+		t.city,
+		(SELECT count(ttr.talk_id) from
+		t_talk_resource ttr
+		where
+		ttr.talk_id=t.id)picCount,ttr.media_type
+		FROM
+		t_talk t
+
+		LEFT JOIN
+		t_user u ON t.creator_id = u.user_id
+		left join
+		t_talk_resource ttr on
+		ttr.talk_id=t.id
+		where
+		u.user_id=#{conditions.creatorId}
+		and t.state = 0
+		and t.reference_type =0
+		GROUP BY t.id ORDER BY
+		t.create_time DESC
+	</select>
+	<!-- 插入评论 -->
+	<insert id="insertComment" parameterType="com.moyou.moyouRms.model.talk.TalkComment"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+		t_talk_comment(talk_id,user_id,content,parent_id,create_time)
+		VALUES(#{talkId},#{userId},#{content},#{parentId},#{createTime})
+	</insert>
+	<insert id="insertTalkDay" parameterType="Integer">
+		INSERT INTO
+		t_talk_day_statis(create_time,user_id,statis_count)VALUES(NOW(),#{userId},1)
+	</insert>
+
+	<update id="updateTalkDay" parameterType="Integer">
+		UPDATE
+		t_talk_day_statis SET statis_count=statis_count +1
+		WHERE
+		user_id=#{userId}
+	</update>
+
+	<select id="queryTalkDay" parameterType="Integer" resultType="Integer">
+		SELECT tds.id FROM t_talk_day_statis tds WHERE tds.user_id=#{userId}
+		AND create_time = CURRENT_DATE()
+	</select>
+	<!-- 说说打赏统计+1 -->
+	<update id="updateTalkRewardTotalIncrease" parameterType="java.lang.Integer">
+		UPDATE
+		t_talk SET reward_total=reward_total+1 WHERE id=#{talkId}
+	</update>
+	<insert id="insertUserFundLog" parameterType="com.moyou.moyouRms.model.talk.Rank">
+		INSERT INTO
+		t_user_fund_log (
+		receive_user_id,
+		mode_type,
+		create_time,
+		user_fund,
+		pingxx_state,
+		trade_number,
+		client_ip,
+		search_userid,
+		search_category,
+		balance
+		)
+		VALUES
+		(
+		#{userId},
+		10,
+		NOW(),
+		#{gold},
+		2,
+		#{tradeNumber},
+		#{clientIp},
+		#{searchUserid},
+		4,
+		#{balance}
+		)
+	</insert>
+	<!-- 占位-gold -->
+	<update id="updateDelGold" parameterType="com.moyou.moyouRms.model.talk.Rank">
+		UPDATE t_user_gold SET
+		user_gold = user_gold - #{gold} WHERE user_id=#{userId}
+	</update>
+	<!-- 插入占位的信息 -->
+	<insert id="insertRankUser" parameterType="com.moyou.moyouRms.model.talk.Rank">
+		INSERT INTO
+		t_nearby_rank(id,user_id,gold,city,update_time)
+		VALUES
+		(#{id},#{userId},#{gold},#{city},NOW())
+	</insert>
+	<!-- 10个占位的人 -->
+	<select id="queryRank" resultType="com.moyou.moyouRms.model.talk.Rank"
+		parameterType="java.util.List">
+		SELECT
+		nr.id,
+		ui.avatar,
+		ui.user_id AS userId,
+		ui.nickname,
+		nr.gold,
+		nr.city
+		FROM
+		t_nearby_rank nr
+		LEFT JOIN t_user_info ui ON ui.user_id =
+		nr.user_id
+		WHERE nr.id IN
+		<foreach collection="list" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach>
+		ORDER BY nr.gold DESC
+	</select>
+	<!--批量修改（假删除说说） -->
+	<update id="updateTalkList" parameterType="com.moyou.moyouRms.model.talk.Talk">
+		<foreach collection="list" item="item" index="index" open=""
+			close="" separator=";">
+			update t_talk
+			<set>
+				state=${item.state}
+			</set>
+			where id = ${item.id}
+		</foreach>
+	</update>
+	<update id="updateTalkReadCount" parameterType="com.moyou.moyouRms.model.talk.Talk">
+		update t_talk
+		<set>
+			read_total=${readTotal} + read_total
+		</set>
+		where id = ${id}
+	</update>
+	<select id="queryTalkReallyUser" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+  <![CDATA[  
+    SELECT t.id,t.creator_id FROM `t_talk` t LEFT JOIN t_user tu on tu.user_id=t.creator_id 
+	where DATE_SUB(CURDATE(), INTERVAL #{time} DAY) <= date(t.create_time) and t.state=0 and tu.type=0
+   ]]>
+	</select>
+	<insert id="insertReferenceDiary" parameterType="com.moyou.moyouRms.model.talk.Talk"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_talk
+		(
+		creator_id,
+		create_time,
+		reference_type,
+		reference_id,
+		relate_state
+		)
+		VALUES
+		(#{creatorId},
+		#{createTime},
+		#{referenceType},
+		#{referenceId},
+		0
+		);
+	</insert>
+	<delete id="deleteReferenceDiary" parameterType="com.moyou.moyouRms.model.talk.Talk">
+		DELETE
+		FROM
+		t_talk
+		WHERE
+		reference_id=#{referenceId} and reference_type
+		=#{referenceType}
+	</delete>
+	<select id="queryStatistAllCount" resultType="java.util.Map">
+	<![CDATA[  
+SELECT
+	(
+		SELECT
+			COUNT(tt.id)
+		FROM
+			t_talk tt
+		LEFT JOIN t_user tu ON tu.user_id = tt.creator_id
+		WHERE
+			tt.media_type = 3
+		AND tt.state = 0
+	) AS allCountPicTalk,
+	
+	(
+		SELECT
+			COUNT(tt.id)
+		FROM
+			t_talk tt
+		LEFT JOIN t_user tu ON tu.user_id = tt.creator_id
+		WHERE
+			tt.state = 0
+	) AS allCountTalk,
+	(
+		SELECT
+			COUNT(tt.id)
+		FROM
+			t_talk tt
+		LEFT JOIN t_user tu ON tu.user_id = tt.creator_id
+		WHERE
+			tt.media_type = 2
+		AND tt.state = 0
+	) AS allCountVidTalk,
+	(
+		SELECT
+			COUNT(tt.id)
+		FROM
+			t_talk tt
+		LEFT JOIN t_user tu ON tu.user_id = tt.creator_id
+		WHERE
+			tt.state = 0
+		AND DATEDIFF(tt.create_time, NOW()) = 0
+	) AS allToDayCountTalk,
+
+	(
+		SELECT
+			COUNT(tt.id)
+		FROM
+			t_talk tt
+		LEFT JOIN t_user tu ON tu.user_id = tt.creator_id
+		WHERE
+			tt.state = 0
+		AND DATEDIFF(tt.create_time, NOW()) = - 1
+	) AS allYesterDayCountTalk
+	]]>
+	</select>
+	<select id="queryStatistCount" resultType="java.util.Map">
+SELECT
+	(
+		SELECT
+			COUNT(tt.id)
+		FROM
+			t_talk tt
+		LEFT JOIN t_user tu ON tu.user_id = tt.creator_id
+		WHERE
+			tt.media_type = 3
+		AND tt.state = 0
+		AND tu.type = 0
+	) AS countPicTalk,
+	(
+		SELECT
+			COUNT(tt.id)
+		FROM
+			t_talk tt
+		LEFT JOIN t_user tu ON tu.user_id = tt.creator_id
+		WHERE
+			tt.state = 0
+		AND tu.type = 0
+	) AS countTalk,
+	(
+		SELECT
+			COUNT(tt.id)
+		FROM
+			t_talk tt
+		LEFT JOIN t_user tu ON tu.user_id = tt.creator_id
+		WHERE
+			tt.media_type = 2
+		AND tu.type = 0
+		AND tt.state = 0
+	) AS countVidTalk,
+	(
+		SELECT
+			COUNT(tt.id)
+		FROM
+			t_talk tt
+		LEFT JOIN t_user tu ON tu.user_id = tt.creator_id
+		WHERE
+			tt.state = 0
+		AND tu.type = 0
+		AND DATEDIFF(tt.create_time, NOW()) = 0
+	) AS toDayCountTalk,
+	(
+		SELECT
+			COUNT(tt.id)
+		FROM
+			t_talk tt
+		LEFT JOIN t_user tu ON tu.user_id = tt.creator_id
+		WHERE
+			tt.state = 0
+		AND tu.type = 0
+		AND DATEDIFF(tt.create_time, NOW()) = - 1
+	) AS yesterDayCountTalk
+	</select>
+	<select id="selectTalkIsExistByTalkId" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+			select count(id) from t_talk where id=#{talkId} and
+			state=0
+			and
+			reference_type=0;
+	</select>
+	<select id="queryTalkUserCount" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+	 <![CDATA[  
+    SELECT
+	count(a)
+FROM
+	(
+		SELECT
+			count(id) a
+		FROM
+			`t_talk` t
+		LEFT JOIN t_user tu ON tu.user_id = t.creator_id
+		WHERE
+			DATE_SUB(CURDATE(), INTERVAL #{time} DAY) <= date(t.create_time)
+		AND t.state = 0
+		AND tu.type = 0 and reference_type =0
+		GROUP BY
+			t.creator_id
+	) a
+   ]]>
+	</select>
+	<select id="queryTalkGroupByUser" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+	<![CDATA[  	SELECT
+		t.id,
+		t.creator_id
+		FROM
+		`t_talk` t
+		LEFT JOIN t_user tu ON tu.user_id = t.creator_id
+		WHERE
+		DATE_SUB(CURDATE(), INTERVAL #{time} DAY) <= date(t.create_time)
+		AND
+		t.state = 0
+		AND tu.type = 0 and reference_type =0
+		GROUP BY
+		t.creator_id   ]]>
+	</select>
+	<update id="deleteTalkByReferenceIdAndReferenceType" parameterType="com.moyou.moyouRms.model.talk.Talk">
+		update t_talk
+		<set>
+			state=#{state} 
+		</set>
+		where reference_type = #{referenceType}  and reference_id=#{referenceId}
+	
+	</update>
+		<select id="selectTalkByTalkId" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.talk.Talk">
+			select id from t_talk where id=#{talkId} and
+			state=0
+	</select>
+</mapper>

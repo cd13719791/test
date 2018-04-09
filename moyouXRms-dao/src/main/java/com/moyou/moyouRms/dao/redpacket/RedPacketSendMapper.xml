@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.redpacket.RedPacketSendMapper" >
+  <resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.redpacket.RedPacketSend" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="send_userid" property="sendUserid" jdbcType="INTEGER" />
+    <result column="send_total_fund" property="sendTotalFund" jdbcType="INTEGER" />
+    <result column="send_text" property="sendText" jdbcType="VARCHAR" />
+    <result column="red_packet_number" property="redPacketNumber" jdbcType="INTEGER" />
+    <result column="red_packet_kind" property="redPacketKind" jdbcType="INTEGER" />
+    <result column="red_packet_type" property="redPacketType" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="past_time" property="pastTime" jdbcType="TIMESTAMP" />
+    <result column="send_single_fund" property="sendSingleFund" jdbcType="INTEGER" />
+    <result column="pingxx_state" property="pingxxState" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, send_userid, send_total_fund, send_text, red_packet_number, 
+    red_packet_kind, red_packet_type,create_time, send_single_fund, pingxx_state,pastTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_red_packet_send
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 时间段内过期的红包 -->
+  <select id="queryPastRedPacketSend" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_red_packet_send
+    where past_time BETWEEN #{startTime} AND #{endTime}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_red_packet_send
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moyou.moyouRms.model.redpacket.RedPacketSend"  useGeneratedKeys="true" keyProperty="id">
+    insert into t_red_packet_send (id, send_userid, send_total_fund, 
+      send_text, red_packet_number, 
+      red_packet_kind,  red_packet_type, create_time, past_time,send_single_fund, 
+      pingxx_state)
+    values (#{id,jdbcType=INTEGER}, #{sendUserid,jdbcType=INTEGER}, #{sendTotalFund,jdbcType=INTEGER}, 
+      #{sendText,jdbcType=VARCHAR}, #{redPacketNumber,jdbcType=INTEGER}, 
+      #{redPacketKind,jdbcType=INTEGER}, 
+      #{redPacketType,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP},
+      #{pastTime,jdbcType=TIMESTAMP},
+       #{sendSingleFund,jdbcType=INTEGER}, 
+      #{pingxxState,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.moyou.moyouRms.model.redpacket.RedPacketSend" >
+    insert into t_red_packet_send
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sendUserid != null" >
+        send_userid,
+      </if>
+      <if test="sendTotalFund != null" >
+        send_total_fund,
+      </if>
+      <if test="sendText != null" >
+        send_text,
+      </if>
+      <if test="redPacketNumber != null" >
+        red_packet_number,
+      </if>
+      <if test="redPacketKind != null" >
+        red_packet_kind,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="sendSingleFund != null" >
+        send_single_fund,
+      </if>
+      <if test="pingxxState != null" >
+        pingxx_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="sendUserid != null" >
+        #{sendUserid,jdbcType=INTEGER},
+      </if>
+      <if test="sendTotalFund != null" >
+        #{sendTotalFund,jdbcType=INTEGER},
+      </if>
+      <if test="sendText != null" >
+        #{sendText,jdbcType=VARCHAR},
+      </if>
+      <if test="redPacketNumber != null" >
+        #{redPacketNumber,jdbcType=INTEGER},
+      </if>
+      <if test="redPacketKind != null" >
+        #{redPacketKind,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pastTime != null" >
+        #{pastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendSingleFund != null" >
+        #{sendSingleFund,jdbcType=INTEGER},
+      </if>
+      <if test="pingxxState != null" >
+        #{pingxxState,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.redpacket.RedPacketSend" >
+    update t_red_packet_send
+    <set >
+      <if test="sendUserid != null" >
+        send_userid = #{sendUserid,jdbcType=INTEGER},
+      </if>
+      <if test="sendTotalFund != null" >
+        send_total_fund = #{sendTotalFund,jdbcType=INTEGER},
+      </if>
+      <if test="sendText != null" >
+        send_text = #{sendText,jdbcType=VARCHAR},
+      </if>
+      <if test="redPacketNumber != null" >
+        red_packet_number = #{redPacketNumber,jdbcType=INTEGER},
+      </if>
+      <if test="redPacketKind != null" >
+        red_packet_kind = #{redPacketKind,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendSingleFund != null" >
+        send_single_fund = #{sendSingleFund,jdbcType=INTEGER},
+      </if>
+      <if test="pingxxState != null" >
+        pingxx_state = #{pingxxState,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.redpacket.RedPacketSend" >
+    update t_red_packet_send
+    set send_userid = #{sendUserid,jdbcType=INTEGER},
+      send_total_fund = #{sendTotalFund,jdbcType=INTEGER},
+      send_text = #{sendText,jdbcType=VARCHAR},
+      red_packet_number = #{redPacketNumber,jdbcType=INTEGER},
+      red_packet_kind = #{redPacketKind,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      send_single_fund = #{sendSingleFund,jdbcType=INTEGER},
+      pingxx_state = #{pingxxState,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

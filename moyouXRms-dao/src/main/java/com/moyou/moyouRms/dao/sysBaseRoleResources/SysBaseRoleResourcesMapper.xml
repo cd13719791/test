@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.sysBaseRoleResources.SysBaseRoleResourcesMapper" >
+  <resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.sysBaseRoleResources.SysBaseRoleResourcesKey" >
+    <id column="role_id" property="roleId" jdbcType="VARCHAR" />
+    <id column="resources_id" property="resourcesId" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.moyou.moyouRms.model.sysBaseRoleResources.SysBaseRoleResourcesKey" >
+    delete from sys_base_role_resources
+    where role_id = #{roleId,jdbcType=VARCHAR}
+      and resources_id = #{resourcesId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByRoleId" parameterType="java.lang.String" >
+    delete from sys_base_role_resources
+    where role_id = #{roleId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.moyou.moyouRms.model.sysBaseRoleResources.SysBaseRoleResourcesKey" >
+    insert into sys_base_role_resources (role_id, resources_id)
+    values (#{roleId,jdbcType=VARCHAR}, #{resourcesId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.moyou.moyouRms.model.sysBaseRoleResources.SysBaseRoleResourcesKey" >
+    insert into sys_base_role_resources
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="resourcesId != null" >
+        resources_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="resourcesId != null" >
+        #{resourcesId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectSysBaseRoleResourcesKeyByRoleId" parameterType="java.lang.String" resultMap="BaseResultMap"> 
+  	SELECT sbrr.role_id,sbrr.resources_id FROM `sys_base_role_resources` sbrr where sbrr.role_id=#{id,jdbcType=VARCHAR}
+  </select>
+</mapper>

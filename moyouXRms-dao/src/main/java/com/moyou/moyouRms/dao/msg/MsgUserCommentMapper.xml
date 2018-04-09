@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.msg.MsgUserCommentMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.msg.MsgUserComment">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="send_user_id" property="sendUserId" jdbcType="VARCHAR" />
+		<result column="receive_user_id" property="receiveUserId"
+			jdbcType="VARCHAR" />
+		<result column="jpush_msg_id" property="jpushMsgId" jdbcType="VARCHAR" />
+		<result column="msg_content" property="msgContent" jdbcType="VARCHAR" />
+		<result column="target_id" property="targetId" jdbcType="VARCHAR" />
+		<result column="comment_content" property="commentContent"
+			jdbcType="VARCHAR" />
+		<result column="short_msg_content" property="shortMsgContent"
+			jdbcType="VARCHAR" />
+		<result column="msg_send_type" property="msgSendType" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, send_user_id, receive_user_id, jpush_msg_id, msg_content, target_id,
+		comment_content,
+		short_msg_content, msg_send_type, state, update_time, create_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from t_msg_user_comment
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from t_msg_user_comment
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.msg.MsgUserComment">
+		insert into t_msg_user_comment (id, send_user_id, receive_user_id,
+		jpush_msg_id, msg_content, target_id,
+		comment_content, short_msg_content, msg_send_type,
+		state, update_time, create_time
+		)
+		values (#{id,jdbcType=VARCHAR}, #{sendUserId,jdbcType=VARCHAR},
+		#{receiveUserId,jdbcType=VARCHAR},
+		#{jpushMsgId,jdbcType=VARCHAR}, #{msgContent,jdbcType=VARCHAR}, #{targetId,jdbcType=VARCHAR},
+		#{commentContent,jdbcType=VARCHAR},
+		#{shortMsgContent,jdbcType=VARCHAR}, #{msgSendType,jdbcType=VARCHAR},
+		#{state,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP},
+		#{createTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.msg.MsgUserComment">
+		insert into t_msg_user_comment
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="sendUserId != null">
+				send_user_id,
+			</if>
+			<if test="receiveUserId != null">
+				receive_user_id,
+			</if>
+			<if test="jpushMsgId != null">
+				jpush_msg_id,
+			</if>
+			<if test="msgContent != null">
+				msg_content,
+			</if>
+			<if test="targetId != null">
+				target_id,
+			</if>
+			<if test="commentContent != null">
+				comment_content,
+			</if>
+			<if test="shortMsgContent != null">
+				short_msg_content,
+			</if>
+			<if test="msgSendType != null">
+				msg_send_type,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="sendUserId != null">
+				#{sendUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="receiveUserId != null">
+				#{receiveUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="jpushMsgId != null">
+				#{jpushMsgId,jdbcType=VARCHAR},
+			</if>
+			<if test="msgContent != null">
+				#{msgContent,jdbcType=VARCHAR},
+			</if>
+			<if test="targetId != null">
+				#{targetId,jdbcType=VARCHAR},
+			</if>
+			<if test="commentContent != null">
+				#{commentContent,jdbcType=VARCHAR},
+			</if>
+			<if test="shortMsgContent != null">
+				#{shortMsgContent,jdbcType=VARCHAR},
+			</if>
+			<if test="msgSendType != null">
+				#{msgSendType,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.msg.MsgUserComment">
+		update t_msg_user_comment
+		<set>
+			<if test="sendUserId != null">
+				send_user_id = #{sendUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="receiveUserId != null">
+				receive_user_id = #{receiveUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="jpushMsgId != null">
+				jpush_msg_id = #{jpushMsgId,jdbcType=VARCHAR},
+			</if>
+			<if test="msgContent != null">
+				msg_content = #{msgContent,jdbcType=VARCHAR},
+			</if>
+			<if test="targetId != null">
+				target_id = #{targetId,jdbcType=VARCHAR},
+			</if>
+			<if test="commentContent != null">
+				comment_content = #{commentContent,jdbcType=VARCHAR},
+			</if>
+			<if test="shortMsgContent != null">
+				short_msg_content = #{shortMsgContent,jdbcType=VARCHAR},
+			</if>
+			<if test="msgSendType != null">
+				msg_send_type = #{msgSendType,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.msg.MsgUserComment">
+		update t_msg_user_comment
+		set send_user_id = #{sendUserId,jdbcType=VARCHAR},
+		receive_user_id = #{receiveUserId,jdbcType=VARCHAR},
+		jpush_msg_id = #{jpushMsgId,jdbcType=VARCHAR},
+		msg_content = #{msgContent,jdbcType=VARCHAR},
+		target_id = #{targetId,jdbcType=VARCHAR},
+		comment_content = #{commentContent,jdbcType=VARCHAR},
+		short_msg_content = #{shortMsgContent,jdbcType=VARCHAR},
+		msg_send_type = #{msgSendType,jdbcType=VARCHAR},
+		state = #{state,jdbcType=INTEGER},
+		update_time = #{updateTime,jdbcType=TIMESTAMP},
+		create_time = #{createTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- list 插入 -->
+	<insert id="insertList" parameterType="java.util.List">
+		insert into t_msg_user_comment 
+		(id, send_user_id, receive_user_id,
+		jpush_msg_id, msg_content, target_id,
+		comment_content, short_msg_content, msg_send_type,
+		state, update_time, create_time)
+		values 
+		<foreach collection="list" item="list" open="(" close=")" separator=",">
+			#{list.id,jdbcType=VARCHAR}, 
+			#{list.sendUserId,jdbcType=VARCHAR},
+			#{list.receiveUserId,jdbcType=VARCHAR},
+			#{list.jpushMsgId,jdbcType=VARCHAR}, 
+			#{list.msgContent,jdbcType=VARCHAR}, 
+			#{list.targetId,jdbcType=VARCHAR},
+			#{list.commentContent,jdbcType=VARCHAR},
+			#{list.shortMsgContent,jdbcType=VARCHAR}, 
+			#{list.msgSendType,jdbcType=VARCHAR},
+			#{list.state,jdbcType=INTEGER}, 
+			#{list.updateTime,jdbcType=TIMESTAMP},
+			#{list.createTime,jdbcType=TIMESTAMP}
+		</foreach>
+	</insert>
+	
+	<!-- 查询一条评论消息 -->
+	<select id="queryCommentMsgItem" parameterType="java.lang.String"
+		resultType="com.moyou.moyouRms.model.msg.MsgItemReturn">
+			SELECT
+				muc.short_msg_content AS shortMsgContent,
+				muc.update_time AS updateTime,
+				muc.state
+			FROM
+				t_msg_user_comment muc
+			WHERE
+				muc.receive_user_id = #{userId,jdbcType=VARCHAR}
+			ORDER BY
+				muc.update_time DESC
+			LIMIT 1
+	</select>
+	
+	<!-- 评论消息列表 -->
+	<select id="queryCommentMsgList" parameterType="PageBean" resultType="java.util.Map">
+		SELECT
+			muc.msg_content AS msgContent,
+			muc.update_time AS updateTime,
+			muc.comment_content AS commentContent,
+			muc.msg_send_type AS msgSendType,
+			muc.target_id AS targetId,
+			u.nickname,
+			ui.avatar,
+			ui.constellation,
+			ui.sex,
+			ui.birthday,
+			ui.user_id AS userId
+		FROM
+			t_msg_user_comment muc
+		LEFT JOIN t_user u ON u.id = muc.send_user_id
+		LEFT JOIN t_user_info ui ON ui.user_id = muc.send_user_id
+		WHERE
+			muc.receive_user_id = #{conditions.userid,jdbcType=VARCHAR}
+		ORDER BY
+			muc.update_time DESC
+	</select>
+</mapper>

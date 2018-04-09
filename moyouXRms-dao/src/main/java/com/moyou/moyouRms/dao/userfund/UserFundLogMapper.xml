@@ -1,0 +1,1004 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.userfund.UserFundLogMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.userfund.UserFundLog">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="pay_user_id" property="payUserId" jdbcType="INTEGER" />
+		<result column="receive_user_id" property="receiveUserId"
+			jdbcType="INTEGER" />
+		<result column="user_fund" property="userFund" jdbcType="INTEGER" />
+		<result column="mode_type" property="modeType" jdbcType="SMALLINT" />
+		<result column="mode_id" property="modeId" jdbcType="INTEGER" />
+		<result column="trade_number" property="tradeNumber" jdbcType="VARCHAR" />
+		<result column="pingxx_id" property="pingxxId" jdbcType="VARCHAR" />
+		<result column="pingxx_state" property="pingxxState" jdbcType="INTEGER" />
+		<result column="client_ip" property="clientIp" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+		<result column="audit" property="audit" jdbcType="SMALLINT" />
+		<result column="pay_type" property="payType" />
+		<result column="pay_user_name" property="payUserName" jdbcType="VARCHAR" />
+		<result column="receive_user_name" property="receiveUserName"
+			jdbcType="VARCHAR" />
+		<result column="extnd" property="extnd" jdbcType="VARCHAR" />
+		<result column="moyou_id" property="moyouId" jdbcType="VARCHAR" />
+		<result column="nickname" property="nickname" jdbcType="VARCHAR" />
+		<result column="avatar" property="avatar" jdbcType="VARCHAR" />
+		<result column="search_userid" property="searchUserid"
+			jdbcType="INTEGER" />
+		<result column="search_category" property="searchCategory"
+			jdbcType="INTEGER" />
+		<result column="balance" property="balance" jdbcType="INTEGER" />
+		<result column="mode_plus_type" property="modePlusType"
+			jdbcType="INTEGER" />
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, pay_user_id, receive_user_id, user_fund, mode_type,
+		mode_id,pay_type,balance,
+		trade_number,
+		pingxx_id, client_ip,
+		create_time,
+		audit_time,audit,extnd,search_userid,search_category
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_user_fund_log
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByIdForLock" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_user_fund_log
+		where id = #{id,jdbcType=INTEGER} FOR UPDATE
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_user_fund_log
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.userfund.UserFundLog">
+		insert into t_user_fund_log
+		(id, pay_user_id, receive_user_id,
+		user_fund, mode_type,
+		mode_id,
+		trade_number, pingxx_id,
+		client_ip, create_time,
+		audit_time,extnd,search_category,search_userid,pingxx_state,balance)
+		values
+		(#{id,jdbcType=INTEGER}, #{payUserId,jdbcType=INTEGER},
+		#{receiveUserId,jdbcType=INTEGER},
+		#{userFund,jdbcType=INTEGER},
+		#{modeType,jdbcType=SMALLINT},
+		#{modeId,jdbcType=INTEGER},
+		#{tradeNumber,jdbcType=VARCHAR}, #{pingxxId,jdbcType=VARCHAR},
+		#{clientIp,jdbcType=VARCHAR}, now(),
+		#{auditTime,jdbcType=TIMESTAMP},#{extnd,jdbcType=VARCHAR},#{searchCategory,jdbcType=INTEGER},#{searchUserid,jdbcType=INTEGER},#{pingxxState},#{balance})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.userfund.UserFundLog"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_user_fund_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="payUserId != null">
+				pay_user_id,
+			</if>
+			<if test="receiveUserId != null">
+				receive_user_id,
+			</if>
+			<if test="userFund != null">
+				user_fund,
+			</if>
+			<if test="modeType != null">
+				mode_type,
+			</if>
+			<if test="modeId != null">
+				mode_id,
+			</if>
+			<if test="tradeNumber != null">
+				trade_number,
+			</if>
+			<if test="pingxxId != null">
+				pingxx_id,
+			</if>
+			<if test="clientIp != null">
+				client_ip,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="auditTime != null">
+				audit_time,
+			</if>
+			<if test="extnd != null">
+				extnd,
+			</if>
+			<if test="pingxxState !=null ">
+				pingxx_state,
+			</if>
+			<if test="searchUserid !=null ">
+				search_userid,
+			</if>
+			<if test="searchCategory !=null ">
+				search_category,
+			</if>
+			<if test="balance !=null ">
+				balance,
+			</if>
+			<if test="audit !=null">
+				audit,
+			</if>
+			<if test="modePlusType != null">
+				mode_plus_type,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="payUserId != null">
+				#{payUserId,jdbcType=INTEGER},
+			</if>
+			<if test="receiveUserId != null">
+				#{receiveUserId,jdbcType=INTEGER},
+			</if>
+			<if test="userFund != null">
+				#{userFund,jdbcType=INTEGER},
+			</if>
+			<if test="modeType != null">
+				#{modeType,jdbcType=SMALLINT},
+			</if>
+			<if test="modeId != null">
+				#{modeId,jdbcType=INTEGER},
+			</if>
+			<if test="tradeNumber != null">
+				#{tradeNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="pingxxId != null">
+				#{pingxxId,jdbcType=VARCHAR},
+			</if>
+			<if test="clientIp != null">
+				#{clientIp,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				now(),
+			</if>
+			<if test="auditTime != null">
+				#{auditTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="extnd != null">
+				#{extnd,jdbcType=VARCHAR},
+			</if>
+			<if test="pingxxState !=null ">
+				#{pingxxState,jdbcType=INTEGER},
+			</if>
+			<if test="searchUserid !=null ">
+				#{searchUserid,jdbcType=INTEGER},
+			</if>
+			<if test="searchCategory !=null ">
+				#{searchCategory,jdbcType=INTEGER},
+			</if>
+			<if test="balance !=null ">
+				#{balance,jdbcType=INTEGER},
+			</if>
+			<if test="audit !=null">
+				#{audit,jdbcType=INTEGER},
+			</if>
+			<if test="modePlusType != null">
+				#{modePlusType,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.userfund.UserFundLog">
+		update t_user_fund_log
+		<set>
+			<if test="payUserId != null">
+				pay_user_id = #{payUserId,jdbcType=INTEGER},
+			</if>
+			<if test="receiveUserId != null">
+				receive_user_id = #{receiveUserId,jdbcType=INTEGER},
+			</if>
+			<if test="userFund != null">
+				user_fund = #{userFund,jdbcType=INTEGER},
+			</if>
+			<if test="modeType != null">
+				mode_type = #{modeType,jdbcType=SMALLINT},
+			</if>
+			<if test="modeId != null">
+				mode_id = #{modeId,jdbcType=INTEGER},
+			</if>
+			<if test="tradeNumber != null">
+				trade_number = #{tradeNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="pingxxId != null">
+				pingxx_id = #{pingxxId,jdbcType=VARCHAR},
+			</if>
+			<if test="pingxxState != null">
+				pingxx_state = #{pingxxState,jdbcType=INTEGER},
+			</if>
+			<if test="clientIp != null">
+				client_ip = #{clientIp,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="auditTime != null">
+				audit_time = #{auditTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="audit != null">
+				audit = #{audit,jdbcType=INTEGER},
+			</if>
+			<if test="extnd != null">
+				extnd = #{extnd,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.userfund.UserFundLog">
+		update
+		t_user_fund_log
+		set pay_user_id = #{payUserId,jdbcType=INTEGER},
+		receive_user_id = #{receiveUserId,jdbcType=INTEGER},
+		user_fund =
+		#{userFund,jdbcType=INTEGER},
+		mode_type =
+		#{modeType,jdbcType=SMALLINT},
+		mode_id = #{modeId,jdbcType=INTEGER},
+		trade_number = #{tradeNumber,jdbcType=VARCHAR},
+		pingxx_id =
+		#{pingxxId,jdbcType=VARCHAR},
+		client_ip = #{clientIp,jdbcType=VARCHAR},
+		extnd = #{extnd,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP}
+		where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+	<!-- 修改订单状态 -->
+	<update id="updateTradeState" parameterType="com.moyou.moyouRms.model.userfund.UserFundLog">
+		update
+		t_user_fund_log
+		set pingxx_state = #{pingxxState,jdbcType=INTEGER}
+		where trade_number = #{tradeNumber}
+	</update>
+	<update id="updateTradeStateyByPingId" parameterType="com.moyou.moyouRms.model.userfund.UserFundLog">
+		update
+		t_user_fund_log
+		set pingxx_state = #{pingxxState,jdbcType=INTEGER}
+		where pingxx_id = #{pingxxId}
+	</update>
+
+	<select id="selectUserFundLogBySelective" resultMap="BaseResultMap"
+		parameterType="PageBean">
+		select
+		<include refid="Base_Column_List" />
+		from t_user_fund_log
+		<where>
+			<if test="conditions.id !=null and conditions.id !=''">
+				and id = #{conditions.id,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.payUserId !=null and conditions.payUserId !=''">
+				and pay_user_id =
+				#{conditions.payUserId,jdbcType=INTEGER}
+			</if>
+			<if
+				test="conditions.receiveUserId !=null and conditions.receiveUserId !=''">
+				and receive_user_id =
+				#{conditions.receiveUserId,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.userFund !=null  and conditions.userFund !=''">
+				and user_fund =#{conditions.userFund,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.modeType !=null  and conditions.modeType !=''">
+				and mode_type =#{conditions.modeType}
+			</if>
+			<if test="conditions.modeId !=null  and conditions.modeId !=''">
+				and mode_id =#{conditions.modeId,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.tradeNumber !=null  and conditions.tradeNumber !=''">
+				and trade_number
+				=#{conditions.tradeNumber,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.tradeNumber !=null  and conditions.tradeNumber !=''">
+				and trade_number
+				=#{conditions.tradeNumber,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.pingxxId !=null  and conditions.pingxxId !=''">
+				and pingxx_id =#{conditions.pingxxId,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.pingxxState !=null  and conditions.pingxxState !=''">
+				and pingxx_state
+				=#{conditions.pingxxState,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.audit !=null  and conditions.audit !=''">
+				and audit =#{conditions.audit,jdbcType=INTEGER}
+			</if>
+		</where>
+		order by create_time desc
+	</select>
+	<select id="selectUserFundLogByUser" resultMap="BaseResultMap"
+		parameterType="PageBean">
+		SELECT
+		tui.nickname AS pay_user_name,
+		tui1.nickname AS
+		receive_user_name,
+		t.id,
+		t.pay_user_id,
+		t.receive_user_id,
+		t.user_fund,
+		t.mode_type,
+		t.create_time
+		FROM
+		(
+		SELECT
+		id,
+		pay_user_id,
+		receive_user_id,
+		user_fund,
+		mode_type,
+		create_time,
+		pingxx_state,
+		mode_plus_type
+		FROM
+		t_user_fund_log
+		WHERE
+		(
+		pay_user_id =
+		#{conditions.payUserId,jdbcType=INTEGER}
+		or
+		receive_user_id =
+		#{conditions.receiveUserId,jdbcType=INTEGER}
+		)
+		) t
+		LEFT JOIN t_user_info
+		tui ON tui.user_id = t.pay_user_id
+		LEFT JOIN
+		t_user_info tui1 ON
+		tui1.user_id = t.receive_user_id
+		where t.mode_type
+		!=11 and pingxx_state
+		!=0
+		<if test="modePlusType != null">
+			and t.mode_plus_type =#{conditions.modePlusType}
+		</if>
+		ORDER BY
+		t.create_time DESC
+	</select>
+	<select id="selectUserFundLogByParam" resultMap="BaseResultMap"
+		parameterType="PageBean">
+		SELECT
+		tui.nickname AS pay_user_name,
+		tui1.nickname AS
+		receive_user_name,
+		t_user_fund_log.id,
+		t_user_fund_log.pay_user_id,
+		t_user_fund_log.receive_user_id,
+		t_user_fund_log.user_fund,
+		t_user_fund_log.mode_type,
+		t_user_fund_log.mode_id,
+		t_user_fund_log.trade_number,
+		t_user_fund_log.pingxx_id,
+		t_user_fund_log.client_ip,
+		t_user_fund_log.create_time,
+		t_user_fund_log.pingxx_state,
+		t_user_fund_log.audit,
+		t_user_fund_log.audit_time,
+		t_user_fund_log.pay_type,
+		t_user_fund_log.extnd,
+		t_user_fund_log.search_userid,
+		t_user_fund_log.search_category
+		FROM
+		t_user_fund_log
+		LEFT JOIN
+		t_user_info tui ON tui.user_id = t_user_fund_log.pay_user_id
+		LEFT JOIN
+		t_user_info tui1 ON tui1.user_id =
+		t_user_fund_log.receive_user_id
+		<where>
+			pingxx_state !=0
+			and t_user_fund_log.search_userid
+			=#{conditions.userId,jdbcType=INTEGER}
+			<if test="conditions.state == 0">  <!-- 全部 -->
+
+			</if>
+			<if test="conditions.state == 1">  <!-- 提现 -->
+				and t_user_fund_log.search_category =1
+			</if>
+			<if test="conditions.state == 2"><!-- 打赏 -->
+				and t_user_fund_log.search_category =2
+			</if>
+			<if test="conditions.state == 3">  <!-- 红包 -->
+				and t_user_fund_log.search_category =3
+			</if>
+			<if test="conditions.state == 4"> <!-- 金币 -->
+				and t_user_fund_log.search_category =4
+			</if>
+		</where>
+		ORDER BY
+		t_user_fund_log.id DESC
+	</select>
+	<select id="selectUserFundLogForZhiBo" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		SELECT
+		t_user_fund_log.id,
+		t_user_fund_log.user_fund,
+		t_user_fund_log.create_time,
+		t_user_fund_log.extnd
+		FROM
+		t_user_fund_log
+		where
+		pingxx_state !=0
+		and t_user_fund_log.search_userid
+		=#{conditions.userId,jdbcType=INTEGER}
+		and
+		mode_type=#{conditions.modeType}
+		<if test="conditions.createTime != null">
+			and
+			date_format(t_user_fund_log.create_time,'%Y-%m')=#{conditions.createTime}
+		</if>
+		ORDER BY
+		t_user_fund_log.id DESC
+
+	</select>
+	<select id="selectUserFundLogBySystemUpdate" resultMap="BaseResultMap"
+		parameterType="PageBean">
+		SELECT
+		tui.nickname AS pay_user_name,
+		tui1.nickname AS
+		receive_user_name,
+		t.id,
+		t.pay_user_id,
+		t.receive_user_id,
+		t.user_fund,
+		t.mode_type,
+		t.create_time,
+		t.extnd,
+		tui1.moyou_id
+		FROM
+		(
+		SELECT
+		id,
+		pay_user_id,
+		receive_user_id,
+		user_fund,
+		mode_type,
+		create_time,
+		pingxx_state,
+		extnd
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type =11
+		AND
+		receive_user_id = #{conditions.receiveUserId,jdbcType=INTEGER}
+		) t
+		LEFT
+		JOIN t_user_info tui ON tui.user_id = t.pay_user_id
+		LEFT JOIN
+		t_user_info tui1 ON tui1.user_id = t.receive_user_id
+		ORDER BY
+		t.create_time DESC
+	</select>
+	<select id="selectUserFundLogReward" resultMap="BaseResultMap"
+		parameterType="PageBean">
+		SELECT
+		tui.nickname AS pay_user_name,
+		tui1.nickname AS
+		receive_user_name,
+		t.id,
+		t.pay_user_id,
+		t.receive_user_id,
+		t.user_fund,
+		t.mode_type,
+		t.create_time
+		FROM
+		(
+		SELECT
+		id,
+		pay_user_id,
+		receive_user_id,
+		user_fund,
+		mode_type,
+		create_time,
+		pingxx_state
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type in (1,2) and pingxx_state = 2
+		AND (
+		pay_user_id =
+		#{conditions.payUserId,jdbcType=INTEGER}
+		or receive_user_id =
+		#{conditions.receiveUserId,jdbcType=INTEGER}
+		)
+		) t
+		LEFT JOIN t_user_info
+		tui ON tui.user_id = t.pay_user_id
+		LEFT JOIN t_user_info tui1 ON
+		tui1.user_id = t.receive_user_id
+		ORDER BY
+		t.create_time DESC
+	</select>
+	<select id="selectUserFundLogByState" resultMap="BaseResultMap"
+		parameterType="PageBean">
+		SELECT
+		tufl.id,
+		tufl.receive_user_id,
+		tufl.user_fund,
+		tufl.create_time,
+		tufl.audit_time,
+		tufl.extnd,
+		tufl.audit,
+		tubd.bind_data2 pay_user_name,
+		tui.nickname,
+		tui.moyou_id,
+		tufl.search_userid
+		FROM
+		t_user_fund_log tufl
+		LEFT JOIN
+		t_user_bind_data tubd on
+		tubd.user_id=tufl.receive_user_id and
+		tubd.bind_type=1
+		LEFT JOIN
+		t_user_info tui on
+		tui.user_id=tufl.receive_user_id
+		WHERE
+		tufl.mode_type = 4
+		<!-- 未处理 -->
+		<if test="conditions.state == 0">
+			and audit =1
+		</if>
+		<!-- 已处理 -->
+		<if test="conditions.state == 1">
+			and audit !=1
+		</if>
+		<if test="conditions.auditStatus != null and conditions.auditStatus != ''">
+			and audit =#{conditions.auditStatus,jdbcType=INTEGER}
+		</if>
+		order by tufl.create_time desc
+	</select>
+	<select id="queryUserFundLogByPageBean" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		SELECT
+		t_user_fund_log.id,
+		tui1.nickname pay_user_name,
+		tui2.nickname
+		receive_user_name,
+		t_user_fund_log.pay_user_id,
+		t_user_fund_log.receive_user_id,
+		t_user_fund_log.user_fund,
+		t_user_fund_log.mode_type,
+		t_user_fund_log.balance,
+		t_user_fund_log.mode_id,
+		t_user_fund_log.trade_number,
+		t_user_fund_log.pingxx_id,
+		t_user_fund_log.client_ip,
+		t_user_fund_log.create_time,
+		t_user_fund_log.pingxx_state,
+		t_user_fund_log.audit,
+		t_user_fund_log.audit_time,
+		t_user_fund_log.pay_type,
+		t_user_fund_log.extnd,
+		t_user_fund_log.search_userid,
+		t_user_fund_log.search_category,
+		tui.avatar,
+		tui.nickname,
+		tui.moyou_id
+		FROM
+		`t_user_fund_log`
+		left join
+		t_user_info tui
+		on tui.user_id=t_user_fund_log.search_userid
+		LEFT JOIN
+		t_user_info tui1
+		on tui1.user_id
+		=t_user_fund_log.pay_user_id
+		LEFT JOIN
+		t_user_info tui2
+		on tui2.user_id
+		=t_user_fund_log.receive_user_id
+		<where>
+			<if test="conditions.tradeNumber !=null and conditions.tradeNumber!= ''">
+				t_user_fund_log.trade_number REGEXP
+				(#{conditions.tradeNumber,jdbcType=VARCHAR})
+			</if>
+			<if
+				test="conditions.searchCategory !=null and conditions.searchCategory !=''">
+				AND t_user_fund_log.search_category =
+				#{conditions.searchCategory,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.startTime !=null and conditions.startTime!= ''">
+				AND t_user_fund_log.create_time >=
+				#{conditions.startTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="conditions.endTime !=null and conditions.endTime !=''">
+				AND t_user_fund_log.create_time &lt;=
+				#{conditions.endTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="conditions.audit !=null and conditions.audit != ''">
+				AND t_user_fund_log.audit
+				=#{conditions.audit,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.moyouId !=null and conditions.moyouId !=''">
+				and tui.moyou_id
+				REGEXP(#{conditions.moyouId,jdbcType=INTEGER})
+			</if>
+			<if test="conditions.id !=null and conditions.id !=''">
+				and t_user_fund_log.id =#{conditions.id,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.pingxxState !=null and conditions.pingxxState !=''">
+				and t_user_fund_log.pingxx_state
+				=#{conditions.pingxxState,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.modeType !=null and conditions.modeType !=''">
+				and t_user_fund_log.mode_type
+				=#{conditions.modeType,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.modePlusType !=null and conditions.modePlusType !=''">
+				and t_user_fund_log.mode_plus_type
+				=#{conditions.modePlusType,jdbcType=INTEGER}
+			</if>
+		</where>
+		ORDER BY
+		t_user_fund_log.create_time DESC
+	</select>
+	<select id="queryGoldAndFundCount" resultType="java.util.Map">
+		SELECT
+		(
+		SELECT
+		SUM(tuf.user_fund)
+		FROM
+		t_user_fund tuf
+		) + (
+		(
+		SELECT
+		(
+		IFNULL(SUM(tufl.user_fund), 0)
+		)
+		FROM
+		t_user_fund_log tufl
+		WHERE
+		tufl.search_category = 1
+		AND tufl.pingxx_state = 2
+		AND tufl.audit = 1
+		) /
+		100
+		) AS alluserfund,
+		(
+		SELECT
+		SUM(tug.user_gold)
+		FROM
+		t_user_gold tug
+		)
+		allusergold
+	</select>
+	<select id="queryUserFundLogCount" resultType="java.util.Map">
+		<!-- SELECT -->
+		<!-- COUNT(tufl.id) allcount, -->
+		<!-- ( -->
+		<!-- SELECT IFNULL(sum(tufl2.user_fund),0) FROM -->
+		<!-- t_user_fund_log tufl2 -->
+		<!-- WHERE -->
+		<!-- FROM_UNIXTIME( -->
+		<!-- tufl2.create_time, -->
+		<!-- '%Y-%m-%d' -->
+		<!-- ) = -->
+		<!-- CURDATE() -->
+		<!-- AND tufl2.search_category = 1 -->
+		<!-- and tufl2.pingxx_state -->
+		<!-- )allSum, -->
+		<!-- (SELECT COUNT(tufl3.id) from t_user_fund_log tufl3 where FROM_UNIXTIME( -->
+		<!-- tufl3.create_time, -->
+		<!-- '%Y-%m-%d' -->
+		<!-- ) = CURDATE() and tufl3.pingxx_state=2 and -->
+		<!-- tufl3.audit!=1 ) -->
+		<!-- yichulicount, -->
+		<!-- (SELECT IFNULL(SUM(tufl4.user_fund),0) from -->
+		<!-- t_user_fund_log tufl4 where FROM_UNIXTIME( -->
+		<!-- tufl4.create_time, -->
+		<!-- '%Y-%m-%d' -->
+		<!-- ) = CURDATE() and tufl4.pingxx_state=2 and tufl4.audit!=1 ) yichulisum, -->
+		<!-- (SELECT COUNT(tufl5.id) from t_user_fund_log tufl5 where FROM_UNIXTIME( -->
+		<!-- tufl5.create_time, -->
+		<!-- '%Y-%m-%d' -->
+		<!-- ) = CURDATE() and tufl5.pingxx_state=2 and -->
+		<!-- tufl5.audit =1 ) -->
+		<!-- weichulicount, -->
+		<!-- (SELECT IFNULL(sum(tufl6.user_fund),0) from -->
+		<!-- t_user_fund_log tufl6 where FROM_UNIXTIME( -->
+		<!-- tufl6.create_time, -->
+		<!-- '%Y-%m-%d' -->
+		<!-- ) = CURDATE() and tufl6.pingxx_state=2 and tufl6.audit =1 ) weichulisum -->
+		<!-- FROM -->
+		<!-- t_user_fund_log tufl -->
+		<!-- WHERE -->
+		<!-- FROM_UNIXTIME( -->
+		<!-- tufl.create_time, -->
+		<!-- '%Y-%m-%d' -->
+		<!-- ) = CURDATE() -->
+		<!-- AND tufl.search_category = 1 -->
+		SELECT
+		count(tufl.id) yichulicount,
+		IFNULL(sum(tufl.user_fund), 0)
+		yichulisum,
+		(
+		SELECT
+		count(tufl2.id)
+		FROM
+		t_user_fund_log tufl2
+		WHERE
+		tufl2.search_category = 1
+		AND tufl2.pingxx_state != 0
+		AND
+		TO_DAYS(tufl2.create_time) =
+		TO_DAYS(now())
+		) allcount,
+		(
+		SELECT
+		IFNULL(sum(tufl2.user_fund), 0)
+		FROM
+		t_user_fund_log tufl2
+		WHERE
+		tufl2.search_category = 1
+		AND tufl2.pingxx_state != 0
+		AND
+		TO_DAYS(tufl2.create_time) =
+		TO_DAYS(now())
+		) allSum,
+		(
+		SELECT
+		count(tufl3.id)
+		FROM
+		t_user_fund_log tufl3
+		WHERE
+		tufl3.search_category = 1
+		AND tufl3.audit = 1
+		) weichulicount,
+		(
+		SELECT
+		IFNULL(sum(tufl3.user_fund), 0)
+		FROM
+		t_user_fund_log tufl3
+		WHERE
+		tufl3.search_category = 1
+		AND tufl3.audit = 1
+		) weichulisum
+		FROM
+		t_user_fund_log tufl
+		WHERE
+		tufl.search_category = 1
+		AND tufl.audit != 1
+	</select>
+	<select id="selectUserFundLogByTypeAndId" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		from t_user_fund_log where mode_type=#{param1} and mode_id=#{param2}
+	</select>
+	<select id="selectUserFundLogByTypeAndIdAndUserId" resultType="java.lang.Integer">
+		SELECT
+		IF (
+		AVG(user_fund) IS NULL,
+		0,
+		user_fund
+		) user_fund
+		from
+		t_user_fund_log where mode_type=#{param1} and
+		mode_id=#{param2} and
+		search_userid=#{param3}
+	</select>
+	<select id="selectActivityLog" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		SELECT
+		tufl.id,
+		tufl.user_fund,
+		tufl.mode_type,
+		tufl.mode_id,
+		tufl.create_time,
+		tufl.search_userid,
+		tufl.balance,
+		tufl.search_category,
+		tui.moyou_id
+		FROM
+		t_user_fund_log AS tufl
+		LEFT JOIN
+		t_user_info tui on tui.user_id=tufl.search_userid
+		<where>
+			<!-- <if test="conditions.searchCategory != null"> -->
+			<!-- tufl.search_category=#{conditions.searchCategory} -->
+			<!-- </if> -->
+			<!-- AND -->
+			( tufl.mode_type = #{conditions.modeTypeOne} or tufl.mode_type
+			=#{conditions.modeTypeTwo})
+			<if test="conditions.modeId != null">
+				and tufl.mode_id=#{conditions.modeId}
+			</if>
+		</where>
+		order by tufl.create_time desc
+	</select>
+	<!-- 充值记录 -->
+	<select id="selectUserFundLogForRegulationChongZhi" resultMap="BaseResultMap">
+		SELECT
+		tufl.id,
+		tufl.pay_user_id,
+		tufl.receive_user_id,
+		tufl.user_fund,
+		tufl.mode_type,
+		tufl.mode_id,
+		tufl.trade_number,
+		tufl.pingxx_id,
+		tufl.client_ip,
+		tufl.create_time,
+		tufl.pingxx_state,
+		tufl.audit,
+		tufl.audit_time,
+		tufl.pay_type,
+		tufl.extnd,
+		tufl.search_userid,
+		tufl.search_category,
+		tufl.balance,
+		tufl.mode_plus_type
+		FROM
+		t_user_fund_log AS tufl
+		WHERE
+		tufl.mode_type = 3
+		and tufl.pingxx_state=2
+		AND DATEDIFF(tufl.create_time, NOW()) = -1
+		ORDER BY
+		tufl.create_time
+		desc
+	</select>
+	<!-- 提现 -->
+	<select id="selectUserFundLogForRegulationTiXian" resultMap="BaseResultMap">
+		SELECT
+		tufl.id,
+		tufl.pay_user_id,
+		tufl.receive_user_id,
+		tufl.user_fund,
+		tufl.mode_type,
+		tufl.mode_id,
+		tufl.trade_number,
+		tufl.pingxx_id,
+		tufl.client_ip,
+		tufl.create_time,
+		tufl.pingxx_state,
+		tufl.audit,
+		tufl.audit_time,
+		tufl.pay_type,
+		tufl.extnd,
+		tufl.search_userid,
+		tufl.search_category,
+		tufl.balance,
+		tufl.mode_plus_type
+		FROM
+		t_user_fund_log AS tufl
+		WHERE
+		tufl.mode_type = 4
+		AND tufl.pingxx_state =
+		2
+		AND tufl.audit = 2
+		AND DATEDIFF(tufl.create_time, NOW()) = -1
+		ORDER BY
+		tufl.create_time
+		DESC
+	</select>
+	<!-- 红包 -->
+	<select id="selectUserFundLogForRegulationHongBao" resultMap="BaseResultMap">
+		SELECT
+		tufl.id,
+		tufl.pay_user_id,
+		tufl.receive_user_id,
+		tufl.user_fund,
+		tufl.mode_type,
+		tufl.mode_id,
+		tufl.trade_number,
+		tufl.pingxx_id,
+		tufl.client_ip,
+		tufl.create_time,
+		tufl.pingxx_state,
+		tufl.audit,
+		tufl.audit_time,
+		tufl.pay_type,
+		tufl.extnd,
+		tufl.search_userid,
+		tufl.search_category,
+		tufl.balance,
+		tufl.mode_plus_type
+		FROM
+		t_user_fund_log AS tufl
+		WHERE
+		tufl.mode_type in (8,14)
+		and tufl.pay_type
+		in (1,2,4)
+		and tufl.pingxx_state=2
+		AND DATEDIFF(tufl.create_time, NOW())
+		= -1
+		ORDER BY tufl.create_time
+		desc
+	</select>
+	<select id="selectUserFundLogForRegulationDaShang" resultMap="BaseResultMap">
+		SELECT
+		tufl.id,
+		tufl.pay_user_id,
+		tufl.receive_user_id,
+		tufl.user_fund,
+		tufl.mode_type,
+		tufl.mode_id,
+		tufl.trade_number,
+		tufl.pingxx_id,
+		tufl.client_ip,
+		tufl.create_time,
+		tufl.pingxx_state,
+		tufl.audit,
+		tufl.audit_time,
+		tufl.pay_type,
+		tufl.extnd,
+		tufl.search_userid,
+		tufl.search_category,
+		tufl.balance,
+		tufl.mode_plus_type
+		FROM
+		t_user_fund_log AS tufl
+		WHERE
+		tufl.mode_type in (21,22)
+		AND
+		DATEDIFF(tufl.create_time, NOW()) = -1
+		ORDER BY
+		tufl.create_time
+		desc
+	</select>
+	<select id="selectUserFundLogForRegulationHuodong" resultMap="BaseResultMap">
+		SELECT
+		tufl.id,
+		tufl.pay_user_id,
+		tufl.receive_user_id,
+		tufl.user_fund,
+		tufl.mode_type,
+		tufl.mode_id,
+		tufl.trade_number,
+		tufl.pingxx_id,
+		tufl.client_ip,
+		tufl.create_time,
+		tufl.pingxx_state,
+		tufl.audit,
+		tufl.audit_time,
+		tufl.pay_type,
+		tufl.extnd,
+		tufl.search_userid,
+		tufl.search_category,
+		tufl.balance,
+		tufl.mode_plus_type
+		FROM
+		t_user_fund_log AS tufl
+		WHERE
+		tufl.mode_type in (31,32,33,34,35,36)
+		AND
+		DATEDIFF(tufl.create_time, NOW()) = -1
+		ORDER BY tufl.create_time
+		desc
+	</select>
+
+	<select id="selectUserFundLogServiceByLiveModeId"
+		resultType="com.moyou.moyouRms.model.liveshow.UserRecordListResult">
+		SELECT
+		tui.nickname,
+		tufl.id,
+		tui.moyou_id moyouId,
+		tufl.create_time createTime,
+		tufl.search_userid userId,
+		tufl.live_seconds watchLiveSeconds,
+		lr.id modeId
+		FROM
+		t_user_fund_log AS tufl
+		LEFT JOIN t_user_info AS tui ON tufl.search_userid = tui.user_id
+		LEFT JOIN live_room AS lr ON tufl.mode_id = lr.id
+		WHERE
+		tufl.mode_id = #{modeId}
+		AND
+		tufl.mode_plus_type=2
+	</select>
+</mapper>

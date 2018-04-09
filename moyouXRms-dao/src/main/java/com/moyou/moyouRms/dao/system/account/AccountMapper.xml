@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moyou.moyouRms.dao.system.account.AccountDao">
+	<resultMap id="base" type="BaseAccount">
+		<id column="ID" jdbcType="VARCHAR" property="accountId" />
+		<!-- <association property="loginLog" column="ID" javaType="LoginLog" select="getLoginLogById" 
+			/> -->
+		<collection property="poss" column="ID" ofType="basePos"
+			select="getPoss" />
+	</resultMap>
+	<resultMap id="LoginLog" type="LoginLog"></resultMap>
+	<resultMap id="ZNodes" type="com.moyou.moyouRms.model.tree.ZNodes"></resultMap>
+	<resultMap id="basePos" type="BasePos"></resultMap>
+	<resultMap id="BaseResultMap"
+		type="com.moyou.moyouRms.model.po.system.account.Account">
+		<result column="loginName" property="loginName" jdbcType="VARCHAR" />
+		<result column="picUrl" property="picUrl" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="juese" property="juese" jdbcType="VARCHAR" />
+		<result column="loginIP" property="loginIP" jdbcType="VARCHAR" />
+		<result column="loginTime" property="loginTime" jdbcType="TIMESTAMP" />
+		<result column="isValid" property="isValid" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="extend_data" property="extendData" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 防止密码外泄，取消密码列 -->
+	<select id="find" resultMap="base" parameterType="BaseAccount">
+		SELECT t.id,
+		t.loginName,
+		t.roleId,
+		jbr.name as roleName,
+		t.name,
+		t.picUrl,
+		t.email,
+		t.isValid,
+		t.createTime,
+		t.updateTime,
+		t.skin,
+		t.description
+		FROM sys_base_account t
+		LEFT JOIN sys_BASE_ROLE jbr
+		ON
+		jbr.id=t.roleId
+		<where>
+		<if test="loginName != null and loginName!='' ">
+			and t.loginName=#{loginName}
+		</if>
+		<if test="accountId != null ">
+			and t.id=#{accountId}
+		</if>
+		</where>
+	</select>
+	<!-- 防止密码外泄，取消密码列 -->
+	<select id="findByPageBean" resultMap="base" parameterType="BaseAccount">
+		SELECT t.id,
+		t.loginName,
+		t.roleId,
+		jbr.name as roleName,
+		t.name,
+		t.picUrl,
+		t.email,
+		t.isValid,
+		t.createTime,
+		t.updateTime,
+		t.skin,
+		t.description FROM sys_BASE_ACCOUNT t
+		LEFT JOIN sys_BASE_ROLE jbr
+		ON
+		jbr.id=t.roleId
+		WHERE 1=1
+		<if test="param.loginName != null and param.loginName!='' ">
+			AND t.loginName LIKE CONCAT('%',#{param.loginName},'%')
+		</if>
+		<if test="param.keyWord!= null">
+			AND (
+			t.loginName LIKE CONCAT('%',#{param.keyWord},'%')
+			OR
+			t.name LIKE CONCAT('%',#{param.keyWord},'%')
+			OR t.email LIKE
+			CONCAT('%',#{param.keyWord},'%')
+			)
+		</if>
+		<if test="param.roleId != null ">
+			AND t.roleId=#{param.roleId}
+		</if>
+		<if test="param.isValid != null ">
+			AND t.isValid=#{param.isValid}
+		</if>
+		ORDER BY t.createTime desc
+	</select>
+	<select id="count" resultType="int" parameterType="BaseAccount">
+		SELECT
+		count(t.id) FROM sys_base_account t
+	</select>
+	<insert id="insert" parameterType="BaseAccount">	
+ 	<![CDATA[
+	INSERT INTO sys_base_account(
+	id,loginName,name,password,salt,roleId,skin,email,createTime,description,phone,type
+	) VALUES (#{accountId},#{loginName},#{name},#{password},#{salt},#{roleIdStr},#{skin},
+	#{email},#{createTime},#{description},#{phone},#{type}
+	)
+	]]>
+	</insert>
+	<delete id="delete" parameterType="BaseAccount">
+		delete from sys_base_account
+		WHERE id=#{accountId}
+	</delete>
+	<delete id="deleteBatch" parameterType="java.util.List">
+		DELETE FROM sys_base_account WHERE id in(
+		<foreach item="o" collection="list" open="" separator=","
+			close="">
+			#{o.accountId}
+		</foreach>
+		)
+	</delete>
+	<update id="update" parameterType="BaseAccount">
+		UPDATE sys_base_account
+		SET
+		name =#{name},
+		email =#{email},
+		isValid =#{isValid},
+		roleId =#{roleId},
+		updateTime =#{updateTime},
+		description =#{description},
+		type =#{type}
+		WHERE id=#{accountId}
+	</update>
+	<!-- 这方法能获取密码和盐 -->
+	<select id="findFormatByLoginName" resultMap="base"
+		parameterType="String">
+    	<![CDATA[
+       SELECT a.* FROM sys_base_account a WHERE  a.isvalid='1' 
+       AND a.loginname=#{loginName,jdbcType=VARCHAR}
+       ]]>
+	</select>
+	<!-- 这方法不能能获取密码和盐 -->
+	<select id="findAccountById" resultMap="base" parameterType="String">
+		SELECT t.id,
+		t.loginName,
+		t.roleId,
+		jbr.name as roleName,
+		t.name,
+		t.picUrl,
+		t.email,
+		t.isValid,
+		t.createTime,
+		t.updateTime,
+		t.skin,
+		t.description
+		FROM sys_base_account t
+		LEFT JOIN sys_BASE_ROLE jbr
+		ON
+		jbr.id=t.roleId
+		WHERE t.id=#{accountId}
+	</select>
+	<update id="setSetting" parameterType="BaseAccount">
+		UPDATE sys_base_account
+		SET skin =#{skin}
+		WHERE id=#{accountId}
+	</update>
+	<select id="getPerData" resultMap="base" parameterType="String">
+		SELECT
+		t.id,
+		t.loginName,
+		t.roleId,
+		t.picUrl,
+		t.name,
+		t.email,
+		t.createTime,
+		t.updateTime,
+		t.description,
+		jbr.name as roleName
+		FROM sys_base_account t
+		LEFT JOIN sys_base_role jbr
+		ON jbr.id=t.roleId
+		WHERE t.isValid=1 and
+		t.id=#{accountId}
+	</select>
+	<update id="setPerData" parameterType="BaseAccount">
+		UPDATE sys_base_account
+		SET name =#{name},
+		email =#{email},
+		updateTime =#{updateTime}
+		WHERE
+		id=#{accountId}
+	</update>
+	<update id="setHeadpic" parameterType="BaseAccount">
+		UPDATE sys_base_account
+		SET picUrl =#{picUrl},
+		updateTime =#{updateTime}
+		WHERE id=#{accountId}
+	</update>
+	<select id="getRoles" resultMap="ZNodes">
+		SELECT jbo.id,
+		jbo.pId,
+		jbo.name,
+		'o' as other
+		FROM sys_base_org jbo
+		UNION ALL
+		SELECT CONCAT('role',jbr.id)
+		as id,
+		jbr.orgId as pId,
+		jbr.name,
+		'r' as other
+		FROM sys_base_role jbr
+	</select>
+	<select id="findCountByLoginName" resultType="int">
+		SELECT COUNT(*)
+		FROM sys_base_account t
+		WHERE t.loginName=#{loginName}
+	</select>
+	<update id="resetPwd" parameterType="BaseAccount">
+		UPDATE sys_base_account
+		SET
+		password =#{password},
+		salt =#{salt}
+		WHERE id=#{accountId}
+	</update>
+
+	<select id="getLoginLogById" parameterType="string" resultMap="LoginLog">
+		SELECT MAX(jbll.loginTime) as loginTime,jbll.loginIP
+		FROM (SELECT
+		t.accountId,t.loginIP,t.loginTime from sys_base_login_log t
+		WHERE
+		t.accountId=#{ID}) jbll
+		GROUP BY jbll.accountId
+	</select>
+	<select id="getPoss" parameterType="string" resultMap="basePos">
+		SELECT
+		jbp.* FROM sys_base_account_position jbap
+		LEFT JOIN sys_base_position
+		jbp
+		ON jbp.id=jbap.posId
+		WHERE jbap.accountId=#{ID}
+		ORDER BY jbap.posId
+	</select>
+	<select id="queryAccountByLoginName" parameterType="BaseAccount"
+		resultMap="BaseResultMap">
+		SELECT loginName,picUrl,name,phone,type,id from
+		sys_base_account
+		where
+		loginName=#{loginName,jdbcType=VARCHAR}
+	</select>
+	<select id="queryAccountByParam" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		SELECT
+		sba.id,
+		sba.loginName,
+		sba.picUrl,
+		sbr.name juese,
+		sba. NAME,
+		sba.isValid,
+		sba.phone,
+		(
+		SELECT
+		sbll.loginIP
+		FROM
+		sys_base_login_log sbll
+		WHERE
+		sbll.accountId = sba.id
+		ORDER BY
+		sbll.loginTime DESC
+		limit 1
+		)loginIP,
+		(
+		SELECT
+		sbll.loginTime
+		FROM
+		sys_base_login_log sbll
+		WHERE
+		sbll.accountId = sba.id
+		ORDER BY
+		sbll.loginTime DESC
+		limit 1
+		)loginTime
+		FROM
+		sys_base_account sba
+		left join sys_base_account_role sbar on
+		sbar.account_id=sba.id
+		left join sys_base_role sbr on
+		sbr.id=sbar.role_id
+		<where>
+			<if test="conditions.loginName !=null and conditions.loginName != ''">
+				sba.loginName REGEXP
+				#{conditions.loginName,jdbcType=VARCHAR}
+			</if>
+			<if test="conditions.isValid != null and conditions.isValid !=''">
+				and sba.isValid=#{conditions.isValid,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.name != null and conditions.name !=''">
+				and sba.name REGEXP #{conditions.name,jdbcType=VARCHAR}
+			</if>
+			<if test="conditions.juese != null and conditions.juese !=''">
+				and sbr.name REGEXP #{conditions.juese,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by sba.loginName
+	</select>
+	<update id="updateByAccount" parameterType="com.moyou.moyouRms.model.po.system.account.Account">
+		UPDATE sys_base_account
+		SET name =#{name},
+		<!-- email =#{email}, -->
+		isValid =#{isValid},
+		roleId =#{roleId},
+		updateTime =#{updateTime},
+		description =#{description}
+		WHERE id=#{accountId}
+	</update>
+	<select id="findFormatByLoginNameWithOutIsValid" resultMap="base"
+		parameterType="String">
+    	<![CDATA[
+       SELECT a.* FROM sys_base_account a WHERE  a.loginname=#{loginName,jdbcType=VARCHAR}
+       ]]>
+	</select>
+	<select id="queryAccountByType" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		SELECT
+		sba.id,
+		sba.loginName,
+		sba.picUrl,
+		sba.name,
+		<!-- sba.createTime, -->
+		<!-- sba.updateTime, -->
+		sba.type
+		FROM
+		sys_base_account AS sba
+		WHERE
+		sba.type =
+		#{type,jdbcType=INTEGER}
+	</select>
+	<update id="updateExtendData" parameterType="com.moyou.moyouRms.model.po.system.account.Account">
+		UPDATE sys_base_account
+		SET
+		extend_data =#{extendData}
+		WHERE id=#{accountId}
+
+	</update>
+	<select id="findAccountByType" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.po.system.account.Account">
+		SELECT
+		sba.loginName,
+		sba.name,
+		sba.id accountId,
+		IFNULL(sba.extend_data,"0_0")extendData
+		FROM
+		sys_base_account sba
+		WHERE
+		sba.type =#{type}
+		GROUP BY
+		sba.id
+		order BY sba.id
+	</select>
+</mapper>

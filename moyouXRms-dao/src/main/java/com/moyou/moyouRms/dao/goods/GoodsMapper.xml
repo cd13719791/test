@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.goods.GoodsMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.goods.Goods">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+		<result column="goods_price" property="goodsPrice" jdbcType="DECIMAL" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="goods_amount" property="goodsAmount" jdbcType="INTEGER" />
+		<result column="sell_amount" property="sellAmount" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.moyou.moyouRms.model.goods.Goods"
+		extends="BaseResultMap">
+		<result column="goods_desc" property="goodsDesc" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, goods_name, goods_price, state, create_time,
+		update_time,
+		goods_amount
+	</sql>
+	<sql id="Blob_Column_List">
+		goods_desc
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from t_goods
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_goods
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<!--发布一条商品 -->
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.goods.Goods"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_goods (
+		goods_name,
+		goods_price,
+		state, create_time, update_time,
+		goods_amount,
+		goods_desc)
+		values (
+		#{goodsName,jdbcType=VARCHAR},
+		#{goodsPrice,jdbcType=DECIMAL},
+		#{state,jdbcType=SMALLINT}, #{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{goodsAmount,jdbcType=INTEGER},
+		#{goodsDesc,jdbcType=LONGVARCHAR})
+	</insert>
+	<!-- 插入商品图片 -->
+	<insert id="insertListGoodsPic" parameterType="com.moyou.moyouRms.model.goods.GoodsResource">
+		insert into t_goods_resource (goods_id, media_type,
+		media_url,
+		resource_sort, update_time,create_time)
+		values
+		<foreach collection="list" item="item" index="" open="" close=""
+			separator=",">
+			(#{item.goodsId,jdbcType=INTEGER},
+			#{item.mediaType,jdbcType=SMALLINT},
+			#{item.mediaUrl,jdbcType=VARCHAR},
+			#{item.resourceSort,jdbcType=SMALLINT},
+			#{item.updateTime,jdbcType=TIMESTAMP},#{item.createTime,jdbcType=TIMESTAMP}
+			)
+		</foreach>
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.goods.Goods">
+		insert into t_goods
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="goodsName != null">
+				goods_name,
+			</if>
+			<if test="goodsPrice != null">
+				goods_price,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="goodsAmount != null">
+				goods_amount,
+			</if>
+			<if test="goodsDesc != null">
+				goods_desc,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="goodsName != null">
+				#{goodsName,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsPrice != null">
+				#{goodsPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=SMALLINT},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="goodsAmount != null">
+				#{goodsAmount,jdbcType=INTEGER},
+			</if>
+			<if test="goodsDesc != null">
+				#{goodsDesc,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.goods.Goods">
+		update t_goods
+		<set>
+			<if test="goodsName != null">
+				goods_name = #{goodsName,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsPrice != null">
+				goods_price = #{goodsPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=SMALLINT},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="goodsAmount != null">
+				goods_amount = #{goodsAmount,jdbcType=INTEGER},
+			</if>
+			<if test="goodsDesc != null">
+				goods_desc = #{goodsDesc,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.moyou.moyouRms.model.goods.Goods">
+		update
+		t_goods
+		set goods_name = #{goodsName,jdbcType=VARCHAR},
+		goods_price =
+		#{goodsPrice,jdbcType=DECIMAL},
+		state = #{state,jdbcType=SMALLINT},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		goods_amount =
+		#{goodsAmount,jdbcType=INTEGER},
+		goods_desc =
+		#{goodsDesc,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.goods.Goods">
+		update t_goods
+		set
+		goods_name = #{goodsName,jdbcType=VARCHAR},
+		goods_price =
+		#{goodsPrice,jdbcType=DECIMAL},
+		state = #{state,jdbcType=SMALLINT},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		goods_amount =
+		#{goodsAmount,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 商品列表初始化 -->
+	<select id="queryGoodsList" parameterType="PageBean"
+		resultType="com.moyou.moyouRms.model.goods.Goods">
+		SELECT tg.id,tg.goods_name AS goodsName,tg.goods_price AS
+		goodsPrice,tg.sell_amount AS
+		sellAmount,tg.state as state FROM t_goods
+		as tg
+		<where>
+			tg.state !=4
+			<if test="conditions.state !=null and conditions.state != ''">
+				and tg.state =#{conditions.state}
+			</if>
+			<if test="conditions.goodsName !=null and conditions.goodsName!= ''">
+				and tg.goods_name LIKE CONCAT(CONCAT('%',
+				#{conditions.goodsName}), '%')
+			</if>
+			<if
+				test="conditions.startGoodsPrice!= null and conditions.startGoodsPrice!= ''">
+	<![CDATA[   and tg.goods_price >= #{conditions.startGoodsPrice}   ]]>
+			</if>
+			<if test="conditions.endGoodsPrice!=null and conditions.endGoodsPrice!=''">
+		<![CDATA[   and  tg.goods_price <= #{conditions.endGoodsPrice}   ]]>
+			</if>
+		</where>
+		<if test="conditions.goodsPrice!=null and conditions.goodsPrice!= ''">
+			ORDER BY ${conditions.goodsPrice} ${conditions.sortRule}
+		</if>
+		<if test="conditions.sellAmount!=null and conditions.sellAmount != ''">
+			ORDER BY ${conditions.sellAmount} ${conditions.sortRule}
+		</if>
+	</select>
+	<!-- 修改商品状态 -->
+	<update id="updateGoodsState" parameterType="com.moyou.moyouRms.model.goods.Goods">
+		UPDATE t_goods SET
+		state=#{state} WHERE id=#{id}
+	</update>
+	<select id="queryGoodsInfo" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.goods.Goods">
+		SELECT
+		g.id,
+		g.goods_name AS goodsName,
+		g.goods_desc AS
+		goodsDesc,
+		g.goods_price AS goodsPrice
+		FROM
+		t_goods g where g.id=#{id}
+	</select>
+	<!-- 根据商品的ID修改商品的价格和描述 -->
+	<update id="updateGoodsInfo" parameterType="com.moyou.moyouRms.model.goods.Goods">
+		UPDATE t_goods SET goods_desc=#{goodsDesc},goods_price=#{goodsPrice}
+		WHERE id=#{id}
+	</update>
+</mapper>

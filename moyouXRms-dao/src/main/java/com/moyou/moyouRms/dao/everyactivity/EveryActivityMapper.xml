@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.everyactivity.EveryActivityMapper">
+	<resultMap id="BaseResultMap"
+		type="com.moyou.moyouRms.model.everyactivity.EveryActivity">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="every_day_money_total" property="everyDayMoneyTotal"
+			jdbcType="INTEGER" />
+		<result column="every_day_limit" property="everyDayLimit"
+			jdbcType="INTEGER" />
+		<result column="activity_desc" property="activityDesc"
+			jdbcType="VARCHAR" />
+		<result column="every_money_max" property="everyMoneyMax"
+			jdbcType="INTEGER" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="data_status" property="dataStatus" jdbcType="SMALLINT" />
+		<result column="every_day" property="everyDay" jdbcType="DATE" />
+		<result column="ing_state" property="ingState" jdbcType="SMALLINT" />
+		<result column="doing_count" property="doingCount" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, every_day_money_total, every_day_limit, activity_desc,
+		every_money_max, update_time,
+		create_time, data_status,
+		every_day,ing_state
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_every_activity
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_every_activity
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.moyou.moyouRms.model.everyactivity.EveryActivity">
+		insert into t_every_activity (id, every_day_money_total,
+		every_day_limit,
+		activity_desc, every_money_max, update_time,
+		create_time, data_status,ing_state, every_day
+		)
+		values
+		(#{id,jdbcType=INTEGER}, #{everyDayMoneyTotal,jdbcType=INTEGER},
+		#{everyDayLimit,jdbcType=INTEGER},
+		#{activityDesc,jdbcType=VARCHAR},
+		#{everyMoneyMax,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{dataStatus,jdbcType=SMALLINT},#{ingState,jdbcType=SMALLINT},
+		#{everyDay,jdbcType=DATE}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.moyou.moyouRms.model.everyactivity.EveryActivity"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_every_activity
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="everyDayMoneyTotal != null">
+				every_day_money_total,
+			</if>
+			<if test="everyDayLimit != null">
+				every_day_limit,
+			</if>
+			<if test="activityDesc != null">
+				activity_desc,
+			</if>
+			<if test="everyMoneyMax != null">
+				every_money_max,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="dataStatus != null">
+				data_status,
+			</if>
+			<if test="everyDay != null">
+				every_day,
+			</if>
+			<if test="ingState != null">
+				ing_state,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="everyDayMoneyTotal != null">
+				#{everyDayMoneyTotal,jdbcType=INTEGER},
+			</if>
+			<if test="everyDayLimit != null">
+				#{everyDayLimit,jdbcType=INTEGER},
+			</if>
+			<if test="activityDesc != null">
+				#{activityDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="everyMoneyMax != null">
+				#{everyMoneyMax,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="dataStatus != null">
+				#{dataStatus,jdbcType=SMALLINT},
+			</if>
+			<if test="everyDay != null">
+				#{everyDay,jdbcType=DATE},
+			</if>
+			<if test="ingState != null">
+				#{ingState,jdbcType=SMALLINT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.moyou.moyouRms.model.everyactivity.EveryActivity">
+		update t_every_activity
+		<set>
+			<if test="ingState != null">
+				ing_state = #{ingState,jdbcType=SMALLINT},
+			</if>
+			<if test="everyDayMoneyTotal != null">
+				every_day_money_total =
+				#{everyDayMoneyTotal,jdbcType=INTEGER},
+			</if>
+			<if test="everyDayLimit != null">
+				every_day_limit = #{everyDayLimit,jdbcType=INTEGER},
+			</if>
+			<if test="activityDesc != null">
+				activity_desc = #{activityDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="everyMoneyMax != null">
+				every_money_max = #{everyMoneyMax,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="dataStatus != null">
+				data_status = #{dataStatus,jdbcType=SMALLINT},
+			</if>
+			<if test="everyDay != null">
+				every_day = #{everyDay,jdbcType=DATE},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.moyou.moyouRms.model.everyactivity.EveryActivity">
+		update t_every_activity
+		set ing_state =
+		#{ingState,jdbcType=SMALLINT},
+		every_day_money_total =
+		#{everyDayMoneyTotal,jdbcType=INTEGER},
+		every_day_limit =
+		#{everyDayLimit,jdbcType=INTEGER},
+		activity_desc =
+		#{activityDesc,jdbcType=VARCHAR},
+		every_money_max =
+		#{everyMoneyMax,jdbcType=INTEGER},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		data_status =
+		#{dataStatus,jdbcType=SMALLINT},
+		every_day = #{everyDay,jdbcType=DATE}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectEveryActivityList" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_every_activity
+		where data_status =1
+		and to_days(every_day) =
+		to_days(now())
+	</select>
+	<select id="selectActivityInfoList" resultMap="BaseResultMap"
+		parameterType="PageBean">
+		SELECT
+		tea.id,
+		tea.every_day,
+		tea.every_day_money_total,
+		tea.every_day_limit,
+		tea.activity_desc,
+		tea.every_money_max,
+		(
+		SELECT
+		count(tear.id)
+		FROM
+		t_every_activity_receive tear
+		WHERE
+		tear.state = 1
+		AND
+		tear.activity_id = tea.id
+		) doing_count,
+		tea.data_status,
+		tea.ing_state
+		FROM
+		t_every_activity AS tea
+		WHERE
+		tea.data_status = 1
+		<if test="conditions.id !=null">
+			tea.id=#{conditons.id}
+		</if>
+		ORDER BY
+		tea.every_day DESC
+	</select>
+	<select id="selectActivitySum" resultType="java.util.Map">
+		SELECT
+		(
+		SELECT
+		IFNULL(SUM(receive_fund), 0)
+		FROM
+		t_every_activity_receive tear
+		WHERE
+		TO_DAYS(create_time) = TO_DAYS(now())
+		AND tear.state = 1
+		) toDay,
+		(
+		SELECT
+		IFNULL(SUM(receive_fund), 0)
+		FROM
+		t_every_activity_receive tear
+		WHERE
+		DATEDIFF(tear.create_time, NOW()) = - 1
+		AND tear.state = 1
+		) yesterDay,
+		(
+		SELECT
+		IFNULL(SUM(receive_fund), 0)
+		FROM
+		t_every_activity_receive tear
+		WHERE
+		tear.state = 1
+		) allDay
+	</select>
+	<select id="selectEveryActivityLimit" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_every_activity
+		order by create_time desc limit 1
+	</select>
+	<select id="selectYesterdayActivity" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		t_every_activity tea
+		WHERE
+		DATE_SUB(CURDATE(), INTERVAL 1 DAY) =
+		date(tea.every_day)
+	</select>
+	<update id="updateState">
+		update t_every_activity set ing_state =2 where
+		ing_state=0
+	</update>
+</mapper>

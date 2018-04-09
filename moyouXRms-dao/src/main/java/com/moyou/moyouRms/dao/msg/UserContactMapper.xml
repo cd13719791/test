@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moyou.moyouRms.dao.msg.UserContactMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.msg.UserContact">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="user_id" jdbcType="VARCHAR" property="userId" />
+		<result column="contact_user_id" jdbcType="VARCHAR" property="contactUserId" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, contact_user_id, update_time, create_time
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_user_contact
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from t_user_contact
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.msg.UserContact">
+		insert into t_user_contact (id, user_id, contact_user_id,
+		update_time, create_time)
+		values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR},
+		#{contactUserId,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.msg.UserContact">
+		insert into t_user_contact
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="contactUserId != null">
+				contact_user_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="contactUserId != null">
+				#{contactUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.msg.UserContact">
+		update t_user_contact
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="contactUserId != null">
+				contact_user_id = #{contactUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.msg.UserContact">
+		update t_user_contact
+		set user_id = #{userId,jdbcType=VARCHAR},
+		contact_user_id = #{contactUserId,jdbcType=VARCHAR},
+		update_time = #{updateTime,jdbcType=TIMESTAMP},
+		create_time = #{createTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 查询消息联系人列表 -->
+	<select id="queryUserContactList" parameterType="PageBean" 
+		resultType="com.moyou.moyouRms.model.msg.UserContactSqlResult">
+		SELECT
+			result.userId,
+			u.nickname,
+			ui.avatar,
+			ui.birthday,
+			ui.constellation,
+			ui.sig,
+			ll.latitude,
+			ll.longitude,
+			ll.create_time AS createTime
+		FROM
+			(
+				(
+					SELECT
+						uc.contact_user_id AS userId	,
+						uc.id AS relationId
+					FROM
+						t_user_contact uc
+					WHERE
+						uc.user_id = #{conditions.userId,jdbcType=VARCHAR}
+				)
+				UNION
+					(
+						SELECT
+							uc.user_id AS userId,
+							uc.id AS relationId
+						FROM
+							t_user_contact uc
+						WHERE
+							uc.contact_user_id = #{conditions.userId,jdbcType=VARCHAR}
+					)
+			) result
+		LEFT JOIN t_user u ON u.id = result.userId
+		LEFT JOIN t_user_info ui ON ui.user_id = result.userId
+		LEFT JOIN t_login_log ll ON ll.user_id = result.userId
+		ORDER BY
+			ll.create_time DESC
+		LIMIT 1
+	</select>
+
+	<!-- 查询聊天相关信息 -->
+	<select id="queryUserChatInfo" resultType="java.util.Map">
+		SELECT
+			result.nickname,
+			result.avatar,
+			result.userId,
+			re.relationId
+		FROM
+			(
+			 SELECT u.nickname, ui.avatar, ui.user_id AS userId
+			 FROM t_user u
+			 LEFT JOIN t_user_info ui ON ui.user_id = u.id
+			 WHERE u.id IN 
+				<foreach collection="queryUserIds" item="string" open="(" close=")" separator=",">
+					#{string,jdbcType=VARCHAR}
+				</foreach>
+			) result
+		LEFT JOIN 
+			(
+				(
+					SELECT uc.contact_user_id AS userId, uc.id AS relationId
+					FROM t_user_contact uc WHERE uc.user_id = #{userId,jdbcType=VARCHAR} AND uc.contact_user_id IN 
+						<foreach collection="queryUserIds" item="string" open="(" close=")" separator=",">
+							#{string,jdbcType=VARCHAR}
+						</foreach>
+				) 
+					UNION
+				(
+					SELECT uc.user_id AS userId, uc.id AS relationId
+					FROM t_user_contact uc WHERE uc.contact_user_id = #{userId,jdbcType=VARCHAR} AND uc.user_id IN 
+						<foreach collection="queryUserIds" item="string" open="(" close=")" separator=",">
+							#{string,jdbcType=VARCHAR}
+						</foreach>
+				)
+			)re 
+		ON re.userId = result.userId
+	</select>
+	
+	<!-- 查询手机联系人 -->
+	<select id="queryPhoneContact" resultType="java.util.Map">
+		SELECT
+			u.id AS userId,
+			ui.avatar,
+			u.nickname,
+			re.relationId
+		FROM
+			t_user u
+		LEFT JOIN t_user_info ui ON ui.user_id = u.id
+		LEFT JOIN t_user_contact uc ON (
+			uc.user_id = #{userId,jdbcType=VARCHAR}
+			AND uc.contact_user_id = u.id
+		)
+		OR (
+			uc.contact_user_id = #{userId,jdbcType=VARCHAR}
+			AND uc.user_id = u.id
+		)
+		WHERE
+		 u.phone_number IN 
+		<foreach collection="phoneList" item="string" open="(" close=")" separator=",">
+			#{string,jdbcType=VARCHAR}
+		</foreach>
+	</select>
+</mapper>

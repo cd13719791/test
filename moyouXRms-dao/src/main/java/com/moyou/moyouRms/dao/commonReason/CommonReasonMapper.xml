@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.commonReason.CommonReasonMapper">
+	<resultMap id="BaseResultMap"
+		type="com.moyou.moyouRms.model.commonReason.CommonReason">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="mode_type" property="modeType" jdbcType="INTEGER" />
+		<result column="mode_id" property="modeId" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs"
+		type="com.moyou.moyouRms.model.commonReason.CommonReason" extends="BaseResultMap">
+		<result column="reason_text" property="reasonText" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, mode_type, mode_id
+	</sql>
+	<sql id="Blob_Column_List">
+		reason_text
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from sys_common_reason
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		sys_common_reason
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.commonReason.CommonReason">
+		insert into sys_common_reason
+		(id, mode_type, mode_id,
+		reason_text)
+		values (#{id,jdbcType=INTEGER},
+		#{modeType,jdbcType=INTEGER},
+		#{modeId,jdbcType=INTEGER},
+		#{reasonText,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.commonReason.CommonReason">
+		insert into sys_common_reason
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="modeType != null">
+				mode_type,
+			</if>
+			<if test="modeId != null">
+				mode_id,
+			</if>
+			<if test="reasonText != null">
+				reason_text,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="modeType != null">
+				#{modeType,jdbcType=INTEGER},
+			</if>
+			<if test="modeId != null">
+				#{modeId,jdbcType=INTEGER},
+			</if>
+			<if test="reasonText != null">
+				#{reasonText,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.commonReason.CommonReason">
+		update sys_common_reason
+		<set>
+			<if test="modeType != null">
+				mode_type = #{modeType,jdbcType=INTEGER},
+			</if>
+			<if test="modeId != null">
+				mode_id = #{modeId,jdbcType=INTEGER},
+			</if>
+			<if test="reasonText != null">
+				reason_text = #{reasonText,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.moyou.moyouRms.model.commonReason.CommonReason">
+		update
+		sys_common_reason
+		set mode_type = #{modeType,jdbcType=INTEGER},
+		mode_id
+		= #{modeId,jdbcType=INTEGER},
+		reason_text =
+		#{reasonText,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.commonReason.CommonReason">
+		update
+		sys_common_reason
+		set mode_type = #{modeType,jdbcType=INTEGER},
+		mode_id
+		= #{modeId,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectCommonReasonByObjectId" parameterType="com.moyou.moyouRms.model.commonReason.CommonReason"
+		resultMap="ResultMapWithBLOBs">
+		SELECT
+		id, mode_type, mode_id,reason_text
+		FROM
+		sys_common_reason scr
+		WHERE
+		scr.mode_id =#{modeId,jdbcType=INTEGER}
+		AND
+		scr.mode_type = #{modeType,jdbcType=INTEGER}
+	</select>
+
+</mapper>

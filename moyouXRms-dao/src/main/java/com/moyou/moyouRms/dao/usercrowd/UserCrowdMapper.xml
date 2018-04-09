@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.usercrowd.UserCrowdMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.usercrowd.UserCrowd">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="crowd_id" property="crowdId" jdbcType="INTEGER" />
+		<result column="crowd_name" property="crowdName" jdbcType="VARCHAR" />
+		<result column="crowd_background" property="crowdBackground"
+			jdbcType="VARCHAR" />
+		<result column="member_count" property="memberCount" jdbcType="INTEGER" />
+		<result column="crowd_city" property="crowdCity" jdbcType="VARCHAR" />
+		<result column="crowd_latitude" property="crowdLatitude"
+			jdbcType="DOUBLE" />
+		<result column="crowd_longitude" property="crowdLongitude"
+			jdbcType="DOUBLE" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="crowd_status" property="crowdStatus" jdbcType="SMALLINT" />
+		<result column="easemod_crowe_id" property="easemodCroweId"
+			jdbcType="VARCHAR" />
+		<result column="crowd_level" property="crowdLevel" jdbcType="SMALLINT" />
+		<result column="category_id" property="categoryId" jdbcType="VARCHAR" />
+		<result column="create_type" property="crowdCreateType"
+			jdbcType="SMALLINT" />
+			<result column="auto_apply_agree" property="autoApplyAgree"
+			jdbcType="SMALLINT" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.moyou.moyouRms.model.usercrowd.UserCrowd"
+		extends="BaseResultMap">
+		<result column="crowd_desc" property="crowdDesc" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, crowd_id, crowd_name, crowd_background,
+		member_count,
+		crowd_city, crowd_latitude,
+		crowd_longitude, create_time,
+		update_time, crowd_status, easemod_crowe_id,
+		crowd_level,
+		category_id
+	</sql>
+	<sql id="Blob_Column_List">
+		crowd_desc
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from t_user_crowd
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_user_crowd
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<!-- 创建群 -->
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowd"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_user_crowd (
+		user_id, crowd_id,
+		crowd_name, crowd_background, member_count,
+		crowd_city, crowd_latitude, crowd_longitude,
+		create_time, update_time,
+		crowd_status,
+		easemod_crowe_id, crowd_level, category_id,
+		crowd_desc,create_type)
+		values ( #{userId,jdbcType=INTEGER},
+		#{crowdId,jdbcType=INTEGER},
+		#{crowdName,jdbcType=VARCHAR},
+		#{crowdBackground,jdbcType=VARCHAR}, #{memberCount,jdbcType=INTEGER},
+		#{crowdCity,jdbcType=VARCHAR}, #{crowdLatitude,jdbcType=DOUBLE},
+		#{crowdLongitude,jdbcType=DOUBLE},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP}, #{crowdStatus,jdbcType=SMALLINT},
+		#{easemodCroweId,jdbcType=VARCHAR}, #{crowdLevel,jdbcType=SMALLINT},
+		#{categoryId,jdbcType=VARCHAR},
+		#{crowdDesc,jdbcType=LONGVARCHAR},#{crowdCreateType,jdbcType=SMALLINT})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowd">
+		insert into t_user_crowd
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="crowdId != null">
+				crowd_id,
+			</if>
+			<if test="crowdName != null">
+				crowd_name,
+			</if>
+			<if test="crowdBackground != null">
+				crowd_background,
+			</if>
+			<if test="memberCount != null">
+				member_count,
+			</if>
+			<if test="crowdCity != null">
+				crowd_city,
+			</if>
+			<if test="crowdLatitude != null">
+				crowd_latitude,
+			</if>
+			<if test="crowdLongitude != null">
+				crowd_longitude,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="crowdStatus != null">
+				crowd_status,
+			</if>
+			<if test="easemodCroweId != null">
+				easemod_crowe_id,
+			</if>
+			<if test="crowdLevel != null">
+				crowd_level,
+			</if>
+			<if test="categoryId != null">
+				category_id,
+			</if>
+			<if test="crowdDesc != null">
+				crowd_desc,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="crowdId != null">
+				#{crowdId,jdbcType=INTEGER},
+			</if>
+			<if test="crowdName != null">
+				#{crowdName,jdbcType=VARCHAR},
+			</if>
+			<if test="crowdBackground != null">
+				#{crowdBackground,jdbcType=VARCHAR},
+			</if>
+			<if test="memberCount != null">
+				#{memberCount,jdbcType=INTEGER},
+			</if>
+			<if test="crowdCity != null">
+				#{crowdCity,jdbcType=VARCHAR},
+			</if>
+			<if test="crowdLatitude != null">
+				#{crowdLatitude,jdbcType=DOUBLE},
+			</if>
+			<if test="crowdLongitude != null">
+				#{crowdLongitude,jdbcType=DOUBLE},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="crowdStatus != null">
+				#{crowdStatus,jdbcType=SMALLINT},
+			</if>
+			<if test="easemodCroweId != null">
+				#{easemodCroweId,jdbcType=VARCHAR},
+			</if>
+			<if test="crowdLevel != null">
+				#{crowdLevel,jdbcType=SMALLINT},
+			</if>
+			<if test="categoryId != null">
+				#{categoryId,jdbcType=VARCHAR},
+			</if>
+			<if test="crowdDesc != null">
+				#{crowdDesc,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 修改群资料 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowd">
+		update t_user_crowd
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="crowdId != null">
+				crowd_id = #{crowdId,jdbcType=INTEGER},
+			</if>
+			<if test="crowdName != null">
+				crowd_name = #{crowdName,jdbcType=VARCHAR},
+			</if>
+			<if test="crowdBackground != null">
+				crowd_background = #{crowdBackground,jdbcType=VARCHAR},
+			</if>
+			<if test="memberCount != null">
+				member_count = #{memberCount,jdbcType=INTEGER},
+			</if>
+			<if test="crowdCity != null">
+				crowd_city = #{crowdCity,jdbcType=VARCHAR},
+			</if>
+			<if test="crowdLatitude != null">
+				crowd_latitude = #{crowdLatitude,jdbcType=DOUBLE},
+			</if>
+			<if test="crowdLongitude != null">
+				crowd_longitude = #{crowdLongitude,jdbcType=DOUBLE},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="crowdStatus != null">
+				crowd_status = #{crowdStatus,jdbcType=SMALLINT},
+			</if>
+			<if test="easemodCroweId != null">
+				easemod_crowe_id = #{easemodCroweId,jdbcType=VARCHAR},
+			</if>
+			<if test="crowdLevel != null">
+				crowd_level = #{crowdLevel,jdbcType=SMALLINT},
+			</if>
+			<if test="categoryId != null">
+				category_id = #{categoryId,jdbcType=VARCHAR},
+			</if>
+			<if test="crowdDesc != null">
+				crowd_desc = #{crowdDesc,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 修改群专用 -->
+	<update id="updateByPrimaryKeyCrowd" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowd">
+		update
+		t_user_crowd
+		set crowd_name =
+		#{crowdName,jdbcType=VARCHAR},
+		crowd_background =
+		#{crowdBackground,jdbcType=VARCHAR},
+		member_count =
+		#{memberCount,jdbcType=INTEGER},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		crowd_status =
+		#{crowdStatus,jdbcType=SMALLINT},
+		category_id =
+		#{categoryId,jdbcType=VARCHAR},
+		crowd_desc =
+		#{crowdDesc,jdbcType=LONGVARCHAR},
+		crowd_status =
+		#{crowdStatus,jdbcType=SMALLINT}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByCrowdMember" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowd">
+		update
+		t_user_crowd set member_count =
+		#{memberCount,jdbcType=INTEGER} where
+		id=#{id}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowd">
+		update
+		t_user_crowd
+		set user_id = #{userId,jdbcType=INTEGER},
+		crowd_id =
+		#{crowdId,jdbcType=INTEGER},
+		crowd_name =
+		#{crowdName,jdbcType=VARCHAR},
+		crowd_background =
+		#{crowdBackground,jdbcType=VARCHAR},
+		member_count =
+		#{memberCount,jdbcType=INTEGER},
+		crowd_city =
+		#{crowdCity,jdbcType=VARCHAR},
+		crowd_latitude =
+		#{crowdLatitude,jdbcType=DOUBLE},
+		crowd_longitude =
+		#{crowdLongitude,jdbcType=DOUBLE},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		crowd_status =
+		#{crowdStatus,jdbcType=SMALLINT},
+		easemod_crowe_id =
+		#{easemodCroweId,jdbcType=VARCHAR},
+		crowd_level =
+		#{crowdLevel,jdbcType=SMALLINT},
+		category_id =
+		#{categoryId,jdbcType=VARCHAR},
+		crowd_desc =
+		#{crowdDesc,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateCrowdMember" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowd">
+		update
+		t_user_crowd
+		set member_count =
+		#{memberCount,jdbcType=INTEGER} where
+		id=#{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowd">
+		update
+		t_user_crowd
+		set user_id = #{userId,jdbcType=INTEGER},
+		crowd_id =
+		#{crowdId,jdbcType=INTEGER},
+		crowd_name =
+		#{crowdName,jdbcType=VARCHAR},
+		crowd_background =
+		#{crowdBackground,jdbcType=VARCHAR},
+		member_count =
+		#{memberCount,jdbcType=INTEGER},
+		crowd_city =
+		#{crowdCity,jdbcType=VARCHAR},
+		crowd_latitude =
+		#{crowdLatitude,jdbcType=DOUBLE},
+		crowd_longitude =
+		#{crowdLongitude,jdbcType=DOUBLE},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		crowd_status =
+		#{crowdStatus,jdbcType=SMALLINT},
+		easemod_crowe_id =
+		#{easemodCroweId,jdbcType=VARCHAR},
+		crowd_level =
+		#{crowdLevel,jdbcType=SMALLINT},
+		category_id =
+		#{categoryId,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 查询群总数 -->
+	<select id="queryCountUserCrowd" resultType="java.lang.Integer">
+		SELECT
+		COUNT(crowd_id) as countCrowd FROM t_user_crowd WHERE crowd_status=1
+	</select>
+	<!-- 查询新增群 -->
+	<select id="queryNewUserCrowd" resultType="java.lang.Integer">
+		SELECT COUNT(crowd_id)
+		AS
+		newCountCrowd FROM t_user_crowd WHERE crowd_status=1
+		AND
+		DATEDIFF
+		(create_time,NOW()) =0
+	</select>
+	<select id="queryUserCrowdList" resultType="com.moyou.moyouRms.model.usercrowd.UserCrowd"
+		parameterType="PageBean">
+		SELECT
+		uc.id,
+		uc.crowd_name AS crowdName,
+		uc.crowd_id AS crowdId,
+		ui.nickname AS crowdUserNickName,
+		uc.create_time AS createTime,
+		uc.member_count AS memberCount,
+		uc.easemod_crowe_id AS easemodCroweId,
+		uc.crowd_background AS crowdBackground,
+		tucr.recommed_status
+		recommedStatus,
+		tucr.recommend_sort recommendSort,
+		tucr.update_time as updateTime,
+		uc.auto_apply_agree autoApplyAgree
+		FROM
+		t_user_crowd uc
+		LEFT JOIN t_user_info ui ON
+		uc.user_id = ui.user_id
+		LEFT JOIN
+		t_user_crowd_recommend tucr on
+		tucr.crowed_id=uc.id
+		<where>
+			uc.crowd_status=1
+			<if test="conditions.crowdName!=null and conditions.crowdName!= ''">
+				AND uc.crowd_name LIKE CONCAT(CONCAT('%',
+				#{conditions.crowdName}), '%')
+			</if>
+			<if test="conditions.crowdId !=null and conditions.crowdId!= ''">
+				AND uc.crowd_id LIKE CONCAT(CONCAT('%',
+				#{conditions.crowdId}), '%')
+			</if>
+			<if test="conditions.starttime != null and conditions.starttime!= ''">
+	<![CDATA[   and DATE_FORMAT(uc.create_time, '%Y-%m-%d')>=  DATE_FORMAT(#{conditions.starttime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="conditions.endtime!=null and conditions.endtime!=''">
+		<![CDATA[  and DATE_FORMAT(uc.create_time, '%Y-%m-%d') <= DATE_FORMAT(#{conditions.endtime}, '%Y-%m-%d')    ]]>
+			</if>
+			<if
+				test="conditions.crowdUserNickName!=null and conditions.crowdUserNickName!= ''">
+				AND ui.nickname LIKE CONCAT(CONCAT('%',
+				#{conditions.crowdUserNickName}),
+				'%')
+			</if>
+		</where>
+		ORDER BY uc.create_time DESC
+	</select>
+	<select id="queryUserCrowd" resultMap="BaseResultMap"
+		parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowd">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM t_user_crowd uc
+		<where>
+			<if test="crowdCreateType !=null and crowdCreateType != ''">
+				AND uc.create_type=#{crowdCreateType}
+			</if>
+			<if test="crowdStatus !=null and crowdStatus != ''">
+				AND uc.crowd_status=#{crowdStatus}
+			</if>
+
+		</where>
+		ORDER BY uc.create_time DESC
+	</select>
+	<!-- 查询CrowdId列最大值 -->
+	<select id="queryMaxCrowdId" resultType="java.lang.Integer">
+		SELECT MAX(crowd_id) AS
+		crowdId
+		FROM t_user_crowd
+	</select>
+	<!-- 根据群编号查询群信息 -->
+	<select id="queryUserCrowdInfo" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.usercrowd.UserCrowd">
+		SELECT
+		uc.easemod_crowe_id AS easemodCroweId,
+		uc.id AS id,
+		uc.user_id AS userId,
+		uc.crowd_background AS crowdBackground,
+		uc.crowd_name AS crowdName,
+		uc.crowd_id AS crowdId,
+		uc.crowd_desc AS
+		crowdDesc,
+		ui.avatar AS avatar,
+		ui.nickname AS crowdUserNickName,
+		uc.create_time createTime,
+		uc.member_count memberCount
+		FROM
+		t_user_crowd
+		uc
+		LEFT JOIN t_user_info ui ON uc.user_id = ui.user_id
+		WHERE
+		uc.crowd_id=#{crowdId,jdbcType=INTEGER}
+	</select>
+	<!-- 根据群编号解散群（假删除） -->
+	<update id="updateUserCrowdState" parameterType="java.lang.Integer">
+		UPDATE
+		t_user_crowd SET crowd_status=0 WHERE crowd_id=#{crowdId}
+	</update>
+	<!-- 根据群编号查询群成员有多少个 -->
+	<select id="queryCrowdCountFakeUser" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+		SELECT COUNT("id") member_count
+		FROM `t_user_crowd_members`
+		LEFT JOIN t_user tu on tu.user_id=t_user_crowd_members.crowd_member_id
+		and tu.type=1
+		WHERE
+		t_user_crowd_members.crowd_pkid = #{id}
+	</select>
+	<select id="queryCrowdCountAllUser" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+		SELECT COUNT("id") member_count
+		FROM `t_user_crowd_members`
+		LEFT JOIN t_user tu on tu.user_id=t_user_crowd_members.crowd_member_id
+		WHERE
+		t_user_crowd_members.crowd_pkid = #{id}
+	</select>
+	<!-- 根据群编号查询群的环信ID -->
+	<select id="queryEasemodCroweId" parameterType="java.lang.Integer"
+		resultType="java.lang.String">
+		SELECT easemod_crowe_id AS easemodCroweId FROM t_user_crowd
+		WHERE
+		crowd_id=#{crowdPkId}
+	</select>
+
+	<select id="queryCrowdMemberList" parameterType="java.lang.Long"
+		resultType="com.moyou.moyouRms.model.user.UserInfo">
+		SELECT ui.city,ui.gender,ui.birthday,ui.avatar AS
+		avatar,ui.push_chat_id AS pushChatId,ui.nickname AS
+		nickname,ui.user_id AS userId FROM t_user_crowd_members cm LEFT JOIN
+		t_user_info ui ON cm.crowd_member_id=ui.user_id LEFT JOIN t_user u ON
+		ui.user_id=u.user_id
+		WHERE crowd_pkid=#{crowdPkId} AND u.TYPE=1
+	</select>
+	<select id="queryContaninsCrowdId" resultType="String">
+		SELECT
+		crowd_id
+		FROM
+		t_user_crowd WHERE crowd_id=#{crowdId}
+	</select>
+	<select id="selectCorwdInfo" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.usercrowd.UserCrowdInfoResult">
+		SELECT
+		tuc.id,
+		tuc.crowd_id crowdId,
+		tuc.crowd_name crowdName,
+		tuc.member_count memberCount,
+		tuc.create_time createTime,
+		tui.nickname,
+		tuc.crowd_status
+		FROM
+		t_user_crowd AS tuc
+		LEFT JOIN t_user_info tui ON tui.user_id = tuc.user_id
+		WHERE
+		tuc.crowd_status = 1
+		and tuc.id=#{id}
+	</select>
+	<select id="selectSortList" resultType="java.lang.Integer">
+		select tucr.recommend_sort from t_user_crowd_recommend tucr
+		where tucr.recommed_status=1 and tucr.recommend_sort>0
+	</select>
+	<select id="queryRecommedCount" resultType="java.lang.Integer">
+	SELECT count(tucr.id) FROM `t_user_crowd_recommend` tucr where tucr.recommed_status=1 
+	</select>
+</mapper>

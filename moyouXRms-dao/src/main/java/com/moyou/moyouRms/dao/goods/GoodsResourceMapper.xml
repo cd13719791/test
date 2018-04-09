@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.goods.GoodsResourceMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.goods.GoodsResource">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="goods_id" property="goodsId" jdbcType="INTEGER" />
+		<result column="media_type" property="mediaType" jdbcType="SMALLINT" />
+		<result column="media_url" property="mediaUrl" jdbcType="VARCHAR" />
+		<result column="resource_sort" property="resourceSort"
+			jdbcType="SMALLINT" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, goods_id, media_type, media_url, resource_sort, update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_goods_resource
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from t_goods_resource
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.goods.GoodsResource">
+		insert into t_goods_resource (id, goods_id, media_type,
+		media_url, resource_sort, update_time
+		)
+		values (#{id,jdbcType=INTEGER}, #{goodsId,jdbcType=INTEGER},
+		#{mediaType,jdbcType=SMALLINT},
+		#{mediaUrl,jdbcType=VARCHAR}, #{resourceSort,jdbcType=SMALLINT}, #{updateTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.goods.GoodsResource">
+		insert into t_goods_resource
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="goodsId != null">
+				goods_id,
+			</if>
+			<if test="mediaType != null">
+				media_type,
+			</if>
+			<if test="mediaUrl != null">
+				media_url,
+			</if>
+			<if test="resourceSort != null">
+				resource_sort,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="goodsId != null">
+				#{goodsId,jdbcType=INTEGER},
+			</if>
+			<if test="mediaType != null">
+				#{mediaType,jdbcType=SMALLINT},
+			</if>
+			<if test="mediaUrl != null">
+				#{mediaUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="resourceSort != null">
+				#{resourceSort,jdbcType=SMALLINT},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.goods.GoodsResource">
+		update t_goods_resource
+		<set>
+			<if test="goodsId != null">
+				goods_id = #{goodsId,jdbcType=INTEGER},
+			</if>
+			<if test="mediaType != null">
+				media_type = #{mediaType,jdbcType=SMALLINT},
+			</if>
+			<if test="mediaUrl != null">
+				media_url = #{mediaUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="resourceSort != null">
+				resource_sort = #{resourceSort,jdbcType=SMALLINT},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.goods.GoodsResource">
+		update t_goods_resource
+		set goods_id = #{goodsId,jdbcType=INTEGER},
+		media_type = #{mediaType,jdbcType=SMALLINT},
+		media_url = #{mediaUrl,jdbcType=VARCHAR},
+		resource_sort = #{resourceSort,jdbcType=SMALLINT},
+		update_time = #{updateTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="queryGoodsPic" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.goods.GoodsResource">
+		SELECT
+		gr.media_url AS mediaUrl,
+		gr.id,
+		gr.resource_sort AS resourceSort FROM t_goods_resource gr WHERE gr.goods_id=#{goodId}
+	</select>
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.shareDetails.ShareDetailsMapper">
+		
+	<!-- 用户说说 -->
+	<select id="queryUserTalk" parameterType="PageBean" 
+	resultType="com.moyou.moyouRms.model.shareDetails.PersonalInfoTalk">
+		SELECT
+			t.id AS talkId,
+			t.city,
+			t.comment_total AS commentTotal,
+			t.create_time AS createTime,
+			t.reward_total AS rewardTotal,
+			t.content AS content,
+			t.support_total AS supportTotal,
+			t.media_type AS mediaType,
+			IFNULL(t.latitude,0) AS latitude,
+			IFNULL(t.longitude,0) AS longitude,
+			tp.state AS supportState,
+			t.relate_talk_id AS relateTalkId,
+			IFNULL(t.relate_state,0) AS relateState,
+			result.user_id AS relateUserId,
+			result.nickname AS relateNickname
+		FROM
+			t_talk t
+		LEFT JOIN t_talk_praise tp ON tp.talk_id = t.id AND tp.user_id = #{myUserId}
+		LEFT JOIN (
+			SELECT
+				ui.nickname,
+				ui.user_id,
+				tta.id
+			FROM
+				t_user_info ui
+			LEFT JOIN t_talk tta ON tta.creator_id = ui.user_id
+		) result ON result.id = t.relate_talk_id
+		WHERE
+			t.creator_id = #{userId} AND t.state = 0 and reference_type=0
+		ORDER BY
+			t.id DESC
+		LIMIT 5
+	</select>
+	
+		<!-- 根据说说的id查询图片 -->
+	<select id="queryPicbyTalkId" parameterType="java.lang.Integer" resultType="com.moyou.moyouRms.model.shareDetails.ResourcePic">
+		SELECT
+			tr.pic_order AS picOrder,
+			tr.url,
+			tr.media_type AS mediaType
+		FROM
+			t_talk_resource tr
+		WHERE
+			tr.talk_id = #{talkId}
+	</select>
+	
+		<!-- 关注列表 -->
+	<select id="queryOtherInterestList" parameterType="PageBean"
+	resultType="com.moyou.moyouRms.model.shareDetails.FollowerOrInterest">
+		SELECT
+			ui.user_id AS userId,
+			ui.nickname,
+			ui.avatar,
+			ui.sig,
+			IFNULL(
+				(
+					SELECT
+						uf1.state
+					FROM
+						t_user_followers uf1
+					WHERE
+						uf1.user_id = uf.user_id
+					AND uf1.followers_user_id = #{conditions.myUserId}
+				),
+				0
+			) state
+		FROM
+			t_user_followers uf
+		LEFT JOIN t_user_info ui ON uf.user_id = ui.user_id
+		WHERE
+			uf.followers_user_id = #{conditions.userId}
+		AND uf.state = 1
+		ORDER BY uf.update_time DESC
+	</select>
+</mapper>

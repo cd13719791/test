@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.report.CommonResourceMapper">
+	<resultMap id="BaseResultMap"
+		type="com.moyou.moyouRms.model.report.CommonResource">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="object_type" property="objectType" jdbcType="SMALLINT" />
+		<result column="object_id" property="objectId" jdbcType="INTEGER" />
+		<result column="media_type" property="mediaType" jdbcType="SMALLINT" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="pic_type" property="picType" jdbcType="SMALLINT" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="pic_order" property="picOrder" jdbcType="SMALLINT" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="picCount" property="picCount" jdbcType="INTEGER" />
+		<result column="extend_data" property="extendData" jdbcType="VARCHAR" />
+		<result column="extend_int" property="extendInt" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, object_type, object_id, media_type, url, pic_type,
+		user_id,extend_int,extend_data,
+		pic_order, create_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_common_resource
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_common_resource
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<!-- 插入举报图片 -->
+	<insert id="insertReporResouce" parameterType="com.moyou.moyouRms.model.report.CommonResource">
+		insert into t_common_resource (id, object_type, object_id,
+		media_type,
+		url, pic_type,
+		user_id, pic_order, create_time
+		)
+		VALUES
+		<foreach collection="list" item="item" index="" open="" close=""
+			separator=",">
+			(#{item.id,jdbcType=INTEGER},
+			#{item.objectType,jdbcType=SMALLINT},
+			#{item.objectId,jdbcType=INTEGER},
+			#{item.mediaType,jdbcType=SMALLINT}, #{item.url,jdbcType=VARCHAR},
+			#{item.picType,jdbcType=SMALLINT},
+			#{item.userId,jdbcType=INTEGER},
+			#{item.picOrder,jdbcType=SMALLINT},
+			#{item.createTime,jdbcType=TIMESTAMP}
+			)
+		</foreach>
+	</insert>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.report.CommonResource">
+		insert into t_common_resource
+		(id, object_type, object_id,
+		media_type, url, pic_type,
+		user_id,
+		pic_order, create_time
+		)
+		values (#{id,jdbcType=INTEGER},
+		#{objectType,jdbcType=SMALLINT},
+		#{objectId,jdbcType=INTEGER},
+		#{mediaType,jdbcType=SMALLINT}, #{url,jdbcType=VARCHAR},
+		#{picType,jdbcType=SMALLINT},
+		#{userId,jdbcType=INTEGER},
+		#{picOrder,jdbcType=SMALLINT},
+		#{createTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.report.CommonResource">
+		insert into t_common_resource
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="objectType != null">
+				object_type,
+			</if>
+			<if test="objectId != null">
+				object_id,
+			</if>
+			<if test="mediaType != null">
+				media_type,
+			</if>
+			<if test="url != null">
+				url,
+			</if>
+			<if test="picType != null">
+				pic_type,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="picOrder != null">
+				pic_order,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="extendInt !=null">
+				extend_int,
+			</if>
+			<if test="extendData !=null">
+				extend_data,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="objectType != null">
+				#{objectType,jdbcType=SMALLINT},
+			</if>
+			<if test="objectId != null">
+				#{objectId,jdbcType=INTEGER},
+			</if>
+			<if test="mediaType != null">
+				#{mediaType,jdbcType=SMALLINT},
+			</if>
+			<if test="url != null">
+				#{url,jdbcType=VARCHAR},
+			</if>
+			<if test="picType != null">
+				#{picType,jdbcType=SMALLINT},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="picOrder != null">
+				#{picOrder,jdbcType=SMALLINT},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="extendInt !=null">
+				#{extendInt,jdbcType=INTEGER},
+			</if>
+			<if test="extendData != null">
+				#{extendData,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.report.CommonResource">
+		update t_common_resource
+		<set>
+			<if test="objectType != null">
+				object_type = #{objectType,jdbcType=SMALLINT},
+			</if>
+			<if test="objectId != null">
+				object_id = #{objectId,jdbcType=INTEGER},
+			</if>
+			<if test="mediaType != null">
+				media_type = #{mediaType,jdbcType=SMALLINT},
+			</if>
+			<if test="url != null">
+				url = #{url,jdbcType=VARCHAR},
+			</if>
+			<if test="picType != null">
+				pic_type = #{picType,jdbcType=SMALLINT},
+			</if>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="picOrder != null">
+				pic_order = #{picOrder,jdbcType=SMALLINT},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.report.CommonResource">
+		update
+		t_common_resource
+		set object_type = #{objectType,jdbcType=SMALLINT},
+		object_id = #{objectId,jdbcType=INTEGER},
+		media_type =
+		#{mediaType,jdbcType=SMALLINT},
+		url = #{url,jdbcType=VARCHAR},
+		pic_type
+		= #{picType,jdbcType=SMALLINT},
+		user_id = #{userId,jdbcType=INTEGER},
+		pic_order = #{picOrder,jdbcType=SMALLINT},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectCommonResourceByObjectId" parameterType="com.moyou.moyouRms.model.report.CommonResource"
+		resultMap="BaseResultMap">
+		SELECT
+		id, object_type, object_id, media_type, url, pic_type,
+		user_id,
+		pic_order, create_time
+		FROM `t_common_resource`
+		where
+		object_id=#{objectId,jdbcType=SMALLINT}
+		AND
+		object_type=#{objectType,jdbcType=SMALLINT}
+	</select>
+	<select id="selectFirstCommonResourceByObjectId" parameterType="com.moyou.moyouRms.model.report.CommonResource"
+		resultMap="BaseResultMap">
+		SELECT
+		id,
+		object_type,
+		object_id,
+		media_type,
+		url,
+		pic_type,
+		user_id,
+		pic_order,
+		create_time,
+		(
+		SELECT
+		Count(id)
+		FROM
+		t_common_resource
+		WHERE
+		object_id=#{objectId,jdbcType=SMALLINT}
+		AND
+		object_type=#{objectType,jdbcType=SMALLINT}
+		<!-- AND media_type=3 -->
+		) picCount
+		FROM
+		`t_common_resource`
+		where
+		object_id=#{objectId,jdbcType=SMALLINT}
+		AND
+		object_type=#{objectType,jdbcType=SMALLINT}
+		limit 0,1
+	</select>
+	<select id="selectCommonResourceByObjectType" parameterType="java.lang.Short"
+		resultMap="BaseResultMap">
+		SELECT
+		id,
+		extend_data,
+		extend_int
+		FROM
+		`t_common_resource`
+		WHERE
+		object_type = #{objectType,jdbcType=SMALLINT}
+	</select>
+	<update id="updateCommonResourceExtendData" parameterType="com.moyou.moyouRms.model.report.CommonResource">
+		update t_common_resource
+		set extend_data = #{extendData,jdbcType=VARCHAR}
+		where object_type=#{objectType,jdbcType=SMALLINT}
+	</update>
+	<update id="updateCommonResourceExtendInt" parameterType="com.moyou.moyouRms.model.report.CommonResource">
+		update t_common_resource
+		set extend_int = #{extendInt,jdbcType=VARCHAR}
+		where object_type=#{objectType,jdbcType=SMALLINT}
+	</update>
+	<select id="selectCommonResourceByObjectTypeForGoldSet" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_common_resource
+		where object_type = #{type,jdbcType=INTEGER}
+	</select>
+</mapper>

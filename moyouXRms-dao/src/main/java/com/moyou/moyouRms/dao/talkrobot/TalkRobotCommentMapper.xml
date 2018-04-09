@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.talkrobot.TalkRobotCommentMapper">
+	<resultMap id="BaseResultMap"
+		type="com.moyou.moyouRms.model.talkrobot.TalkRobotComment">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="talk_id" property="talkId" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="state" property="state" jdbcType="SMALLINT" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="comment_count" property="commentcount"
+			jdbcType="INTEGER" />
+	</resultMap>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.talkrobot.TalkRobotComment"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_talk_robot_comment
+		(talk_id, user_id,
+		content, parent_id, state,
+		create_time,comment_count)
+		values (#{talkId,jdbcType=INTEGER},
+		#{userId,jdbcType=INTEGER},
+		#{content,jdbcType=VARCHAR},
+		#{parentId,jdbcType=INTEGER}, #{state,jdbcType=SMALLINT},
+		#{createTime,jdbcType=TIMESTAMP},#{commentcount,jdbcType=INTEGER} )
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.talkrobot.TalkRobotComment">
+		insert into t_talk_robot_comment
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="talkId != null">
+				talk_id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="talkId != null">
+				#{talkId,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=SMALLINT},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<!-- 查询评论模板集合 -->
+	<select id="queryTalkRobotCommentList" resultType="com.moyou.moyouRms.model.talkrobot.TalkRobotComment"
+		parameterType="PageBean">
+		SELECT id,content,comment_count AS commentcount,state
+		FROM
+		t_talk_robot_comment where state !=3 ORDER BY
+		create_time DESC
+	</select>
+	<!-- 查询所有可用的评论 -->
+	<select id="queryAllTalkRobotCommentList" resultType="com.moyou.moyouRms.model.talkrobot.TalkRobotComment">
+		SELECT id,content,comment_count AS commentcount,state
+		FROM
+		t_talk_robot_comment where state=1 
+	</select>
+	<!-- 查询评论总数 -->
+	<select id="queryCountComment" resultType="java.lang.Integer">
+		SELECT
+		COUNT(id) AS countcomment
+		FROM
+		t_talk_robot_comment WHERE state !=3
+	</select>
+	<update id="updateTalkRobotCommentState" parameterType="com.moyou.moyouRms.model.talkrobot.TalkRobotComment">
+		UPDATE
+		t_talk_robot_comment SET state=#{state} WHERE id=#{id}
+	</update>
+	<update id="updateTalkRobotCommentUseCount" parameterType="java.lang.Integer">
+		UPDATE
+		t_talk_robot_comment SET comment_count=comment_count+1 WHERE id=#{talkRobotCommentId}
+	</update>
+		<select id="queryTalkComment"  resultType="com.moyou.moyouRms.model.statistics.Robot">
+		SELECT COUNT(id) AS commentY,(SELECT COUNT(id) FROM t_talk_robot_comment
+		WHERE state=1 OR state=2) AS commentN FROM t_talk_robot_comment WHERE
+		state=1
+	</select>
+</mapper>

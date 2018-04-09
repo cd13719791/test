@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.feedback.FeedbackMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.feedback.Feedback">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="form_app" property="formApp" jdbcType="SMALLINT" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="moyou_version" property="moyouVersion"
+			jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, content, form_app, phone, email,
+		moyou_version, state,
+		create_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_feedback
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_feedback
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<!-- 添加一条意见反馈的回复 -->
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.feedback.Feedback">
+		insert into t_feedback (
+		user_id, content,
+		form_app, phone, email,
+		moyou_version,
+		create_time,state,account
+		)
+		values (
+		#{userId,jdbcType=INTEGER},
+		#{content,jdbcType=VARCHAR},
+		#{formApp,jdbcType=SMALLINT},
+		#{phone,jdbcType=VARCHAR},
+		#{email,jdbcType=VARCHAR},
+		#{moyouVersion,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},#{state,jdbcType=INTEGER},#{account,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.feedback.Feedback">
+		insert into t_feedback
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="formApp != null">
+				form_app,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="email != null">
+				email,
+			</if>
+			<if test="moyouVersion != null">
+				moyou_version,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="account != null">
+				account,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="formApp != null">
+				#{formApp,jdbcType=SMALLINT},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="moyouVersion != null">
+				#{moyouVersion,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=SMALLINT},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="account != null">
+				#{account,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.feedback.Feedback">
+		update t_feedback
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="formApp != null">
+				form_app = #{formApp,jdbcType=SMALLINT},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="moyouVersion != null">
+				moyou_version = #{moyouVersion,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=SMALLINT},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="account != null">
+				account= #{account,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.feedback.Feedback">
+		update t_feedback
+		set user_id = #{userId,jdbcType=INTEGER},
+		content =
+		#{content,jdbcType=VARCHAR},
+		form_app = #{formApp,jdbcType=SMALLINT},
+		phone = #{phone,jdbcType=VARCHAR},
+		email = #{email,jdbcType=VARCHAR},
+		moyou_version = #{moyouVersion,jdbcType=VARCHAR},
+		state =
+		#{state,jdbcType=SMALLINT},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		account= #{account,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 查询意见反馈集合 -->
+	<select id="selectFeedBackList" parameterType="PageBean"
+		resultType="com.moyou.moyouRms.model.feedback.Feedback">
+		SELECT f.id, f.user_id as userId, f.content,f.email as email,f.state
+		as state,f.create_time as createTime,
+		f.form_app as
+		formApp,f.moyou_version as moyouVersion,ui.nickname as
+		nickname FROM
+		t_feedback f LEFT
+		JOIN t_user_info ui ON
+		f.user_id=ui.user_id
+		<where>
+			<if test="conditions.state!=null and conditions.state!=''">
+				f.state =#{conditions.state}
+			</if>
+		</where>
+		ORDER BY f.create_time DESC
+	</select>
+	<!-- 根据意见反馈主键ID查询意见反馈详情 -->
+	<select id="selectFeedBackInfo" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.feedback.Feedback">
+		SELECT
+		f.user_id AS userId,
+		f.id,
+		f.content,
+		f.create_time AS
+		createTime,
+		f.account,
+		ui.avatar,
+		ui.nickname,
+		f.state
+		<!-- , -->
+		<!-- ms.msg_content AS -->
+		<!-- msgContent -->
+		FROM
+		t_feedback f
+		<!-- LEFT JOIN -->
+		<!-- t_msg_system ms -->
+		<!-- ON f.id=ms.mode_id -->
+		LEFT JOIN
+		t_user u
+		ON f.user_id = u.user_id
+		LEFT JOIN
+		t_user_info ui
+		ON
+		u.user_id = ui.user_id
+		WHERE f.id=#{feedbackId}
+	</select>
+	<!-- 根据意见反馈的主键ID 修改它的处理状态 -->
+	<update id="updateFeedBackState" parameterType="com.moyou.moyouRms.model.feedback.Feedback">
+		UPDATE t_feedback
+		SET state=2 WHERE id=#{id,jdbcType=INTEGER}
+	</update>
+	<select id="queryCountYFeedBack" resultType="com.moyou.moyouRms.model.statistics.UserStatistics">
+		SELECT COUNT(id) AS
+		countYFeedBack,(SELECT COUNT(id) FROM t_feedback WHERE
+		state=1) AS
+		countNFeedBack FROM t_feedback WHERE state=2
+	</select>
+</mapper>

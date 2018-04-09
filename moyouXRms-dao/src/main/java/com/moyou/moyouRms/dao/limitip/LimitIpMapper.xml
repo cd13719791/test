@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.limitip.LimitIpMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.limitip.LimitIp">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="ip_address" property="ipAddress" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="mode_type" property="modeType" jdbcType="INTEGER" />
+		<result column="extend_data" property="extendData" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, ip_address as ipAddress, state,create_time as
+		createTime,update_time as updateTime
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_limit_ip
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_limit_ip
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.limitip.LimitIp"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_limit_ip (
+		ip_address, state,create_time,update_time,extend_data
+		)
+		values (
+		#{ipAddress,jdbcType=VARCHAR},
+		#{state,jdbcType=INTEGER},NOW(),NOW(),#{extendData,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.limitip.LimitIp">
+		insert into t_limit_ip
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="ipAddress != null">
+				ip_address,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="modeType != null">
+				mode_type,
+			</if>
+			<if test="extendData != null">
+				extend_data,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="ipAddress != null">
+				#{ipAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="modeType != null">
+				#{modeType,jdbcType=INTEGER},
+			</if>
+			<if test="extendData != null">
+				#{extendData,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.limitip.LimitIp">
+		update t_limit_ip
+		<set>
+			<if test="ipAddress != null">
+				ip_address = #{ipAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="extendData != null">
+				extend_data = #{extendData,jdbcType=VARCHAR},
+			</if>
+			update_time=#{updateTime,jdbcType=TIMESTAMP}
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.limitip.LimitIp">
+		update t_limit_ip
+		set ip_address = #{ipAddress,jdbcType=VARCHAR},
+		state =
+		#{state,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="queryLimitIpList" parameterType="PageBean"
+		resultType="com.moyou.moyouRms.model.limitip.LimitIp">
+		SELECT
+		id, ip_address AS ipAddress, state,create_time AS
+		createTime,update_time AS updateTime
+		FROM t_limit_ip WHERE state=1 and
+		mode_type=1
+		ORDER BY create_time DESC
+	</select>
+	<select id="queryByIpAddress" parameterType="java.lang.String"
+		resultType="com.moyou.moyouRms.model.limitip.LimitIp">
+		select
+		ip_address as ipAddress
+		from t_limit_ip where state=1
+		and
+		ip_address=#{ipAddress,jdbcType=VARCHAR} and mode_type=1
+	</select>
+<!-- 	前台ip限制查询 -->
+	<select id="queryLimitIpListByType" parameterType="PageBean" resultMap="BaseResultMap">
+		SELECT
+		id, ip_address, state,create_time,update_time,extend_data
+		FROM t_limit_ip WHERE state=1 and
+		mode_type=#{conditions.type,jdbcType=INTEGER}
+		ORDER BY create_time DESC
+	
+	</select>
+</mapper>

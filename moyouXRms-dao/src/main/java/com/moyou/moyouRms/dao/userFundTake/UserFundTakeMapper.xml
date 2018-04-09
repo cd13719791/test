@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.userFundTake.UserFundTakeMapper">
+	<resultMap id="BaseResultMap"
+		type="com.moyou.moyouRms.model.userFundTake.UserFundTake">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="take_fund" property="takeFund" jdbcType="DECIMAL" />
+		<result column="audit_status" property="auditStatus" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+		<result column="auditor_id" property="auditorId" jdbcType="VARCHAR" />
+		<result column="auditor_name" property="auditorName" jdbcType="VARCHAR" />
+		<result column="weixin" property="weixin" jdbcType="VARCHAR" />
+		<result column="reason_text" property="reasonText" jdbcType="VARCHAR" />		
+		<result column="moyou_id" property="moyouId" jdbcType="VARCHAR" />
+		<result column="nickname" property="nickname" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, take_fund, audit_status, create_time,
+		audit_time,
+		auditor_id, auditor_name
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_user_fund_take
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_user_fund_take
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.userFundTake.UserFundTake">
+		insert into t_user_fund_take
+		(id, user_id, take_fund,
+		audit_status, create_time, audit_time,
+		auditor_id, auditor_name)
+		values (#{id,jdbcType=INTEGER},
+		#{userId,jdbcType=INTEGER},
+		#{takeFund,jdbcType=DECIMAL},
+		#{auditStatus,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+		#{auditTime,jdbcType=TIMESTAMP},
+		#{auditorId,jdbcType=VARCHAR},
+		#{auditorName,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.userFundTake.UserFundTake">
+		insert into t_user_fund_take
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="takeFund != null">
+				take_fund,
+			</if>
+			<if test="auditStatus != null">
+				audit_status,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="auditTime != null">
+				audit_time,
+			</if>
+			<if test="auditorId != null">
+				auditor_id,
+			</if>
+			<if test="auditorName != null">
+				auditor_name,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="takeFund != null">
+				#{takeFund,jdbcType=DECIMAL},
+			</if>
+			<if test="auditStatus != null">
+				#{auditStatus,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="auditTime != null">
+				#{auditTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="auditorId != null">
+				#{auditorId,jdbcType=VARCHAR},
+			</if>
+			<if test="auditorName != null">
+				#{auditorName,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.userFundTake.UserFundTake">
+		update t_user_fund_take
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="takeFund != null">
+				take_fund = #{takeFund,jdbcType=DECIMAL},
+			</if>
+			<if test="auditStatus != null">
+				audit_status = #{auditStatus,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="auditTime != null">
+				audit_time = #{auditTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="auditorId != null">
+				auditor_id = #{auditorId,jdbcType=VARCHAR},
+			</if>
+			<if test="auditorName != null">
+				auditor_name = #{auditorName,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.userFundTake.UserFundTake">
+		update
+		t_user_fund_take
+		set user_id = #{userId,jdbcType=INTEGER},
+		take_fund =
+		#{takeFund,jdbcType=DECIMAL},
+		audit_status =
+		#{auditStatus,jdbcType=INTEGER},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		audit_time =
+		#{auditTime,jdbcType=TIMESTAMP},
+		auditor_id =
+		#{auditorId,jdbcType=VARCHAR},
+		auditor_name =
+		#{auditorName,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectUserFundTakeByState" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		SELECT
+		tuft.id,
+		tuft.user_id,
+		tuft.take_fund,
+		tuft.audit_status,
+		tuft.create_time,
+		tuft.audit_time,
+		tuft.auditor_id,
+		tuft.auditor_name,
+		tui.moyou_id,
+		tui.nickname,
+		tubd.bind_data2 AS weixin,
+		scr.reason_text
+		FROM
+		`t_user_fund_take` tuft
+		LEFT JOIN t_user_info tui ON tui.user_id = tuft.user_id
+		LEFT JOIN t_user_bind_data tubd ON tuft.user_id = tubd.user_id
+		LEFT JOIN sys_common_reason scr on scr.mode_id=tuft.id and scr.mode_type=1
+		AND tubd.bind_type = 1
+		where
+		<if test="conditions.state ==0 ">
+			tuft.audit_status =1
+		</if>
+		<if test="conditions.state ==1 ">
+			tuft.audit_status in (2,3)
+		</if>
+		<if test="conditions.auditStatus !=null and conditions.auditStatus!=''">
+			and tuft.audit_status =#{conditions.auditStatus,jdbcType=INTEGER}
+		</if>
+		order by tuft.create_time,tuft.audit_time desc
+	</select>
+</mapper>

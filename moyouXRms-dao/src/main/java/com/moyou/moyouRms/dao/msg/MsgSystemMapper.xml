@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.msg.MsgSystemMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.msg.MsgSystem">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="msg_content" property="msgContent" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="ranges" property="ranges" jdbcType="INTEGER" />
+		<result column="send_user_id" property="sendUserId" jdbcType="VARCHAR" />
+		<result column="receive_user_id" property="receiveUserId"
+			jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="short_msg_content" property="shortMsgContent"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, msg_content, type, ranges, send_user_id, receive_user_id, state,
+		create_time,
+		update_time, title, short_msg_content
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from t_msg_system
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from t_msg_system
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.msg.MsgSystem">
+		insert into t_msg_system (id, msg_content, type,
+		ranges, send_user_id, receive_user_id,
+		state, create_time, update_time,
+		title, short_msg_content)
+		values (#{id,jdbcType=VARCHAR}, #{msgContent,jdbcType=VARCHAR},
+		#{type,jdbcType=INTEGER},
+		#{ranges,jdbcType=INTEGER}, #{sendUserId,jdbcType=VARCHAR}, #{receiveUserId,jdbcType=VARCHAR},
+		#{state,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{title,jdbcType=VARCHAR}, #{shortMsgContent,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.msg.MsgSystem">
+		insert into t_msg_system
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="msgContent != null">
+				msg_content,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="ranges != null">
+				ranges,
+			</if>
+			<if test="sendUserId != null">
+				send_user_id,
+			</if>
+			<if test="receiveUserId != null">
+				receive_user_id,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="shortMsgContent != null">
+				short_msg_content,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="msgContent != null">
+				#{msgContent,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="ranges != null">
+				#{ranges,jdbcType=INTEGER},
+			</if>
+			<if test="sendUserId != null">
+				#{sendUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="receiveUserId != null">
+				#{receiveUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="shortMsgContent != null">
+				#{shortMsgContent,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.msg.MsgSystem">
+		update t_msg_system
+		<set>
+			<if test="msgContent != null">
+				msg_content = #{msgContent,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="ranges != null">
+				ranges = #{ranges,jdbcType=INTEGER},
+			</if>
+			<if test="sendUserId != null">
+				send_user_id = #{sendUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="receiveUserId != null">
+				receive_user_id = #{receiveUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="shortMsgContent != null">
+				short_msg_content = #{shortMsgContent,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.msg.MsgSystem">
+		update t_msg_system
+		set msg_content = #{msgContent,jdbcType=VARCHAR},
+		type = #{type,jdbcType=INTEGER},
+		ranges = #{ranges,jdbcType=INTEGER},
+		send_user_id = #{sendUserId,jdbcType=VARCHAR},
+		receive_user_id = #{receiveUserId,jdbcType=VARCHAR},
+		state = #{state,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		update_time = #{updateTime,jdbcType=TIMESTAMP},
+		title = #{title,jdbcType=VARCHAR},
+		short_msg_content = #{shortMsgContent,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 查询一条系统消息 -->
+	<select id="querySystemMsgItem" parameterType="java.lang.String"
+		resultType="com.moyou.moyouRms.model.msg.MsgItemReturn">
+			SELECT
+				ms.short_msg_content AS shortMsgContent,
+				ms.create_time AS updateTime,
+				ms.state
+			FROM
+				t_msg_system ms
+			WHERE
+				ms.receive_user_id = #{userId,jdbcType=VARCHAR}
+			ORDER BY
+				ms.update_time DESC
+			LIMIT 1
+	</select>
+	
+	<!-- 系统消息列表 -->
+	<select id="querySystemMsgList" parameterType="PageBean" resultType="java.util.Map">
+		SELECT
+			muc.msg_content AS msgContent,
+			muc.update_time AS updateTime,
+			muc.title,
+			muc.type
+		FROM
+			t_msg_user_comment muc
+		LEFT JOIN t_user u ON u.id = muc.send_user_id
+		LEFT JOIN t_user_info ui ON ui.user_id = muc.send_user_id
+		WHERE
+			muc.receive_user_id = #{conditions.userid,jdbcType=VARCHAR}
+		ORDER BY
+			muc.update_time DESC
+	</select>
+</mapper>

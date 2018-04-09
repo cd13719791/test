@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moyou.moyouRms.dao.liveshow.LiveUserConvertDao">
+    <!-- LiveUserConvert的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_LiveUserConvert_Map" type="com.moyou.moyouRms.model.liveshow.LiveUserConvert">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="nickname" property="nickname" />
+        <result column="moyou_id" property="moyouId" />
+        <result column="weixin_id" property="weixinId" />
+        <result column="gold_num" property="goldNum" />
+        <result column="money" property="money" />
+        <result column="create_time" property="createTime" />
+        <result column="state" property="state" />
+        <result column="operation_user" property="operationUser" />
+        <result column="operation_time" property="operationTime" />
+        <result column="operation_remark" property="operationRemark" />
+    </resultMap>
+
+	   <!-- Assist用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="Assist">
+        <where>
+            <foreach collection="require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+	   <!-- updateAssist用于更新数据的使用它拓展自Assist,用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="updateAssist">
+        <where>
+            <foreach collection="assist.require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+    <!-- 数据库中表名为:live_user_convert的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="live_user_convert_Column">
+        live_user_convert.id as id
+        ,live_user_convert.user_id as user_id
+        ,live_user_convert.nickname as nickname
+        ,live_user_convert.moyou_id as moyou_id
+        ,live_user_convert.weixin_id as weixin_id
+        ,live_user_convert.gold_num as gold_num
+        ,live_user_convert.money as money
+        ,live_user_convert.create_time as create_time
+        ,live_user_convert.state as state
+        ,live_user_convert.operation_user as operation_user
+        ,live_user_convert.operation_time as operation_time
+        ,live_user_convert.operation_remark as operation_remark
+    </sql>
+
+    <!--获得类名为:LiveUserConvert对应的数据库表的数据总行数 -->
+    <select id="getLiveUserConvertRowCount" parameterType="com.moyou.moyouRms.interceptor.Assist" resultType="java.lang.Long">
+        select count(id) from live_user_convert
+        <if test="require!=null"><include refid="Assist" /></if>
+    </select>
+    <!-- 获得类名为:LiveUserConvert对应数据库中表的数据集合 -->
+    <select id="selectLiveUserConvert" parameterType="com.moyou.moyouRms.interceptor.Assist"  resultMap="result_LiveUserConvert_Map">
+        select  <if test="distinct !=null">${distinct}</if>
+        <choose>
+            <when test="resultColumn!=null">${resultColumn}</when>
+            <otherwise>
+        <include refid="live_user_convert_Column" /> 
+            </otherwise>
+        </choose>
+        from live_user_convert
+        <choose>
+            <when test="rowSize ==null">
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+            </when>
+            <otherwise>
+                inner join
+                (
+                SELECT id as primary_key FROM live_user_convert
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+                <choose>
+                    <when test="startRow !=null and rowSize !=null">LIMIT #{startRow},#{rowSize} </when>
+                    <when test="rowSize !=null">LIMIT #{rowSize}</when>
+                 </choose>
+                 ) as tmp
+                 on tmp.primary_key=live_user_convert.id
+            </otherwise>
+        </choose>
+    </select> 
+
+    <!-- 获得一个LiveUserConvert对象,以参数LiveUserConvert对象中不为空的属性作为条件进行查询-->
+    <select id="selectLiveUserConvertByObj" parameterType="com.moyou.moyouRms.model.liveshow.LiveUserConvert" resultMap="result_LiveUserConvert_Map">
+        select 
+            <include refid="live_user_convert_Column" /> 
+        from live_user_convert
+        <where>
+            <if test="operationRemark != null "> and live_user_convert.operation_remark = #{operationRemark}</if>
+            <if test="operationTime != null "> and live_user_convert.operation_time = #{operationTime}</if>
+            <if test="operationUser != null "> and live_user_convert.operation_user = #{operationUser}</if>
+            <if test="state != null "> and live_user_convert.state = #{state}</if>
+            <if test="createTime != null "> and live_user_convert.create_time = #{createTime}</if>
+            <if test="money != null "> and live_user_convert.money = #{money}</if>
+            <if test="goldNum != null "> and live_user_convert.gold_num = #{goldNum}</if>
+            <if test="weixinId != null "> and live_user_convert.weixin_id = #{weixinId}</if>
+            <if test="moyouId != null "> and live_user_convert.moyou_id = #{moyouId}</if>
+            <if test="nickname != null "> and live_user_convert.nickname = #{nickname}</if>
+            <if test="userId != null "> and live_user_convert.user_id = #{userId}</if>
+            <if test="id != null "> and live_user_convert.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过LiveUserConvert的id获得对应数据库中表的数据对象-->
+    <select id="selectLiveUserConvertById" parameterType="java.lang.Integer" resultMap="result_LiveUserConvert_Map">
+        select 
+            <include refid="live_user_convert_Column" /> 
+        from live_user_convert
+        where live_user_convert.id = #{id}
+    </select> 
+
+    <!-- 将LiveUserConvert插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertLiveUserConvert" parameterType="com.moyou.moyouRms.model.liveshow.LiveUserConvert" keyProperty="id" useGeneratedKeys="true">
+        insert into live_user_convert(id,user_id,nickname,moyou_id,weixin_id,gold_num,money,create_time,state,operation_user,operation_time,operation_remark) 
+        values(#{id},#{userId},#{nickname},#{moyouId},#{weixinId},#{goldNum},#{money},#{createTime},#{state},#{operationUser},#{operationTime},#{operationRemark})
+    </insert>
+
+    <!-- 将LiveUserConvert中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyLiveUserConvert" parameterType="com.moyou.moyouRms.model.liveshow.LiveUserConvert">
+        insert into live_user_convert
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="nickname != null">nickname,</if>
+            <if test="moyouId != null">moyou_id,</if>
+            <if test="weixinId != null">weixin_id,</if>
+            <if test="goldNum != null">gold_num,</if>
+            <if test="money != null">money,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="state != null">state,</if>
+            <if test="operationUser != null">operation_user,</if>
+            <if test="operationTime != null">operation_time,</if>
+            <if test="operationRemark != null">operation_remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="userId != null"> #{userId},</if>
+            <if test="nickname != null"> #{nickname},</if>
+            <if test="moyouId != null"> #{moyouId},</if>
+            <if test="weixinId != null"> #{weixinId},</if>
+            <if test="goldNum != null"> #{goldNum},</if>
+            <if test="money != null"> #{money},</if>
+            <if test="createTime != null"> #{createTime},</if>
+            <if test="state != null"> #{state},</if>
+            <if test="operationUser != null"> #{operationUser},</if>
+            <if test="operationTime != null"> #{operationTime},</if>
+            <if test="operationRemark != null"> #{operationRemark},</if>
+        </trim>
+    </insert>
+
+    <!-- 通过LiveUserConvert的id将数据库表中对应的数据删除-->
+    <delete id="deleteLiveUserConvertById" parameterType="java.lang.Integer">
+        delete from live_user_convert
+        where id = #{id}
+    </delete>
+
+    <!-- 通过辅助工具Assist中的条件将LiveUserConvert对应的数据库表的数据删除-->
+    <delete id="deleteLiveUserConvert" parameterType="com.moyou.moyouRms.interceptor.Assist">
+        delete from live_user_convert
+        <if test="require!=null"><include refid="Assist" /></if>
+    </delete>
+
+    <!-- 通过LiveUserConvert的id将LiveUserConvert的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateLiveUserConvertById" parameterType="com.moyou.moyouRms.model.liveshow.LiveUserConvert">
+        update live_user_convert set
+            user_id=#{userId}
+            ,nickname=#{nickname}
+            ,moyou_id=#{moyouId}
+            ,weixin_id=#{weixinId}
+            ,gold_num=#{goldNum}
+            ,money=#{money}
+            ,create_time=#{createTime}
+            ,state=#{state}
+            ,operation_user=#{operationUser}
+            ,operation_time=#{operationTime}
+            ,operation_remark=#{operationRemark}
+        where id=#{id}
+    </update>
+
+    <!-- 通过LiveUserConvert的id将LiveUserConvert中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyLiveUserConvertById" parameterType="com.moyou.moyouRms.model.liveshow.LiveUserConvert">
+        update live_user_convert
+        <set>
+            <if test="userId != null">
+                user_id=#{userId},
+            </if>
+            <if test="nickname != null">
+                nickname=#{nickname},
+            </if>
+            <if test="moyouId != null">
+                moyou_id=#{moyouId},
+            </if>
+            <if test="weixinId != null">
+                weixin_id=#{weixinId},
+            </if>
+            <if test="goldNum != null">
+                gold_num=#{goldNum},
+            </if>
+            <if test="money != null">
+                money=#{money},
+            </if>
+            <if test="createTime != null">
+                create_time=#{createTime},
+            </if>
+            <if test="state != null">
+                state=#{state},
+            </if>
+            <if test="operationUser != null">
+                operation_user=#{operationUser},
+            </if>
+            <if test="operationTime != null">
+                operation_time=#{operationTime},
+            </if>
+            <if test="operationRemark != null">
+                operation_remark=#{operationRemark},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将LiveUserConvert中的数据更新到数据库对应的表中,包括值为null的数据-->
+    <update id="updateLiveUserConvert" parameterType="map">
+        update live_user_convert
+        <set>
+                id=#{enti.id},
+                user_id=#{enti.userId},
+                nickname=#{enti.nickname},
+                moyou_id=#{enti.moyouId},
+                weixin_id=#{enti.weixinId},
+                gold_num=#{enti.goldNum},
+                money=#{enti.money},
+                create_time=#{enti.createTime},
+                state=#{enti.state},
+                operation_user=#{enti.operationUser},
+                operation_time=#{enti.operationTime},
+                operation_remark=#{enti.operationRemark},
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将LiveUserConvert中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyLiveUserConvert" parameterType="map">
+        update live_user_convert
+        <set>
+            <if test="enti.id != null">
+                id=#{enti.id},
+            </if>
+            <if test="enti.userId != null">
+                user_id=#{enti.userId},
+            </if>
+            <if test="enti.nickname != null">
+                nickname=#{enti.nickname},
+            </if>
+            <if test="enti.moyouId != null">
+                moyou_id=#{enti.moyouId},
+            </if>
+            <if test="enti.weixinId != null">
+                weixin_id=#{enti.weixinId},
+            </if>
+            <if test="enti.goldNum != null">
+                gold_num=#{enti.goldNum},
+            </if>
+            <if test="enti.money != null">
+                money=#{enti.money},
+            </if>
+            <if test="enti.createTime != null">
+                create_time=#{enti.createTime},
+            </if>
+            <if test="enti.state != null">
+                state=#{enti.state},
+            </if>
+            <if test="enti.operationUser != null">
+                operation_user=#{enti.operationUser},
+            </if>
+            <if test="enti.operationTime != null">
+                operation_time=#{enti.operationTime},
+            </if>
+            <if test="enti.operationRemark != null">
+                operation_remark=#{enti.operationRemark},
+            </if>
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+	<select id="selectUserConvertCount" resultType="java.util.Map">
+	SELECT
+	(
+		SELECT
+			count(id)
+		FROM
+			live_user_convert
+		WHERE
+			TO_DAYS(create_time) = TO_DAYS(now())
+	) toDayCount,
+	(
+		SELECT
+			IFNULL(sum(money), 0)
+		FROM
+			live_user_convert
+		WHERE
+			TO_DAYS(create_time) = TO_DAYS(now())
+	) toDaySum,
+	(
+		SELECT
+			count(id)
+		FROM
+			live_user_convert
+		WHERE
+			state = 0
+	) weichuli,
+	(
+		SELECT
+			IFNULL(sum(money), 0)
+		FROM
+			live_user_convert
+		WHERE
+			state = 0
+	) weichuliSum,
+	(
+		SELECT
+			count(id)
+		FROM
+			live_user_convert
+		WHERE
+			state = 1
+	) yichuli,
+	(
+		SELECT
+			IFNULL(sum(money), 0)
+		FROM
+			live_user_convert
+		WHERE
+			state = 1
+	) yichuliSum
+	</select>
+</mapper>

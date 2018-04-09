@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.usercrowd.UserCrowdMembersMapper">
+	<resultMap id="BaseResultMap"
+		type="com.moyou.moyouRms.model.usercrowd.UserCrowdMembers">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="crowd_member_id" property="crowdMemberId"
+			jdbcType="INTEGER" />
+		<result column="crowd_pkid" property="crowdPkid" jdbcType="INTEGER" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="message_reminding" property="messageReminding"
+			jdbcType="SMALLINT" />
+		<result column="role_type" property="roleType" jdbcType="SMALLINT" />
+		
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, crowd_member_id, crowd_pkid, update_time,
+		message_reminding
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_user_crowd_members
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_user_crowd_members
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<!-- 添加群成员 -->
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowdMembers"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_user_crowd_members
+		(crowd_member_id, crowd_pkid,
+		update_time,message_reminding,role_type)
+		values
+		(#{crowdMemberId,jdbcType=INTEGER},
+		#{crowdPkid,jdbcType=INTEGER},
+		#{updateTime,jdbcType=TIMESTAMP},#{messageReminding,jdbcType=SMALLINT},#{roleType,jdbcType=SMALLINT})
+	</insert>
+
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowdMembers">
+		insert into t_user_crowd_members
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="crowdMemberId != null">
+				crowd_member_id,
+			</if>
+			<if test="crowdPkid != null">
+				crowd_pkid,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="messageReminding != null">
+				message_reminding,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="crowdMemberId != null">
+				#{crowdMemberId,jdbcType=INTEGER},
+			</if>
+			<if test="crowdPkid != null">
+				#{crowdPkid,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="messageReminding != null">
+				#{messageReminding,jdbcType=SMALLINT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowdMembers">
+		update t_user_crowd_members
+		<set>
+			<if test="crowdMemberId != null">
+				crowd_member_id = #{crowdMemberId,jdbcType=INTEGER},
+			</if>
+			<if test="crowdPkid != null">
+				crowd_pkid = #{crowdPkid,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="messageReminding != null">
+				message_reminding =
+				#{messageReminding,jdbcType=SMALLINT},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowdMembers">
+		update
+		t_user_crowd_members
+		set crowd_member_id =
+		#{crowdMemberId,jdbcType=INTEGER},
+		crowd_pkid =
+		#{crowdPkid,jdbcType=INTEGER},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		message_reminding =
+		#{messageReminding,jdbcType=SMALLINT}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 根据群编号查询群信息 -->
+	<select id="queryUserCrowdMembersList" resultType="com.moyou.moyouRms.model.user.UserInfo"
+		parameterType="PageBean">
+		SELECT
+		ui.user_id userId,
+		ui.city AS city,
+		ui.avatar AS avatar,
+		ui.nickname AS nickname,
+		ui.gender AS gender,
+		ui.birthday AS birthday,
+		cm.update_time AS updateTime,
+		ui.push_chat_id pushChatId,
+		ui.moyou_id AS moyouId
+		FROM
+		t_user_crowd_members cm
+		LEFT JOIN t_user_info ui ON cm.crowd_member_id = ui.user_id
+		<where>
+			<if test="conditions.id !=null and conditions.id!= ''">
+				cm.crowd_pkid=#{conditions.id}
+			</if>
+		</where>
+		order BY cm.update_time
+	</select>
+	<!-- 根据用户ID查询该用户是否已经加入该群了 -->
+
+	<select id="queryIsNot" parameterType="java.lang.Integer">
+		SELECT * FROM
+		t_user_crowd_members WHERE crowd_member_id=#{userId} AND
+		crowd_pkid=#{crowdPkid} LIMIT 1
+	</select>
+	<!-- 根据群编号查询这个群的所有成员ID -->
+	<select id="queryMemberCrowd" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.usercrowd.UserCrowdMembers">
+		SELECT cm.crowd_member_id AS crowdMemberId ,crowd_pkid as
+		crowdPkid,cm.role_type as roleType
+		FROM t_user_crowd_members cm
+		WHERE
+		cm.crowd_pkid=#{crowdPkid} AND cm.role_type !=1
+	</select>
+	<!--据群Id删除群成员 -->
+	<delete id="deleteMemberCrowd" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowdMembers">
+		DELETE
+		FROM
+		t_user_crowd_members
+		WHERE crowd_member_id= #{userId,jdbcType=INTEGER}
+		and crowd_pkid=#{id,jdbcType=INTEGER}
+	</delete>
+	<!-- 根据群ID查询群成员ID以及成员环信ID -->
+	<select id="queryUserIdAndEasemodCroweId" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.user.UserInfo">
+		SELECT
+		ui.user_id AS userId,
+		ui.push_chat_id AS pushChatId,
+		cm.role_type AS roleType
+		FROM
+		t_user_crowd_members cm
+		LEFT JOIN
+		t_user_info ui ON cm.crowd_member_id = ui.user_id
+		left JOIN t_user tu
+		on tu.user_id=ui.user_id WHERE
+		cm.crowd_pkid=#{id} AND cm.role_type !=1
+		and tu.type=1
+	</select>
+	<!-- 查询群总用户数( 真实用户) -->
+	<select id="queryUserCrowdCount" resultType="java.lang.Integer">
+		SELECT
+		SUM(member_count) AS crowdMemberId FROM t_user_crowd WHERE
+		crowd_status=1
+	</select>
+</mapper>

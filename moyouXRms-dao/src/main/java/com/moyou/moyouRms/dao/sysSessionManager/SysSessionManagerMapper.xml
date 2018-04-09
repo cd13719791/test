@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.moyou.moyouRms.dao.sysSessionManager.SysSessionManagerMapper">
+	<resultMap id="BaseResultMap"
+		type="com.moyou.moyouRms.model.sysSessionManager.SysSessionManager">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="session_id" property="sessionId" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="login_name" property="loginName" jdbcType="VARCHAR" />
+		<result column="online_time" property="onlineTime" jdbcType="INTEGER" />
+		<result column="online_type" property="onlineType" jdbcType="INTEGER" />
+		<result column="set_time" property="setTime" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, session_id, create_time, login_name, online_time,
+		online_type,set_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from sys_session_manager
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		sys_session_manager
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.moyou.moyouRms.model.sysSessionManager.SysSessionManager">
+		insert into sys_session_manager (id, session_id,
+		create_time,
+		login_name, online_time, online_type,set_time
+		)
+		values
+		(#{id,jdbcType=INTEGER}, #{sessionId,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{loginName,jdbcType=VARCHAR},
+		#{onlineTime,jdbcType=INTEGER},
+		#{onlineType,jdbcType=INTEGER},#{setTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.moyou.moyouRms.model.sysSessionManager.SysSessionManager">
+		insert into sys_session_manager
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="sessionId != null">
+				session_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="loginName != null">
+				login_name,
+			</if>
+			<if test="onlineTime != null">
+				online_time,
+			</if>
+			<if test="onlineType != null">
+				online_type,
+			</if>
+			<if test="setTime != null">
+				set_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="sessionId != null">
+				#{sessionId,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="loginName != null">
+				#{loginName,jdbcType=VARCHAR},
+			</if>
+			<if test="onlineTime != null">
+				#{onlineTime,jdbcType=INTEGER},
+			</if>
+			<if test="onlineType != null">
+				#{onlineType,jdbcType=INTEGER},
+			</if>
+			<if test="setTime != null">
+				#{setTime,jdbcType=TIMESTAMP}
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.moyou.moyouRms.model.sysSessionManager.SysSessionManager">
+		update sys_session_manager
+		<set>
+			<if test="sessionId != null">
+				session_id = #{sessionId},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="loginName != null">
+				login_name = #{loginName,jdbcType=VARCHAR},
+			</if>
+			<if test="onlineTime != null">
+				online_time = #{onlineTime,jdbcType=INTEGER},
+			</if>
+			<if test="onlineType != null">
+				online_type = #{onlineType,jdbcType=INTEGER},
+			</if>
+			<if test="setTime != null">
+				set_time = #{setTime,jdbcType=TIMESTAMP}
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.moyou.moyouRms.model.sysSessionManager.SysSessionManager">
+		update sys_session_manager
+		set session_id =
+		#{sessionId,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		login_name =
+		#{loginName,jdbcType=VARCHAR},
+		online_time =
+		#{onlineTime,jdbcType=TIMESTAMP},
+		online_type =
+		#{onlineType,jdbcType=INTEGER},
+		set_time = #{setTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByLoginName"
+		parameterType="com.moyou.moyouRms.model.sysSessionManager.SysSessionManager">
+		update sys_session_manager
+		<set>
+			<if test="sessionId != null">
+				session_id = #{sessionId},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="onlineTime != null">
+				online_time =
+				(online_time+#{onlineTime,jdbcType=TIMESTAMP}),
+			</if>
+			<if test="onlineType != null">
+				online_type = #{onlineType,jdbcType=INTEGER},
+			</if>
+			<if test="setTime != null">
+				set_time = #{setTime,jdbcType=TIMESTAMP}
+			</if>
+		</set>
+		where login_name = #{loginName,jdbcType=INTEGER}
+		and
+		to_days(create_time) = to_days(now())
+	</update>
+	<select id="selectByLoginName" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_session_manager
+		where login_name =
+		#{loginName,jdbcType=VARCHAR}
+		<!-- <if test="to !=null and "> -->
+		<!-- and to_days(create_time) = to_days(now()) -->
+		<!-- </if> -->
+	</select>
+	<select id="selectToDayDataByLoginName" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_session_manager
+		where login_name =
+		#{loginName,jdbcType=VARCHAR}
+		and to_days(create_time) = to_days(now())
+	</select>
+	<update id="updateAllUserOnlineType">
+		update sys_session_manager
+		set
+		online_type =0;
+	</update>
+	<update id="updateOnlineTypeByLoginName"
+		parameterType="com.moyou.moyouRms.model.sysSessionManager.SysSessionManager">
+		update sys_session_manager
+		set
+		online_type =
+		#{onlineType,jdbcType=INTEGER}
+		<if test="createTime != null ">
+		,create_time =#{createTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="setTime != null ">
+		,set_time =#{setTime,jdbcType=TIMESTAMP}
+		</if>
+		where login_name =
+		#{loginName,jdbcType=INTEGER} and to_days(create_time) = to_days(now())
+	</update>
+	<update id="updateSessionSetTime" parameterType="java.lang.String">
+	update sys_session_manager
+		set
+		set_time =
+		current_timestamp()
+		where login_name =
+		#{loginName,jdbcType=INTEGER}
+		and to_days(create_time) = to_days(now())
+	</update>
+<!-- 	查询今天最后操作时间在 >= now() 30分钟的数据 在线数据 -->
+	 <select id="selectSessionNeedBalance"   resultMap="BaseResultMap">
+			SELECT
+		<include refid="Base_Column_List" />
+		from sys_session_manager
+		where 
+		to_days(create_time) = to_days(now())
+		and (UNIX_TIMESTAMP(current_timestamp()) - UNIX_TIMESTAMP(set_time))/60 >=30
+		and online_type =  1
+	</select>
+</mapper>

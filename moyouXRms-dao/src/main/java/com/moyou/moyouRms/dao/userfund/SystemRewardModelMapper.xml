@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.userfund.SystemRewardModelMapper">
+	<resultMap id="BaseResultMap"
+		type="com.moyou.moyouRms.model.userfund.SystemRewardModel">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="model_type" property="modelType" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="price" property="price" jdbcType="INTEGER" />
+		<result column="reward_number" property="rewardNumber"
+			jdbcType="INTEGER" />
+		<result column="one_price" property="onePrice" jdbcType="INTEGER" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="admin" property="admin" jdbcType="VARCHAR" />
+		<result column="decs" property="dec" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, type, model_type, create_time, price, reward_number,
+		one_price,
+		state, admin,
+		decs
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from sys_reward
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		sys_reward
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.userfund.SystemRewardModel"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into sys_reward (id, type,
+		model_type,
+		create_time, price, reward_number,
+		one_price, state, admin,
+		decs)
+		values (#{id,jdbcType=INTEGER}, #{type,jdbcType=INTEGER},
+		#{modelType,jdbcType=INTEGER},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{price,jdbcType=INTEGER}, #{rewardNumber,jdbcType=INTEGER},
+		#{onePrice,jdbcType=INTEGER}, #{state,jdbcType=INTEGER},
+		#{admin,jdbcType=VARCHAR},
+		#{dec,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.userfund.SystemRewardModel"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into sys_reward
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="modelType != null">
+				model_type,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="rewardNumber != null">
+				reward_number,
+			</if>
+			<if test="onePrice != null">
+				one_price,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="admin != null">
+				admin,
+			</if>
+			<if test="dec != null">
+				decs,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="modelType != null">
+				#{modelType,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=INTEGER},
+			</if>
+			<if test="rewardNumber != null">
+				#{rewardNumber,jdbcType=INTEGER},
+			</if>
+			<if test="onePrice != null">
+				#{onePrice,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="admin != null">
+				#{admin,jdbcType=VARCHAR},
+			</if>
+			<if test="dec != null">
+				#{dec,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.userfund.SystemRewardModel">
+		update sys_reward
+		<set>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="modelType != null">
+				model_type = #{modelType,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=INTEGER},
+			</if>
+			<if test="rewardNumber != null">
+				reward_number = #{rewardNumber,jdbcType=INTEGER},
+			</if>
+			<if test="onePrice != null">
+				one_price = #{onePrice,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="admin != null">
+				admin = #{admin,jdbcType=VARCHAR},
+			</if>
+			<if test="dec != null">
+				decs = #{dec,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.userfund.SystemRewardModel">
+		update sys_reward
+		set type = #{type,jdbcType=INTEGER},
+		model_type =
+		#{modelType,jdbcType=INTEGER},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		price = #{price,jdbcType=INTEGER},
+		reward_number = #{rewardNumber,jdbcType=INTEGER},
+		one_price =
+		#{onePrice,jdbcType=INTEGER},
+		state = #{state,jdbcType=INTEGER},
+		admin =
+		#{admin,jdbcType=VARCHAR},
+		decs = #{dec,jdbcType=VARCHAR}
+		where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectSystemRewardLog" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM `sys_reward`
+		ORDER BY create_time DESC
+	</select>
+	<select id="selectRewardSystemInfoCount" resultType="java.util.Map">
+		SELECT
+	(
+		SELECT
+			IFNULL(sum(fund) / 100, 0)
+		FROM
+			`sys_reward_log`
+		WHERE
+			TO_DAYS(NOW()) - TO_DAYS(create_time) = 1
+	) yesterDay,
+	(
+		SELECT
+			IFNULL(sum(fund) / 100, 0)
+		FROM
+			`sys_reward_log`
+		WHERE
+			TO_DAYS(NOW()) = TO_DAYS(create_time)
+	) toDay,
+	(
+		SELECT
+			IFNULL(sum(fund) / 100, 0)
+		FROM
+			`sys_reward_log`
+	) sum
+	</select>
+<!-- 	将所有正在执行的打赏 改为异常 -->
+	<update id="updateSysRewardState">
+	update sys_reward
+		set state= 3
+		where 	state= 0
+	</update>
+</mapper>

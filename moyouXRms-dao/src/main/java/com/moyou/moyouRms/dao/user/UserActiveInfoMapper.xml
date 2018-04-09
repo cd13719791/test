@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.user.UserActiveInfoMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.user.UserActiveInfo">
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="latitude" property="latitude" jdbcType="DOUBLE" />
+		<result column="longitude" property="longitude" jdbcType="DOUBLE" />
+		<result column="online_state" property="onlineState" jdbcType="INTEGER" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.user.UserActiveInfo">
+		insert into t_user_active_info (user_id, latitude, longitude,
+		online_state, update_time, create_time,map_function
+		)
+		values (#{userId,jdbcType=INTEGER}, #{latitude,jdbcType=DOUBLE},
+		#{longitude,jdbcType=DOUBLE},
+		#{onlineState,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},#{mapFunction}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.user.UserActiveInfo">
+		insert into t_user_active_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="latitude != null">
+				latitude,
+			</if>
+			<if test="longitude != null">
+				longitude,
+			</if>
+			<if test="onlineState != null">
+				online_state,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="mapFunction != null">
+				map_function,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="latitude != null">
+				#{latitude,jdbcType=DOUBLE},
+			</if>
+			<if test="longitude != null">
+				#{longitude,jdbcType=DOUBLE},
+			</if>
+			<if test="onlineState != null">
+				#{onlineState,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="mapFunction != null">
+				#{mapFunction,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectActiveInfoUserIdByUserId"  parameterType="java.lang.Integer" resultType="java.lang.Integer"> 
+	select user_id from t_user_active_info where user_id=#{userId,jdbcType=INTEGER}
+	</select>
+	<!-- update UserActiveInfo -->
+	<update id="updateUserActiveInfo" parameterType="com.moyou.moyouRms.model.user.UserActiveInfo">
+		UPDATE t_user_active_info
+		SET latitude = #{latitude,jdbcType=DOUBLE},
+			longitude = #{longitude,jdbcType=DOUBLE},
+			online_state = #{onlineState,jdbcType=INTEGER},
+			update_time = #{updateTime,jdbcType=TIMESTAMP},
+			map_function=#{mapFunction,jdbcType=INTEGER}
+		WHERE
+			user_id = #{userId,jdbcType=INTEGER}
+	</update>
+		<!-- update UserActiveInfo -->
+	<update id="updateUserLatAndLon" parameterType="com.moyou.moyouRms.model.user.UserActiveInfo">
+		UPDATE t_user_active_info
+		SET latitude = #{latitude,jdbcType=DOUBLE},
+			longitude = #{longitude,jdbcType=DOUBLE}
+		WHERE
+			user_id = #{userId,jdbcType=INTEGER}
+	</update>
+	<!-- 查询用户位置信息 -->
+	<select id="queryUserLatAndLng" parameterType="com.moyou.moyouRms.model.user.ChatBackground" 
+	resultType="String">
+		SELECT
+			ROUND(
+				6378.138 * 2 * ASIN(
+					SQRT(
+						POW(
+							SIN(
+								(
+									uai.latitude * PI() / 180 - #{latitude} * PI() / 180
+								) / 2
+							),
+							2
+						) + COS(uai.latitude * PI() / 180) * COS(#{latitude} * PI() / 180) * POW(
+							SIN(
+								(
+									uai.longitude * PI() / 180 - #{longitude} * PI() / 180
+								) / 2
+							),
+							2
+						)
+					)
+				),
+				2
+			) distance
+		FROM
+			t_user_active_info uai
+		WHERE
+			uai.user_id = #{userIdPassive}
+	</select>
+	<select id="selectUserLatAndLon" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	SELECT tuai.latitude,tuai.longitude FROM `t_user_active_info` tuai where tuai.user_id=#{userId}
+	</select>
+</mapper>

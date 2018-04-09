@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.userfund.UserFundMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.userfund.UserFund">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="user_fund" property="userFund" jdbcType="DECIMAL" />
+		<result column="update_time" property="updateTime" />
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, user_fund,update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_user_fund
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_user_fund
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.userfund.UserFund">
+		insert into t_user_fund (id,
+		user_id, user_fund,update_time
+		)
+		values (#{id,jdbcType=INTEGER},
+		#{userId,jdbcType=INTEGER},
+		#{userFund,jdbcType=DECIMAL},#{updateTime}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.userfund.UserFund">
+		insert into t_user_fund
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="userFund != null">
+				user_fund,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="userFund != null">
+				#{userFund,jdbcType=DECIMAL},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.userfund.UserFund">
+		update t_user_fund
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="userFund != null">
+				user_fund = #{userFund,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.userfund.UserFund">
+		update t_user_fund
+		set user_id = #{userId,jdbcType=INTEGER},
+		user_fund =
+		#{userFund,jdbcType=DECIMAL}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateUserFundByUserId" parameterType="com.moyou.moyouRms.model.userfund.UserFund">
+		update
+		t_user_fund
+		set user_fund = #{userFund,jdbcType=DECIMAL} ,update_time=
+		now()
+		where user_id = #{userId,jdbcType=INTEGER}
+	</update>
+	<select id="selectUserFundByXLock" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_user_fund
+		where user_id = #{userId,jdbcType=INTEGER} FOR UPDATE
+	</select>
+	<select id="selectUserFundByUserId" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_user_fund
+		where user_id = #{userId,jdbcType=INTEGER}
+	</select>
+	<select id="queryUserFundByUserId" parameterType="java.lang.Integer"
+		resultType="java.math.BigDecimal">
+		SELECT user_fund as userFund FROM t_user_fund WHERE
+		user_id=#{userId}
+	</select>
+	<select id="queryCountHb" resultType="com.moyou.moyouRms.model.statistics.Consume">
+		SELECT COUNT(id) AS
+		countHb, SUM(user_fund) AS countHbMoney FROM
+		t_user_fund_log WHERE
+		<!-- mode_type=7 AND user_fund>0 -->
+		mode_type in (8,14)
+		<!-- AND user_fund>0 -->
+	</select>
+	<select id="queryCountYesterDayHb" resultType="com.moyou.moyouRms.model.statistics.Consume">
+		SELECT
+		COUNT(id) AS countYesterDayHb,
+		SUM(user_fund) AS
+		countYesterDayHbMoney
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type IN (8, 14)
+
+		AND
+		TO_DAYS( NOW( ) ) - TO_DAYS( create_time) = 1
+		<!-- SELECT COUNT(id) -->
+		<!-- AS -->
+		<!-- countYesterDayHb, SUM(user_fund) AS countYesterDayHbMoney -->
+		<!-- FROM -->
+		<!-- t_user_fund_log WHERE -->
+		<!-- mode_type in (8,14) AND user_fund>0 AND DATEDIFF -->
+		<!-- mode_type=7 AND user_fund>0 AND DATEDIFF -->
+		<!-- (create_time,NOW()) =1 -->
+	</select>
+	<select id="queryCountToDayWithdraw" resultType="com.moyou.moyouRms.model.statistics.Consume">
+		SELECT COUNT(id)
+		AS countToDayWithdraw,SUM(user_fund) AS
+		counTtoDayWithdrawMoney FROM
+		t_user_fund_log WHERE user_fund>0 AND
+		DATEDIFF (create_time,NOW()) =0
+		AND mode_type=4
+	</select>
+	<select id="queryCountGive" resultType="com.moyou.moyouRms.model.statistics.Consume">
+		SELECT COUNT(id) AS
+		countGive,
+		SUM(user_fund) AS countGiveMoney FROM
+		t_user_fund_log WHERE
+		mode_type=1
+		OR mode_type=2 AND pingxx_state=2
+	</select>
+	<select id="queryAuditWithdraw" resultType="com.moyou.moyouRms.model.statistics.Consume">
+		SELECT COUNT(id) AS
+		countAuditWithdraw,SUM(user_fund) AS countMoney FROM t_user_fund_log
+		WHERE audit=0 AND mode_type=4
+	</select>
+	<select id="queryCountSucceedWithdraw" resultType="com.moyou.moyouRms.model.statistics.Consume">
+		SELECT
+		COUNT(tufl.id) AS countSucceedWithdraw,
+		SUM(tufl.user_fund) AS
+		countSucceedMoney
+		FROM
+		t_user_fund_log tufl
+		LEFT JOIN
+		t_user_bind_data
+		tubd ON
+		tubd.user_id=tufl.receive_user_id AND
+		tubd.bind_type=1
+		LEFT JOIN
+		t_user_info tui ON
+		tui.user_id=tufl.receive_user_id
+		WHERE
+		tufl.mode_type
+		= 4 AND audit !=1
+	</select>
+
+	<select id="queryCountFund" resultType="com.moyou.moyouRms.model.statistics.Consume">
+		SELECT SUM(user_gold) AS
+		countFund FROM t_user_gold
+	</select>
+
+	<select id="queryCountUseFund" resultType="com.moyou.moyouRms.model.statistics.Consume">
+		SELECT SUM(user_fund)
+		AS countUseFund FROM t_user_fund_log WHERE mode_type=10 and
+		user_fund&lt;0
+	</select>
+	<select id="queryCountAdminFund" resultType="com.moyou.moyouRms.model.statistics.Consume">
+		SELECT
+		SUM(user_fund) AS countAdminFund FROM t_user_fund_log WHERE
+		mode_type=11
+	</select>
+	<select id="queryTalkGiveMoney" resultType="com.moyou.moyouRms.model.statistics.Consume">
+		SELECT COUNT(id) AS
+		countTalkGive, SUM(user_fund) AS talkGiveMoney FROM
+		t_user_fund_log
+		WHERE
+		mode_type=1 AND pingxx_state=2
+	</select>
+	<select id="queryDiaryGiveMoney" resultType="com.moyou.moyouRms.model.statistics.Consume">
+		SELECT COUNT(id) AS
+		countDiaryGvie, SUM(user_fund) AS diaryGiveMoney FROM
+		t_user_fund_log
+		WHERE
+		mode_type=2 AND pingxx_state=2
+	</select>
+	<select id="queryCountToDayHb" resultType="com.moyou.moyouRms.model.statistics.Consume">
+		SELECT
+		COUNT(id) AS
+		countToDayHb,
+		SUM(user_fund) AS
+		countToDayHbMoney
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type IN (8, 14)
+
+		AND TO_DAYS( NOW( ) ) - TO_DAYS( create_time)
+		= 0
+	</select>
+	<select id="queryUserFundList" parameterType="String"
+		resultType="com.moyou.moyouRms.model.userfund.UserFund">
+		SELECT
+		SUM(user_fund) as userFund,
+		${states}
+		FROM
+		t_user_fund
+		doc
+		where
+		${time}
+		GROUP BY
+		dateTimes
+		ORDER BY update_time
+	</select>
+	<update id="updateSystemFund" parameterType="com.moyou.moyouRms.model.userfund.UserFund">
+		update
+		t_user_fund
+		set user_fund =user_fund + #{userFund,jdbcType=DECIMAL} ,update_time=
+		now()
+		where user_id = #{userId,jdbcType=INTEGER}
+	</update>
+	<update id="updateSystemFundJIAN" parameterType="com.moyou.moyouRms.model.userfund.UserFund">
+		update
+		t_user_fund
+		set user_fund =user_fund - #{userFund,jdbcType=DECIMAL}
+		,update_time=
+		now()
+		where user_id = #{userId,jdbcType=INTEGER}
+	</update>
+	<!-- 所有统计数据 -->
+	<select id="queryAllStatist" resultType="com.moyou.moyouRms.model.statistics.Consume">
+		SELECT
+		(
+		SELECT
+		COUNT(id)
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type IN (8, 14)
+		) AS countHb,
+		(
+		SELECT
+		SUM(user_fund)
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type IN (8, 14)
+		) AS countHbMoney,
+		(
+		SELECT
+		COUNT(id)
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type IN (8, 14)
+		AND TO_DAYS(NOW()) - TO_DAYS(create_time) = 1
+		) AS countYesterDayHb,
+		(
+		SELECT
+		IFNULL(SUM(user_fund), 0)
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type IN (8, 14)
+		AND TO_DAYS(NOW()) - TO_DAYS(create_time) = 1
+		) AS countYesterDayHbMoney,
+		(
+		SELECT
+		COUNT(id)
+		FROM
+		t_user_fund_log
+		WHERE
+		user_fund > 0
+		AND DATEDIFF(create_time, NOW()) = 0
+		AND mode_type = 4
+		) AS countToDayWithdraw,
+		(
+		SELECT
+		IFNULL(SUM(user_fund), 0)
+		FROM
+		t_user_fund_log
+		WHERE
+		user_fund > 0
+		AND DATEDIFF(create_time, NOW()) = 0
+		AND mode_type = 4
+		) AS counTtoDayWithdrawMoney,
+		(
+		SELECT
+		COUNT(id)
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type = 1
+		OR mode_type = 2
+		AND pingxx_state = 2
+		) AS countGive,
+		(
+		SELECT
+		IFNULL(SUM(user_fund), 0)
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type = 1
+		OR mode_type = 2
+		AND pingxx_state = 2
+		) AS countGiveMoney,
+		(
+		SELECT
+		COUNT(id)
+		FROM
+		t_user_fund_log
+		WHERE
+		audit = 0
+		AND mode_type = 4
+		) AS countAuditWithdraw,
+		(
+		SELECT
+		IFNULL(SUM(user_fund), 0)
+		FROM
+		t_user_fund_log
+		WHERE
+		audit = 0
+		AND mode_type = 4
+		) AS countMoney,
+		(
+		SELECT
+		COUNT(tufl.id)
+		FROM
+		t_user_fund_log tufl
+		LEFT JOIN t_user_bind_data tubd ON tubd.user_id =
+		tufl.receive_user_id
+		AND tubd.bind_type = 1
+		LEFT JOIN t_user_info tui ON
+		tui.user_id = tufl.receive_user_id
+		WHERE
+		tufl.mode_type = 4
+		AND audit != 1
+		) AS countSucceedWithdraw,
+		(
+		SELECT
+		IFNULL(SUM(tufl.user_fund), 0)
+		FROM
+		t_user_fund_log tufl
+		LEFT JOIN t_user_bind_data tubd ON tubd.user_id =
+		tufl.receive_user_id
+		AND tubd.bind_type = 1
+		LEFT JOIN t_user_info tui ON
+		tui.user_id = tufl.receive_user_id
+		WHERE
+		tufl.mode_type = 4
+		AND audit != 1
+		) AS countSucceedMoney,
+		(
+		SELECT
+		SUM(user_gold)
+		FROM
+		t_user_gold
+		) AS countFund,
+		(
+		SELECT
+		SUM(user_fund)
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type = 10
+		AND user_fund > 0
+		) AS countUseFund,
+		(
+		SELECT
+		SUM(user_fund)
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type = 11
+		) AS countAdminFund,
+		(
+		SELECT
+		COUNT(id)
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type = 1
+		AND pingxx_state = 2
+		) AS countTalkGive,
+		(
+		SELECT
+		IFNULL(SUM(user_fund), 0)
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type = 1
+		AND pingxx_state = 2
+		) AS talkGiveMoney,
+		(
+		SELECT
+		COUNT(id)
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type = 2
+		AND pingxx_state = 2
+		) AS countDiaryGvie,
+		(
+		SELECT
+		SUM(user_fund)
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type = 2
+		AND pingxx_state = 2
+		) AS diaryGiveMoney,
+		(
+		SELECT
+		COUNT(id)
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type IN (8, 14)
+		AND TO_DAYS(NOW()) - TO_DAYS(create_time) = 0
+		) AS countToDayHb,
+		(
+		SELECT
+		SUM(user_fund)
+		FROM
+		t_user_fund_log
+		WHERE
+		mode_type IN (8, 14)
+		AND TO_DAYS(NOW()) - TO_DAYS(create_time) = 0
+		) AS countToDayHbMoney
+	</select>
+	<select id="selcetToDayWithdrawSum" resultType="java.math.BigDecimal"
+		parameterType="java.lang.Integer">
+		select IFNULL(sum(user_fund/100),0) from t_user_fund_log
+		where to_days(create_time ) = to_days(now()) and mode_type=4 and
+		search_userid=#{userId}
+	</select>
+	<update id="updateUserGole" parameterType="com.moyou.moyouRms.model.userfund.UserFund">
+	update
+		t_user_fund
+		set user_gold =user_gold + #{userGold,jdbcType=INTEGER}
+		,update_time=
+		now()
+		where user_id = #{userId,jdbcType=INTEGER}
+	</update>
+</mapper>

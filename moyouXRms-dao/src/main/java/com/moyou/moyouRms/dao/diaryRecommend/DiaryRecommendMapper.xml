@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.diaryRecommend.DiaryRecommendMapper">
+	<resultMap id="BaseResultMap"
+		type="com.moyou.moyouRms.model.diaryRecommend.DiaryRecommend">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="mode_type" property="modeType" jdbcType="INTEGER" />
+		<result column="diary_id" property="diaryId" jdbcType="INTEGER" />
+		<result column="recommed_status" property="recommedStatus"
+			jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="recommend_sort" property="recommendSort"
+			jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, mode_type, diary_id, recommed_status, create_time,
+		update_time,
+		recommend_sort
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_diary_recommend
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByDiaryId" resultType="Integer"
+		parameterType="java.lang.Integer">
+		select
+		 diary_id
+		from t_diary_recommend
+		where diary_id = #{diaryId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_diary_recommend
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.moyou.moyouRms.model.diaryRecommend.DiaryRecommend">
+		insert into t_diary_recommend (id, mode_type, diary_id,
+		recommed_status, create_time, update_time,
+		recommend_sort)
+		values
+		(#{id,jdbcType=INTEGER}, #{modeType,jdbcType=INTEGER},
+		#{diaryId,jdbcType=INTEGER},
+		#{recommedStatus,jdbcType=INTEGER},
+		#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{recommendSort,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.moyou.moyouRms.model.diaryRecommend.DiaryRecommend">
+		insert into t_diary_recommend
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="modeType != null">
+				mode_type,
+			</if>
+			<if test="diaryId != null">
+				diary_id,
+			</if>
+			<if test="recommedStatus != null">
+				recommed_status,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="recommendSort != null">
+				recommend_sort,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="modeType != null">
+				#{modeType,jdbcType=INTEGER},
+			</if>
+			<if test="diaryId != null">
+				#{diaryId,jdbcType=INTEGER},
+			</if>
+			<if test="recommedStatus != null">
+				#{recommedStatus,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="recommendSort != null">
+				#{recommendSort,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.moyou.moyouRms.model.diaryRecommend.DiaryRecommend">
+		update t_diary_recommend
+		<set>
+			<if test="modeType != null">
+				mode_type = #{modeType,jdbcType=INTEGER},
+			</if>
+			<if test="diaryId != null">
+				diary_id = #{diaryId,jdbcType=INTEGER},
+			</if>
+			<if test="recommedStatus != null">
+				recommed_status = #{recommedStatus,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="recommendSort != null">
+				recommend_sort = #{recommendSort,jdbcType=INTEGER},
+			</if>
+		</set>
+		where diary_id = #{diaryId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.moyou.moyouRms.model.diaryRecommend.DiaryRecommend">
+		update t_diary_recommend
+		set mode_type =
+		#{modeType,jdbcType=INTEGER},
+		diary_id = #{diaryId,jdbcType=INTEGER},
+		recommed_status = #{recommedStatus,jdbcType=INTEGER},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		recommend_sort =
+		#{recommendSort,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="queryDiaryRecommendList" parameterType="PageBean"
+		resultType="com.moyou.moyouRms.model.diary.Diary">
+		SELECT
+		td.id, td.diary_title as diaryTitle, td.city,
+		td.creator_id,
+		td.praise_total as praiseTotal,
+		td.comment_total as commentTotal,
+		td.reward_total as rewardTotal,
+		td.state,
+		td.read_total as readTotal,
+		tu.TYPE,
+		dr.create_time as createTime ,tui.avatar,tui.nickname as
+		creatorName,
+		dr.recommed_status as recommedStatus
+		FROM t_diary td
+		LEFT
+		JOIN
+		t_diary_recommend dr ON td.id=dr.diary_id
+		LEFT JOIN t_user_info
+		tui
+		ON
+		tui.user_id=td.creator_id
+		LEFT JOIN t_user tu ON
+		tu.user_id=td.creator_id
+		WHERE  dr.recommed_status=0 AND
+		td.state=1
+		<if test="conditions.diaryTitle != null and conditions.diaryTitle !=''">
+			and td.diary_title REGEXP #{conditions.diaryTitle}
+		</if>
+		<if
+			test="conditions.searchContent != null and conditions.searchContent !=''">
+			and td.search_content REGEXP #{conditions.searchContent}
+		</if>
+		<if test="conditions.creatorName !=null and conditions.creatorName !=''">
+			and tui.nickname REGEXP
+			#{conditions.creatorName,jdbcType=VARCHAR}
+		</if>
+		<if test="conditions.startTime != null and conditions.startTime !=''">
+     			 <![CDATA[
+     				 and dr.create_time >= #{conditions.startTime,jdbcType=TIMESTAMP}
+      			 ]]>
+		</if>
+		<if test="conditions.endTime != null and conditions.endTime!=''">
+    			  <![CDATA[
+     				 and dr.create_time <= #{conditions.endTime,jdbcType=TIMESTAMP}
+      			 ]]>
+		</if>
+		ORDER BY dr.create_time DESC
+	</select>
+	<update id="updateByDiaryId" parameterType="com.moyou.moyouRms.model.diaryRecommend.DiaryRecommend">
+	update t_diary_recommend
+		set 
+		recommed_status = #{recommedStatus,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

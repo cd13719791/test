@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.category.CategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.category.Category" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="category_name" property="categoryName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <result column="category_status" property="categoryStatus" jdbcType="SMALLINT" />
+    <result column="mode_type" property="modeType" jdbcType="SMALLINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="category_sort" property="categorySort" jdbcType="SMALLINT" />
+    <result column="crowd_numbre" property="crowdNumbre" jdbcType="SMALLINT" />
+    <result column="crowd_Member_Numbre" property="crowdMemberNumbre" jdbcType="SMALLINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, category_name, parent_id, category_status, mode_type, create_time, update_time, 
+    category_sort
+  </sql>
+  
+  <select id="selectCategoryList" resultMap="BaseResultMap" parameterType="PageBean" >
+  SELECT
+	tc.id,
+	tc.category_name,
+	(
+		SELECT
+			count(tuc.id)
+		FROM
+			t_user_crowd tuc
+		WHERE
+			tuc.category_id = tc.id
+	) AS crowd_numbre,
+	(
+		SELECT
+			SUM(tuc.member_count)
+		FROM
+			t_user_crowd tuc
+		WHERE
+			tuc.category_id = tc.id
+	) crowd_Member_Numbre
+FROM
+	t_category tc
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_category
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_category
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.moyou.moyouRms.model.category.Category" >
+    insert into t_category (id, category_name, parent_id, 
+      category_status, mode_type, create_time, 
+      update_time, category_sort)
+    values (#{id,jdbcType=VARCHAR}, #{categoryName,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, 
+      #{categoryStatus,jdbcType=SMALLINT}, #{modeType,jdbcType=SMALLINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{categorySort,jdbcType=SMALLINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.moyou.moyouRms.model.category.Category" >
+    insert into t_category
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="categoryName != null" >
+        category_name,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="categoryStatus != null" >
+        category_status,
+      </if>
+      <if test="modeType != null" >
+        mode_type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="categorySort != null" >
+        category_sort,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryName != null" >
+        #{categoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryStatus != null" >
+        #{categoryStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="modeType != null" >
+        #{modeType,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="categorySort != null" >
+        #{categorySort,jdbcType=SMALLINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.category.Category" >
+    update t_category
+    <set >
+      <if test="categoryName != null" >
+        category_name = #{categoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryStatus != null" >
+        category_status = #{categoryStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="modeType != null" >
+        mode_type = #{modeType,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="categorySort != null" >
+        category_sort = #{categorySort,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.category.Category" >
+    update t_category
+    set category_name = #{categoryName,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+      category_status = #{categoryStatus,jdbcType=SMALLINT},
+      mode_type = #{modeType,jdbcType=SMALLINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      category_sort = #{categorySort,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

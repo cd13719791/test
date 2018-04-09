@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.sysBaseResources.SysBaseResourcesMapper" >
+  <resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.sysBaseResources.SysBaseResources" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="parentId" property="parentid" jdbcType="VARCHAR" />
+    <result column="layer" property="layer" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="resUrl" property="resurl" jdbcType="VARCHAR" />
+    <result column="btnId" property="btnid" jdbcType="VARCHAR" />
+    <result column="btnFun" property="btnfun" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="isValid" property="isvalid" jdbcType="INTEGER" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, parentId, layer, type, resUrl, btnId, btnFun, icon, sort, isValid, description, 
+    createTime, updateTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_base_resources
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_base_resources
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.moyou.moyouRms.model.sysBaseResources.SysBaseResources" >
+    insert into sys_base_resources (id, name, parentId, 
+      layer, type, resUrl, 
+      btnId, btnFun, icon, 
+      sort, isValid, description, 
+      createTime, updateTime)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{parentid,jdbcType=VARCHAR}, 
+      #{layer,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{resurl,jdbcType=VARCHAR}, 
+      #{btnid,jdbcType=VARCHAR}, #{btnfun,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, 
+      #{sort,jdbcType=INTEGER}, #{isvalid,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.moyou.moyouRms.model.sysBaseResources.SysBaseResources" >
+    insert into sys_base_resources
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="parentid != null" >
+        parentId,
+      </if>
+      <if test="layer != null" >
+        layer,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="resurl != null" >
+        resUrl,
+      </if>
+      <if test="btnid != null" >
+        btnId,
+      </if>
+      <if test="btnfun != null" >
+        btnFun,
+      </if>
+      <if test="icon != null" >
+        icon,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="isvalid != null" >
+        isValid,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="updatetime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null" >
+        #{parentid,jdbcType=VARCHAR},
+      </if>
+      <if test="layer != null" >
+        #{layer,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="resurl != null" >
+        #{resurl,jdbcType=VARCHAR},
+      </if>
+      <if test="btnid != null" >
+        #{btnid,jdbcType=VARCHAR},
+      </if>
+      <if test="btnfun != null" >
+        #{btnfun,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null" >
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="isvalid != null" >
+        #{isvalid,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.sysBaseResources.SysBaseResources" >
+    update sys_base_resources
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null" >
+        parentId = #{parentid,jdbcType=VARCHAR},
+      </if>
+      <if test="layer != null" >
+        layer = #{layer,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="resurl != null" >
+        resUrl = #{resurl,jdbcType=VARCHAR},
+      </if>
+      <if test="btnid != null" >
+        btnId = #{btnid,jdbcType=VARCHAR},
+      </if>
+      <if test="btnfun != null" >
+        btnFun = #{btnfun,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null" >
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="isvalid != null" >
+        isValid = #{isvalid,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.sysBaseResources.SysBaseResources" >
+    update sys_base_resources
+    set name = #{name,jdbcType=VARCHAR},
+      parentId = #{parentid,jdbcType=VARCHAR},
+      layer = #{layer,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      resUrl = #{resurl,jdbcType=VARCHAR},
+      btnId = #{btnid,jdbcType=VARCHAR},
+      btnFun = #{btnfun,jdbcType=VARCHAR},
+      icon = #{icon,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      isValid = #{isvalid,jdbcType=INTEGER},
+      description = #{description,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+	<select id="queryResourcesByParentId" resultMap="BaseResultMap" parameterType="java.lang.String">
+	SELECT * FROM `sys_base_resources` sbr where sbr.parentId=#{parentId,jdbcType=VARCHAR} and sbr.isValid=1 order by sbr.sort
+	</select>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.talk.TalkResourceMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.talk.TalkResource">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="media_type" property="mediaType" jdbcType="INTEGER" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="pic_order" property="picOrder" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<!-- 根据说说ID查询说说的资源 -->
+	<select id="queryTalkResource" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.talk.TalkResource">
+		SELECT
+		r.talk_id AS talkId,
+		r.media_type AS mediaType,
+		r.url,
+		(SELECT
+		COUNT(r.url)
+		FROM
+		t_talk_resource r WHERE r.talk_id=#{talkId}) AS coutUrl,
+		r.pic_order AS picOrder
+		FROM
+		t_talk_resource r
+		LEFT JOIN
+		t_talk t
+		ON r.talk_id = t.id
+		WHERE r.talk_id =#{talkId}
+	</select>
+</mapper>
+

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.redpacket.RedPacketReceiveMapper" >
+  <resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.redpacket.RedPacketReceive" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="red_packet_send_id" property="redPacketSendId" jdbcType="INTEGER" />
+    <result column="receive_userid" property="receiveUserid" jdbcType="INTEGER" />
+    <result column="send_userid" property="sendUserid" jdbcType="INTEGER" />
+    <result column="receive_fund" property="receiveFund" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, red_packet_send_id, receive_userid, receive_fund, create_time, update_time, state,send_userid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_red_packet_receive
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 获取红包到期应该退还的数据 -->
+  <select id="selectBackRedPacketData" resultMap="BaseResultMap" >
+    SELECT tr.receive_userid,tr.receive_fund,tr.red_packet_send_id,tr.send_userid,tr.id FROM t_red_packet_receive tr 
+    JOIN t_red_packet_send ts ON tr.red_packet_send_id = ts.id  AND ts.past_time<![CDATA[<]]>NOW() AND ts.pingxx_state=2
+    WHERE tr.state=0
+  </select>
+  <select id="selectBySendRedpacketId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_red_packet_receive
+    where red_packet_send_id = #{selectBySendRedpacketId,jdbcType=INTEGER}
+  </select>
+  <select id="queryRedPacketReceive" resultMap="BaseResultMap" parameterType="com.moyou.moyouRms.model.redpacket.RedPacketReceive" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_red_packet_receive
+    <where>
+    	<if test="state != null" >
+         AND state = #{state,jdbcType=INTEGER}
+      </if>
+    	<if test="redPacketSendId != null" >
+         AND red_packet_send_id = #{redPacketSendId,jdbcType=INTEGER}
+      </if>
+    </where> 
+     
+ 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_red_packet_receive
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moyou.moyouRms.model.redpacket.RedPacketReceive" >
+    insert into t_red_packet_receive (id, red_packet_send_id, receive_userid, 
+      receive_fund, create_time, update_time, 
+      state,send_userid)
+    values (#{id,jdbcType=INTEGER}, #{redPacketSendId,jdbcType=INTEGER}, #{receiveUserid,jdbcType=INTEGER}, 
+      #{receiveFund,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{state,jdbcType=INTEGER},#{sendUserid})
+  </insert>
+  <insert id="insertSelective" parameterType="com.moyou.moyouRms.model.redpacket.RedPacketReceive" >
+    insert into t_red_packet_receive
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="redPacketSendId != null" >
+        red_packet_send_id,
+      </if>
+      <if test="receiveUserid != null" >
+        receive_userid,
+      </if>
+      <if test="receiveFund != null" >
+        receive_fund,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="redPacketSendId != null" >
+        #{redPacketSendId,jdbcType=INTEGER},
+      </if>
+      <if test="receiveUserid != null" >
+        #{receiveUserid,jdbcType=INTEGER},
+      </if>
+      <if test="receiveFund != null" >
+        #{receiveFund,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.redpacket.RedPacketReceive" >
+    update t_red_packet_receive
+    <set >
+      <if test="redPacketSendId != null" >
+        red_packet_send_id = #{redPacketSendId,jdbcType=INTEGER},
+      </if>
+      <if test="receiveUserid != null" >
+        receive_userid = #{receiveUserid,jdbcType=INTEGER},
+      </if>
+      <if test="receiveFund != null" >
+        receive_fund = #{receiveFund,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.redpacket.RedPacketReceive" >
+    update t_red_packet_receive
+    set red_packet_send_id = #{redPacketSendId,jdbcType=INTEGER},
+      receive_userid = #{receiveUserid,jdbcType=INTEGER},
+      receive_fund = #{receiveFund,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

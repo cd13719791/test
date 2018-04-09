@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.adsupply.AdSupplyMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.adsupply.AdSupply">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="supply_desc" property="supplyDesc" jdbcType="VARCHAR" />
+		<result column="activity_info" property="activityInfo"
+			jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="longitude" property="longitude" jdbcType="DOUBLE" />
+		<result column="latitude" property="latitude" jdbcType="DOUBLE" />
+		<result column="creator_id" property="creatorId" jdbcType="INTEGER" />
+		<result column="read_total" property="readTotal" jdbcType="INTEGER" />
+		<result column="comment_total" property="commentTotal"
+			jdbcType="INTEGER" />
+		<result column="allow_letter" property="allowLetter" jdbcType="TINYINT" />
+		<result column="allow_phone" property="allowPhone" jdbcType="TINYINT" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="region" property="region" jdbcType="VARCHAR" />
+		<result column="category" property="category" jdbcType="VARCHAR" />
+		<result column="pic" property="pic" jdbcType="VARCHAR" />
+		<result column="cover" property="cover" jdbcType="VARCHAR" />
+		<result column="audit" property="audit" jdbcType="SMALLINT" />
+		<result column="supply_type" property="supplyType" jdbcType="SMALLINT" />
+		<result column="state" property="state" jdbcType="SMALLINT" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="extend_data" property="extendData" jdbcType="VARCHAR" />
+		<result column="avatar" property="avatar" jdbcType="VARCHAR" />
+		<result column="nickname" property="nickname" jdbcType="VARCHAR" />
+		<result column="sig" property="sig" jdbcType="VARCHAR" />
+		<result column="moyou_id" property="moyouId" jdbcType="VARCHAR" />
+		<result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, title, supply_desc, activity_info, address, longitude,
+		latitude,
+		creator_id,
+		read_total, comment_total, allow_letter,
+		allow_phone, phone, region, category,
+		pic,
+		cover, audit, supply_type,
+		state, create_time, update_time, extend_data,audit_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		SELECT
+		asu.id,
+		asu.title,
+		asu.supply_desc,
+		asu.activity_info,
+		asu.address,
+		asu.longitude,
+		asu.latitude,
+		asu.creator_id,
+		asu.read_total,
+		asu.comment_total,
+		asu.allow_letter,
+		asu.allow_phone,
+		asu.phone,
+		asu.region,
+		asu.category,
+		asu.pic,
+		asu.cover,
+		asu.audit,
+		asu.supply_type,
+		asu.state,
+		asu.create_time,
+		asu.update_time,
+		asu.audit_time,
+		asu.extend_data,
+		tui.avatar,
+		tui.nickname
+		FROM
+		ad_supply
+		asu
+		left join
+		t_user_info tui on tui.user_id= asu.creator_id
+		where asu.id
+		=
+		#{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		ad_supply
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.adsupply.AdSupply">
+		insert into ad_supply (id,
+		title, supply_desc,
+		activity_info, address, longitude,
+		latitude,
+		creator_id, read_total,
+		comment_total, allow_letter, allow_phone,
+		phone, region, category,
+		pic, cover, audit,
+		supply_type, state,
+		create_time,
+		update_time, extend_data)
+		values (#{id,jdbcType=INTEGER},
+		#{title,jdbcType=VARCHAR},
+		#{supplyDesc,jdbcType=VARCHAR},
+		#{activityInfo,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+		#{longitude,jdbcType=DOUBLE},
+		#{latitude,jdbcType=DOUBLE},
+		#{creatorId,jdbcType=INTEGER},
+		#{readTotal,jdbcType=INTEGER},
+		#{commentTotal,jdbcType=INTEGER}, #{allowLetter,jdbcType=TINYINT},
+		#{allowPhone,jdbcType=TINYINT},
+		#{phone,jdbcType=VARCHAR},
+		#{region,jdbcType=VARCHAR},
+		#{category,jdbcType=VARCHAR},
+		#{pic,jdbcType=VARCHAR}, #{cover,jdbcType=VARCHAR},
+		#{audit,jdbcType=SMALLINT},
+		#{supplyType,jdbcType=SMALLINT},
+		#{state,jdbcType=SMALLINT},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP}, #{extendData,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.adsupply.AdSupply">
+		insert into ad_supply
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="supplyDesc != null">
+				supply_desc,
+			</if>
+			<if test="activityInfo != null">
+				activity_info,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="longitude != null">
+				longitude,
+			</if>
+			<if test="latitude != null">
+				latitude,
+			</if>
+			<if test="creatorId != null">
+				creator_id,
+			</if>
+			<if test="readTotal != null">
+				read_total,
+			</if>
+			<if test="commentTotal != null">
+				comment_total,
+			</if>
+			<if test="allowLetter != null">
+				allow_letter,
+			</if>
+			<if test="allowPhone != null">
+				allow_phone,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="region != null">
+				region,
+			</if>
+			<if test="category != null">
+				category,
+			</if>
+			<if test="pic != null">
+				pic,
+			</if>
+			<if test="cover != null">
+				cover,
+			</if>
+			<if test="audit != null">
+				audit,
+			</if>
+			<if test="supplyType != null">
+				supply_type,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="extendData != null">
+				extend_data,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="supplyDesc != null">
+				#{supplyDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="activityInfo != null">
+				#{activityInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="longitude != null">
+				#{longitude,jdbcType=DOUBLE},
+			</if>
+			<if test="latitude != null">
+				#{latitude,jdbcType=DOUBLE},
+			</if>
+			<if test="creatorId != null">
+				#{creatorId,jdbcType=INTEGER},
+			</if>
+			<if test="readTotal != null">
+				#{readTotal,jdbcType=INTEGER},
+			</if>
+			<if test="commentTotal != null">
+				#{commentTotal,jdbcType=INTEGER},
+			</if>
+			<if test="allowLetter != null">
+				#{allowLetter,jdbcType=TINYINT},
+			</if>
+			<if test="allowPhone != null">
+				#{allowPhone,jdbcType=TINYINT},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="region != null">
+				#{region,jdbcType=VARCHAR},
+			</if>
+			<if test="category != null">
+				#{category,jdbcType=VARCHAR},
+			</if>
+			<if test="pic != null">
+				#{pic,jdbcType=VARCHAR},
+			</if>
+			<if test="cover != null">
+				#{cover,jdbcType=VARCHAR},
+			</if>
+			<if test="audit != null">
+				#{audit,jdbcType=SMALLINT},
+			</if>
+			<if test="supplyType != null">
+				#{supplyType,jdbcType=SMALLINT},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=SMALLINT},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="extendData != null">
+				#{extendData,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.adsupply.AdSupply">
+		update ad_supply
+		<set>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="supplyDesc != null">
+				supply_desc = #{supplyDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="activityInfo != null">
+				activity_info = #{activityInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="longitude != null">
+				longitude = #{longitude,jdbcType=DOUBLE},
+			</if>
+			<if test="latitude != null">
+				latitude = #{latitude,jdbcType=DOUBLE},
+			</if>
+			<if test="creatorId != null">
+				creator_id = #{creatorId,jdbcType=INTEGER},
+			</if>
+			<if test="readTotal != null">
+				read_total = #{readTotal,jdbcType=INTEGER},
+			</if>
+			<if test="commentTotal != null">
+				comment_total = #{commentTotal,jdbcType=INTEGER},
+			</if>
+			<if test="allowLetter != null">
+				allow_letter = #{allowLetter,jdbcType=TINYINT},
+			</if>
+			<if test="allowPhone != null">
+				allow_phone = #{allowPhone,jdbcType=TINYINT},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="region != null">
+				region = #{region,jdbcType=VARCHAR},
+			</if>
+			<if test="category != null">
+				category = #{category,jdbcType=VARCHAR},
+			</if>
+			<if test="pic != null">
+				pic = #{pic,jdbcType=VARCHAR},
+			</if>
+			<if test="cover != null">
+				cover = #{cover,jdbcType=VARCHAR},
+			</if>
+			<if test="audit != null">
+				audit = #{audit,jdbcType=SMALLINT},
+			</if>
+			<if test="supplyType != null">
+				supply_type = #{supplyType,jdbcType=SMALLINT},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=SMALLINT},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="extendData != null">
+				extend_data = #{extendData,jdbcType=VARCHAR},
+			</if>
+			<if test="auditTime != null">
+				audit_time= #{auditTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.adsupply.AdSupply">
+		update ad_supply
+		set title = #{title,jdbcType=VARCHAR},
+		supply_desc =
+		#{supplyDesc,jdbcType=VARCHAR},
+		activity_info =
+		#{activityInfo,jdbcType=VARCHAR},
+		address =
+		#{address,jdbcType=VARCHAR},
+		longitude = #{longitude,jdbcType=DOUBLE},
+		latitude = #{latitude,jdbcType=DOUBLE},
+		creator_id =
+		#{creatorId,jdbcType=INTEGER},
+		read_total =
+		#{readTotal,jdbcType=INTEGER},
+		comment_total =
+		#{commentTotal,jdbcType=INTEGER},
+		allow_letter =
+		#{allowLetter,jdbcType=TINYINT},
+		allow_phone =
+		#{allowPhone,jdbcType=TINYINT},
+		phone = #{phone,jdbcType=VARCHAR},
+		region = #{region,jdbcType=VARCHAR},
+		category =
+		#{category,jdbcType=VARCHAR},
+		pic = #{pic,jdbcType=VARCHAR},
+		cover =
+		#{cover,jdbcType=VARCHAR},
+		audit = #{audit,jdbcType=SMALLINT},
+		supply_type = #{supplyType,jdbcType=SMALLINT},
+		state =
+		#{state,jdbcType=SMALLINT},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		extend_data =
+		#{extendData,jdbcType=VARCHAR},
+		audit_time=
+		#{auditTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectAdSupplyList" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		SELECT
+		asu.id,
+		asu.title,
+		asu.supply_desc,
+		asu.activity_info,
+		asu.address,
+		asu.longitude,
+		asu.latitude,
+		asu.creator_id,
+		asu.read_total,
+		asu.comment_total,
+		asu.allow_letter,
+		asu.allow_phone,
+		asu.phone,
+		asu.region,
+		asu.category,
+		asu.audit_time,
+		asu.pic,
+		asu.cover,
+		asu.audit,
+		asu.supply_type,
+		asu.state,
+		asu.create_time,
+		asu.update_time,
+		asu.extend_data,
+		tui.avatar,
+		tui.nickname,
+		tui.moyou_id
+		FROM
+		ad_supply asu
+		left join
+		t_user_info tui on tui.user_id=
+		asu.creator_id
+		<where>
+			state = 1
+			<if test="conditions.audit !=null">
+				and asu.audit = #{conditions.audit,jdbcType=SMALLINT}
+			</if>
+			<if test="conditions.supplyType != null">
+				and
+				asu.supply_type=#{conditions.supplyType,jdbcType=SMALLINT}
+			</if>
+			<if test="conditions.title != null">
+
+				and asu.title regexp #{conditions.title,jdbcType=VARCHAR}
+			</if>
+			<if test="conditions.supplyDesc != null">
+				and asu.supply_desc regexp #{conditions.supplyDesc}
+			</if>
+			<if test="conditions.startTime != null">
+				and asu.create_time >=#{conditions.startTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="conditions.endTime != null">
+				and asu.create_time
+				&lt;=#{conditions.endTime,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+		order by asu.create_time desc
+	</select>
+	<select id="selectAdsupplyCount" resultType="java.util.Map">
+		SELECT
+		<!-- 待审核 -->
+		IFNULL((select count(ads.id) from ad_supply ads where ads.audit=0 and
+		ads.state=1),0)wait,
+		<!-- 审核通过 -->
+		IFNULL((select count(ads.id) from ad_supply ads where ads.audit=1 and
+		ads.state=1),0)audit_ok,
+		<!-- 审核不通过 -->
+		IFNULL((select count(ads.id) from ad_supply ads where ads.audit=2 and
+		ads.state=1),0)audit_no
+	</select>
+	<select id="selectAdsupplyDetailByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		SELECT
+		asu.id,
+		asu.title,
+		asu.supply_desc,
+		asu.activity_info,
+		asu.address,
+		asu.longitude,
+		asu.latitude,
+		asu.creator_id,
+		asu.read_total,
+		asu.comment_total,
+		asu.allow_letter,
+		asu.allow_phone,
+		asu.phone,
+		asu.region,
+		asu.category,
+		asu.pic,
+		asu.cover,
+		asu.audit_time,
+		asu.audit,
+		asu.supply_type,
+		asu.state,
+		asu.create_time,
+		asu.update_time,
+		asu.extend_data,
+		tui.avatar,
+		tui.nickname,
+		tui.sig
+		FROM
+		ad_supply asu
+		left
+		join t_user_info tui on
+		tui.user_id=
+		asu.creator_id
+		where asu.id =
+		#{id,jdbcType=INTEGER}
+	</select>
+	<!-- 增量统计 -->
+	<select id="selectAdsupplyAllCount" resultType="java.util.Map">
+		SELECT
+	(
+		SELECT
+			IFNULL(count(id), 0)
+		FROM
+			`ad_supply`
+		WHERE
+			to_days(create_time) = to_days(now())
+		AND supply_type = 1
+		AND state = 1
+		AND audit = 1
+	) todayBody,
+	(
+		SELECT
+			IFNULL(count(id), 0)
+		FROM
+			`ad_supply`
+		WHERE
+			to_days(create_time) = to_days(now())
+		AND supply_type = 2
+		AND state = 1
+		AND audit = 1
+	) todayBussness,
+	(
+		SELECT
+			IFNULL(count(id), 0)
+		FROM
+			`ad_supply`
+		WHERE
+			state = 1
+		AND audit = 1
+	) sumCount,
+	(
+		SELECT
+			IFNULL(count(id), 0)
+		FROM
+			`ad_supply`
+		WHERE
+			supply_type = 1
+		AND state = 1
+		AND audit = 1
+	) sumBody,
+	(
+		SELECT
+			IFNULL(count(id), 0)
+		FROM
+			`ad_supply`
+		WHERE
+			supply_type = 2
+		AND audit = 1
+		AND state = 1
+	) sumBussness
+	</select>
+</mapper>

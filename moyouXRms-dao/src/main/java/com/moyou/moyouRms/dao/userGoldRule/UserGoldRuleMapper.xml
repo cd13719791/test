@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.userGoldRule.UserGoldRuleMapper">
+	<resultMap id="BaseResultMap"
+		type="com.moyou.moyouRms.model.userGoldRule.UserGoldRule">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="mode_type" property="modeType" jdbcType="SMALLINT" />
+		<result column="mode_rule_type" property="modeRuleType"
+			jdbcType="SMALLINT" />
+		<result column="rule_desc" property="ruleDesc" jdbcType="VARCHAR" />
+		<result column="gold_num" property="goldNum" jdbcType="INTEGER" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="give" property="give" jdbcType="INTEGER" />
+		<result column="need_rmb" property="needRmb" jdbcType="DECIMAL" />
+		<result column="data_sort" property="dataSort" jdbcType="INTEGER" />
+		<result column="data_status" property="dataStatus" jdbcType="INTEGER" />
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, mode_type, mode_rule_type, rule_desc, gold_num, update_time,
+		create_time, give,
+		need_rmb, data_sort,data_status
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_user_gold_rule
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from t_user_gold_rule
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.userGoldRule.UserGoldRule">
+		insert into t_user_gold_rule (id, mode_type, mode_rule_type,
+		rule_desc, gold_num, update_time,
+		create_time, give, need_rmb,
+		data_sort,data_status)
+		values (#{id,jdbcType=INTEGER}, #{modeType,jdbcType=SMALLINT},
+		#{modeRuleType,jdbcType=SMALLINT},
+		#{ruleDesc,jdbcType=VARCHAR}, #{goldNum,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP},
+		#{createTime,jdbcType=TIMESTAMP}, #{give,jdbcType=INTEGER},
+		#{needRmb,jdbcType=INTEGER},
+		#{dataSort,jdbcType=INTEGER},#{dataStatus,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.userGoldRule.UserGoldRule">
+		insert into t_user_gold_rule
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="modeType != null">
+				mode_type,
+			</if>
+			<if test="modeRuleType != null">
+				mode_rule_type,
+			</if>
+			<if test="ruleDesc != null">
+				rule_desc,
+			</if>
+			<if test="goldNum != null">
+				gold_num,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="give != null">
+				give,
+			</if>
+			<if test="needRmb != null">
+				need_rmb,
+			</if>
+			<if test="dataSort != null">
+				data_sort,
+			</if>
+			<if test="dataStatus != null">
+				data_status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="modeType != null">
+				#{modeType,jdbcType=SMALLINT},
+			</if>
+			<if test="modeRuleType != null">
+				#{modeRuleType,jdbcType=SMALLINT},
+			</if>
+			<if test="ruleDesc != null">
+				#{ruleDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="goldNum != null">
+				#{goldNum,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="give != null">
+				#{give,jdbcType=INTEGER},
+			</if>
+			<if test="needRmb != null">
+				#{needRmb,jdbcType=INTEGER},
+			</if>
+			<if test="dataSort != null">
+				#{dataSort,jdbcType=INTEGER},
+			</if>
+			<if test="dataStatus != null">
+				#{dataStatus,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.userGoldRule.UserGoldRule">
+		update t_user_gold_rule
+		<set>
+			<if test="modeType != null">
+				mode_type = #{modeType,jdbcType=SMALLINT},
+			</if>
+			<if test="modeRuleType != null">
+				mode_rule_type = #{modeRuleType,jdbcType=SMALLINT},
+			</if>
+			<if test="ruleDesc != null">
+				rule_desc = #{ruleDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="goldNum != null">
+				gold_num = #{goldNum,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="give != null">
+				give = #{give,jdbcType=INTEGER},
+			</if>
+			<if test="needRmb != null">
+				need_rmb = #{needRmb,jdbcType=INTEGER},
+			</if>
+			<if test="dataSort != null">
+				data_sort = #{dataSort,jdbcType=INTEGER},
+			</if>
+			<if test="dataStatus != null">
+			data_status	= #{dataStatus,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.userGoldRule.UserGoldRule">
+		update t_user_gold_rule
+		set mode_type = #{modeType,jdbcType=SMALLINT},
+		mode_rule_type = #{modeRuleType,jdbcType=SMALLINT},
+		rule_desc = #{ruleDesc,jdbcType=VARCHAR},
+		gold_num = #{goldNum,jdbcType=INTEGER},
+		update_time = #{updateTime,jdbcType=TIMESTAMP},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		give = #{give,jdbcType=INTEGER},
+		need_rmb = #{needRmb,jdbcType=INTEGER},
+		data_sort = #{dataSort,jdbcType=INTEGER},
+		data_status	= #{dataStatus,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectGoldRuleByModeRuleType" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_user_gold_rule
+		where mode_type=1 and mode_rule_type=#{type} and data_status = 1
+	</select>
+	<select id="selectGodRuleByModeTypeAndModeRuleType"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_user_gold_rule
+		where mode_type=#{type} and data_status = 1
+	</select>
+</mapper>

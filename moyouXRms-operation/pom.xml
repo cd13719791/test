@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.immouo</groupId>
+    <artifactId>moyouXRms</artifactId>
+    <version>1.0</version>
+  </parent>
+  <artifactId>moyouXRms-operation</artifactId>
+  <packaging>war</packaging>
+  <name>moyouXRms-operation Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+		<dependency>
+  			<groupId>com.immouo</groupId>
+			<artifactId>moyouXRms-servcie</artifactId>
+			<version>1.0</version>
+		</dependency>
+	</dependencies>
+  <build>
+    <finalName>moyouXRms-operation</finalName>
+  </build>
+</project>

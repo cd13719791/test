@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.notification.UserNotificationMapper">
+	<insert id="insert"
+		parameterType="com.moyou.moyouRms.model.notification.UserNotification">
+		INSERT INTO t_user_notification (
+		receive_user_id,
+		send_user_id,
+		business_id,
+		business_type,
+		action_type,
+		comment_text_content,
+		business_text_content,
+		pic,
+		comment_relate_id,
+		create_time
+		)
+		VALUES
+		(
+		#{receiveUserId},
+		#{sendUserId},
+		#{businessId},
+		#{businessType},
+		#{actionType},
+		#{commentTextContent},
+		#{businessTextContent},
+		#{pic},
+		#{commentRelateId},
+		NOW()
+		)
+	</insert>
+
+	<!-- 根据故事 id 查询 userNotification -->
+	<select id="queryUserNotificationByDiaryId" parameterType="Integer"
+		resultType="com.moyou.moyouRms.model.notification.UserNotification">
+			SELECT
+			d.creator_id AS receiveUserId,
+			(
+				SELECT
+					dc.text_or_picture
+				FROM
+					t_diary_content dc
+				WHERE
+					dc.diary_id = d.id
+				AND conten_type = 0
+				ORDER BY
+					dc.sorting
+				LIMIT 1
+			) AS businessTextContent,
+			(
+				SELECT
+					dc.text_or_picture
+				FROM
+					t_diary_content dc
+				WHERE
+					dc.diary_id = d.id
+				AND conten_type = 1
+				ORDER BY
+					dc.sorting
+				LIMIT 1
+			) AS pic
+		FROM
+			t_diary d
+		WHERE
+			d.id =#{diaryId}
+	</select>
+
+	<!-- 根据故事评论 id 查询 userNotification -->
+	<select id="queryUserNotificationByDiaryCommentId"
+		parameterType="Integer" resultType="com.moyou.moyouRms.model.notification.UserNotification">
+		SELECT
+		dc.user_id AS receiveUserId,
+		dc.content AS businessTextContent
+		FROM
+		t_diary_comment dc
+		WHERE dc.id = #{parentId}
+	</select>
+
+	<!-- 根据说说 id 查询 userNotification -->
+	<select id="queryUserNotificationByTalkId" parameterType="Integer"
+		resultType="com.moyou.moyouRms.model.notification.UserNotification">
+		SELECT
+		tt.content AS businessTextContent,
+		tt.creator_id AS receiveUserId,
+		(
+		SELECT
+		ttr.url
+		FROM
+		t_talk_resource ttr
+		WHERE
+		ttr.talk_id = tt.id
+		ORDER BY
+		ttr.pic_order
+		LIMIT 1
+		) AS pic
+		FROM
+		t_talk tt
+		WHERE tt.id = #{talkId}
+	</select>
+
+	<!-- 根据说说评论 id 查询 userNotification -->
+	<select id="queryUserNotificationByTalkCommentId" parameterType="Integer"
+		resultType="com.moyou.moyouRms.model.notification.UserNotification">
+		SELECT
+		tt.creator_id AS receiveUserId,
+		tc.content AS businessTextContent
+		FROM
+		t_talk_comment tc
+		LEFT JOIN t_talk tt ON tt.id = tc.talk_id
+		WHERE
+		tc.id = #{parentId}
+	</select>
+
+	<!-- 用户通知 -->
+	<select id="queryUserNotificationList" parameterType="PageBean"
+		resultType="com.moyou.moyouRms.model.notification.UserNotificationQuery">
+		SELECT
+		un.business_id AS businessId,
+		un.business_type AS businessType,
+		un.action_type AS actionType,
+		un.comment_relate_id AS commentRelateId,
+		un.comment_text_content AS commentTextContent,
+		un.business_text_content AS businessTextContent,
+		un.pic,
+		ui.user_id AS userId,
+		ui.nickname AS nickname,
+		ui.avatar
+		FROM
+		t_user_notification un
+		LEFT JOIN t_user_info ui ON ui.user_id = un.send_user_id
+		WHERE
+		un.receive_user_id = #{conditions.userId}
+		ORDER BY un.id DESC
+	</select>
+
+	<!-- 根据转发说说id查询说说的创建者 -->
+	<select id="queryUserId" parameterType="Integer" resultType="Integer">
+		SELECT t.creator_id AS userId FROM t_talk t WHERE t.id=#{relateTalkId}
+	</select>
+
+	<!-- 查询转发说说相关信息 -->
+	<select id="queryTalkRelatedInfoByTalkId" parameterType="Integer"
+		resultType="com.moyou.moyouRms.model.notification.RepublishTalkData">
+		SELECT
+		tt.relate_talk_id AS relateTalkId,
+		tt.relate_state AS relateState,
+		tta.creator_id AS relateUserId,
+		(
+		SELECT
+		ui.nickname
+		FROM
+		t_user_info ui
+		WHERE
+		ui.user_id = tta.creator_id
+		) AS relateNickname
+		FROM
+		t_talk tt
+		LEFT JOIN t_talk tta ON tta.id = tt.relate_talk_id
+		WHERE tt.id =
+		#{talkId}
+	</select>
+</mapper>

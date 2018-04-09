@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.diary.DiaryContentMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.diary.DiaryContent">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="diary_id" property="diaryId" jdbcType="INTEGER" />
+		<result column="text_or_picture" property="textOrPicture"
+			jdbcType="VARCHAR" />
+		<result column="sorting" property="sorting" jdbcType="INTEGER" />
+		<result column="conten_type" property="contenType" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="extend_data" property="extendData" jdbcType="VARCHAR" />
+		<result column="moyou_id" property="moyouId" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, diary_id, text_or_picture, sorting, conten_type, create_time,
+		extend_data
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_diary_content
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from t_diary_content
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.diary.DiaryContent">
+		insert into t_diary_content (id, diary_id, text_or_picture,
+		sorting, conten_type, create_time
+		)
+		values (#{id,jdbcType=INTEGER}, #{diaryId,jdbcType=INTEGER},
+		#{textOrPicture,jdbcType=VARCHAR},
+		#{sorting,jdbcType=INTEGER}, #{contenType,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.diary.DiaryContent">
+		insert into t_diary_content
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="diaryId != null">
+				diary_id,
+			</if>
+			<if test="textOrPicture != null">
+				text_or_picture,
+			</if>
+			<if test="sorting != null">
+				sorting,
+			</if>
+			<if test="contenType != null">
+				conten_type,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="extendData != null">
+				extend_data,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="diaryId != null">
+				#{diaryId,jdbcType=INTEGER},
+			</if>
+			<if test="textOrPicture != null">
+				#{textOrPicture,jdbcType=VARCHAR},
+			</if>
+			<if test="sorting != null">
+				#{sorting,jdbcType=INTEGER},
+			</if>
+			<if test="contenType != null">
+				#{contenType,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="extendData != null">
+				#{extendData,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.diary.DiaryContent">
+		update t_diary_content
+		<set>
+			<if test="diaryId != null">
+				diary_id = #{diaryId,jdbcType=INTEGER},
+			</if>
+			<if test="textOrPicture != null">
+				text_or_picture = #{textOrPicture,jdbcType=VARCHAR},
+			</if>
+			<if test="sorting != null">
+				sorting = #{sorting,jdbcType=INTEGER},
+			</if>
+			<if test="contenType != null">
+				conten_type = #{contenType,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.diary.DiaryContent">
+		update t_diary_content
+		set diary_id = #{diaryId,jdbcType=INTEGER},
+		text_or_picture = #{textOrPicture,jdbcType=VARCHAR},
+		sorting = #{sorting,jdbcType=INTEGER},
+		conten_type = #{contenType,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectFirstDiaryContentListByDiaryId" parameterType="java.lang.Integer"
+		resultType="java.util.Map">
+		SELECT
+		IFNULL(tdc.text_or_picture ,"")picture,
+		(
+		select IFNULL(tdc2.text_or_picture,"")
+		FROM
+		t_diary_content tdc2
+		WHERE
+		tdc2.diary_id = #{id,jdbcType=INTEGER}
+		AND tdc2.conten_type = 0
+		ORDER BY
+		tdc2.sorting
+		LIMIT 0,
+		1
+		)text
+		,diary_title
+		FROM
+		t_diary_content tdc
+		LEFT JOIN t_diary t ON t.id=tdc.diary_id
+		WHERE
+		tdc.diary_id =#{id,jdbcType=INTEGER}
+		AND tdc.conten_type = 1
+		ORDER BY
+		tdc.sorting
+		LIMIT 0,
+		1
+
+	</select>
+	<select id="selectFirstDiaryContentPicByDiaryId" parameterType="java.lang.Integer"
+		resultType="java.util.Map">
+		SELECT
+		tdc.text_or_picture text,
+		(
+		select tdc2.text_or_picture
+		FROM
+		t_diary_content tdc2
+		WHERE
+		tdc2.diary_id = #{id,jdbcType=INTEGER}
+		AND tdc2.conten_type = 1
+		ORDER BY
+		tdc2.sorting
+		LIMIT 0,
+		1
+		)picture
+		FROM
+		t_diary_content tdc
+		WHERE
+		tdc.diary_id = #{id,jdbcType=INTEGER}
+		AND tdc.conten_type = 0
+		ORDER BY
+		tdc.sorting
+		LIMIT 0,
+		1
+	</select>
+	<select id="selectDiaryContentListByDiaryId" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		SELECT
+		tdc.id,
+		tdc.diary_id,
+		tdc.text_or_picture,
+		tdc.sorting,
+		tdc.conten_type,
+		tdc.create_time,
+		tdc.extend_data,
+		tui.moyou_id
+		FROM
+		t_diary_content tdc
+		LEFT JOIN t_diary td ON td.id = tdc.diary_id
+		LEFT JOIN t_user_info tui ON tui.user_id = td.creator_id = tui.user_id
+		WHERE
+		tdc.diary_id = #{id,jdbcType=INTEGER}
+		ORDER BY
+		tdc.sorting
+	</select>
+</mapper>

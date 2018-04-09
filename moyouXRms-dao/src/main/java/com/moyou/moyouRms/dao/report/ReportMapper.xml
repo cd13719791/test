@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.report.ReportMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.report.Report">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="object_type" property="objectType" jdbcType="SMALLINT" />
+		<result column="object_id" property="objectId" jdbcType="INTEGER" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="SMALLINT" />
+		<result column="report_category" property="reportCategory"
+			jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="to_user_id" property="toUserId" jdbcType="INTEGER" />
+		<result column="username" property="userName" jdbcType="VARCHAR" />
+		<result column="tonickname" property="toNickName" jdbcType="VARCHAR" />
+		<result column="moyou_id" property="moyouId" jdbcType="VARCHAR" />
+		<result column="sig" property="sig" jdbcType="VARCHAR" />
+		<result column="avatar" property="avatar" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, object_type, object_id, content, state,
+		report_category,
+		create_time,
+		update_time, to_user_id
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_report
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_report
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.report.Report"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_report (
+		user_id,
+		object_type,
+		object_id, content, state,
+		report_category,
+		create_time,
+		update_time,
+		to_user_id)
+		values (
+		#{userId,jdbcType=INTEGER},
+		#{objectType,jdbcType=SMALLINT},
+		#{objectId,jdbcType=INTEGER},
+		#{content,jdbcType=VARCHAR},
+		#{state,jdbcType=SMALLINT},
+		#{reportCategory,jdbcType=VARCHAR},
+		NOW(),
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{toUserId,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.report.Report">
+		insert into t_report
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="objectType != null">
+				object_type,
+			</if>
+			<if test="objectId != null">
+				object_id,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="reportCategory != null">
+				report_category,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="toUserId != null">
+				to_user_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="objectType != null">
+				#{objectType,jdbcType=SMALLINT},
+			</if>
+			<if test="objectId != null">
+				#{objectId,jdbcType=INTEGER},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=SMALLINT},
+			</if>
+			<if test="reportCategory != null">
+				#{reportCategory,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="toUserId != null">
+				#{toUserId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.report.Report">
+		update t_report
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="objectType != null">
+				object_type = #{objectType,jdbcType=SMALLINT},
+			</if>
+			<if test="objectId != null">
+				object_id = #{objectId,jdbcType=INTEGER},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=SMALLINT},
+			</if>
+			<if test="reportCategory != null">
+				report_category = #{reportCategory,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="toUserId != null">
+				to_user_id = #{toUserId,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.report.Report">
+		update t_report
+		set user_id = #{userId,jdbcType=INTEGER},
+		object_type =
+		#{objectType,jdbcType=SMALLINT},
+		object_id =
+		#{objectId,jdbcType=INTEGER},
+		content = #{content,jdbcType=VARCHAR},
+		state = #{state,jdbcType=SMALLINT},
+		report_category =
+		#{reportCategory,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		to_user_id =
+		#{toUserId,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 举报管理初始化接口 -->
+	<select id="selectReportsBySelctive" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		SELECT
+		tr.id,
+		tr.object_type,
+		tr.object_id,
+		tr.content,
+		tr.state,
+		tr.create_time,
+		tr.update_time,
+		tui.nickname AS username,
+		tui2.moyou_id,
+		tui.user_id,
+		tui2.sig,
+		tui2.avatar,
+		tui2.nickname AS tonickname,
+		tui2.user_id AS toUserId
+		FROM
+		t_report tr
+		LEFT JOIN
+		t_user_info tui
+		ON
+		tui.user_id = tr.user_id
+		LEFT JOIN
+		t_user_info tui2
+		ON tui2.user_id =
+		tr.to_user_id
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="conditions.id !=null and conditions.id !=''">
+				AND tr.id = #{conditions.id,jdbcType=SMALLINT}
+			</if>
+			<if test="conditions.objectType !=null and conditions.objectType !=''">
+				AND tr.object_type =
+				#{conditions.objectType,jdbcType=SMALLINT}
+			</if>
+			<if test="conditions.state !=null and conditions.state !=''">
+				AND tr.state = #{conditions.state,jdbcType=SMALLINT}
+			</if>
+			<if test="conditions.startTime !=null and conditions.startTime !=''">
+		<![CDATA[ 
+			AND tr.create_time >=
+			#{conditions.startTime,jdbcType=TIMESTAMP}
+			AND tr.create_time <=
+			#{conditions.endTime,jdbcType=TIMESTAMP}]]>
+			</if>
+			<if test="conditions.endTime !=null and conditions.endTime !=''">
+		<![CDATA[ 
+			AND tr.create_time <=
+			#{conditions.endTime,jdbcType=TIMESTAMP}]]>
+			</if>
+			<if test="conditions.content !=null and conditions.content !=''">
+				AND tr.content like
+				concat(concat('%',#{conditions.content,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="conditions.toNickName !=null and  conditions.toNickName !='' ">
+				AND
+				tui2.nickname like
+				concat(concat('%',#{conditions.toNickName,jdbcType=VARCHAR}),'%')
+			</if>
+		</trim>
+		ORDER BY tr.create_time
+		<if test="conditions.orderBy == 0">
+			DESC
+		</if>
+	</select>
+	<select id="selectReportsById" resultMap="BaseResultMap"
+		parameterType="com.moyou.moyouRms.model.report.Report">
+		select id, user_id, object_type, object_id, content,
+		state,
+		report_category,
+		create_time,
+		update_time, to_user_id from
+		t_report where id = #{id,jdbcType=INTEGER}
+	</select>
+	<update id="updateReportsWithState" parameterType="com.moyou.moyouRms.model.report.Report">
+		update
+		t_report
+		set
+		state = #{state}
+		where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+	<!-- 查询举报未处理总数 -->
+	<select id="queryCountNoDispose" resultType="java.lang.Short">
+		SELECT COUNT(state)
+		AS noDispose FROM t_report WHERE state=0
+	</select>
+	<!-- 查询举报已经处理总数 -->
+	<select id="queryCountDispose" resultType="java.lang.Short">
+		SELECT COUNT(state) AS
+		state FROM t_report WHERE state !=0
+	</select>
+	<select id="queryUserStatisticsReport" resultType="com.moyou.moyouRms.model.statistics.UserStatistics">
+		SELECT COUNT(id) AS dispose,(SELECT COUNT(id) FROM t_report WHERE state=0)
+		AS noDispose FROM t_report WHERE state !=0
+	</select>
+</mapper>

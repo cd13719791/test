@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.diary.DiaryFolderMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.diary.DiaryFolder">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="diary_folder_name" property="diaryFolderName"
+			jdbcType="VARCHAR" />
+		<result column="diary_folder_url" property="diaryFolderUrl"
+			jdbcType="VARCHAR" />
+		<result column="creator_id" property="creatorId" jdbcType="INTEGER" />
+		<result column="diary_total" property="diaryTotal" jdbcType="INTEGER" />
+		<result column="whether_default" property="whetherDefault"
+			jdbcType="INTEGER" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="recommend" property="recommend" jdbcType="INTEGER" />
+		<result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+		<result column="avatar" property="avatar" jdbcType="VARCHAR"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, diary_folder_name, diary_folder_url, creator_id,
+		diary_total,
+		whether_default,
+		state, create_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_diary_folder
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_diary_folder
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.diary.DiaryFolder">
+		insert into t_diary_folder
+		(id, diary_folder_name, diary_folder_url,
+		creator_id, diary_total,
+		whether_default,
+		state, create_time)
+		values (#{id,jdbcType=INTEGER},
+		#{diaryFolderName,jdbcType=VARCHAR},
+		#{diaryFolderUrl,jdbcType=VARCHAR},
+		#{creatorId,jdbcType=INTEGER},
+		#{diaryTotal,jdbcType=INTEGER}, #{whetherDefault,jdbcType=INTEGER},
+		#{state,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.diary.DiaryFolder">
+		insert into t_diary_folder
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="diaryFolderName != null">
+				diary_folder_name,
+			</if>
+			<if test="diaryFolderUrl != null">
+				diary_folder_url,
+			</if>
+			<if test="creatorId != null">
+				creator_id,
+			</if>
+			<if test="diaryTotal != null">
+				diary_total,
+			</if>
+			<if test="whetherDefault != null">
+				whether_default,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="diaryFolderName != null">
+				#{diaryFolderName,jdbcType=VARCHAR},
+			</if>
+			<if test="diaryFolderUrl != null">
+				#{diaryFolderUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="creatorId != null">
+				#{creatorId,jdbcType=INTEGER},
+			</if>
+			<if test="diaryTotal != null">
+				#{diaryTotal,jdbcType=INTEGER},
+			</if>
+			<if test="whetherDefault != null">
+				#{whetherDefault,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.diary.DiaryFolder">
+		update t_diary_folder
+		<set>
+			<if test="diaryFolderName != null">
+				diary_folder_name = #{diaryFolderName,jdbcType=VARCHAR},
+			</if>
+			<if test="diaryFolderUrl != null">
+				diary_folder_url = #{diaryFolderUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="creatorId != null">
+				creator_id = #{creatorId,jdbcType=INTEGER},
+			</if>
+			<if test="diaryTotal != null">
+				diary_total = #{diaryTotal,jdbcType=INTEGER},
+			</if>
+			<if test="whetherDefault != null">
+				whether_default = #{whetherDefault,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.diary.DiaryFolder">
+		update
+		t_diary_folder
+		set diary_folder_name =
+		#{diaryFolderName,jdbcType=VARCHAR},
+		diary_folder_url =
+		#{diaryFolderUrl,jdbcType=VARCHAR},
+		creator_id =
+		#{creatorId,jdbcType=INTEGER},
+		diary_total =
+		#{diaryTotal,jdbcType=INTEGER},
+		whether_default =
+		#{whetherDefault,jdbcType=INTEGER},
+		state = #{state,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP}
+		where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectDiaryFolderBySelective" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		SELECT
+		tdf.id,
+		tdf.diary_folder_name,
+		tdf.diary_folder_url,
+		tdf.creator_id,
+		tdf.diary_total,
+		tdf.whether_default,
+		tdf.state,
+		tdf.create_time,
+		tui.nickname,
+		tdfr.recommed_status recommend
+		FROM
+		t_diary_folder
+		tdf
+		LEFT JOIN t_diary_folder_recommend tdfr ON tdfr.diary_folder_id =
+		tdf.id
+		LEFT JOIN t_user_info tui ON tui.user_id = tdf.creator_id
+		<where>
+			<if test="conditions.state != nulland conditions.state != ''">
+				tdf.state = #{conditions.state,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.recommed !=null and conditions.recommed !=''">
+				and
+				tdfr.recommed_status=#{conditions.recommed,jdbcType=INTEGER}
+			</if>
+			<if test="conditions.nickname !=null and conditions.nickname !=''">
+				and tui.nickname regexp
+				#{conditions.nickname,jdbcType=VARCHAR}
+			</if>
+			<if test="conditions.nickname !=null and conditions.nickname !=''">
+				and tdf.diary_folder_name regexp
+				#{conditions.diaryFolderName,jdbcType=VARCHAR}
+			</if>
+			<if
+				test="conditions.diaryTotalStart !=null and conditions.diaryTotalStart !=''">
+			<![CDATA[ and tdf.diary_total >= #{conditions.diaryTotalStart,jdbcType=INTEGER}]]>
+			</if>
+			<if
+				test="conditions.diaryTotalEnd !=null and conditions.diaryTotalEnd !=''">
+			<![CDATA[and tdf.diary_total <= #{conditions.diaryTotalEnd,jdbcType=INTEGER}]]>
+			</if>
+		</where>
+		ORDER BY
+		tdf.create_time DESC
+	</select>
+	<select id="selectDiaryFolderById" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		SELECT
+		tdf.id,
+		tdf.diary_folder_name,
+		tdf.diary_folder_url,
+		tdf.creator_id,
+		tdf.diary_total,
+		tdf.whether_default,
+		tdf.state,
+		tdf.create_time,
+		tui.nickname,tui.avatar,
+		tdfr.recommed_status recommend
+		FROM
+		t_diary_folder tdf
+		LEFT JOIN t_diary_folder_recommend tdfr ON tdfr.diary_folder_id = tdf.id
+		LEFT JOIN t_user_info tui ON tui.user_id = tdf.creator_id
+		where tdf.id = #{id}
+	</select>
+</mapper>

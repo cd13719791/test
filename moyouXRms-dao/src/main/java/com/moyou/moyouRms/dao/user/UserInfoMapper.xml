@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.user.UserInfoMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.user.UserInfo">
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="nickname" property="nickname" jdbcType="VARCHAR" />
+		<result column="avatar" property="avatar" jdbcType="VARCHAR" />
+		<result column="gender" property="gender" jdbcType="INTEGER" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+		<result column="height" property="height" jdbcType="INTEGER" />
+		<result column="weight" property="weight" jdbcType="INTEGER" />
+		<result column="push_chat_id" property="pushChatId" jdbcType="VARCHAR" />
+		<result column="sig" property="sig" jdbcType="VARCHAR" />
+		<result column="moyou_id" property="moyouId" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="account_type" property="accountType" jdbcType="INTEGER" />
+		<result column="latitude" property="latitude" jdbcType="DOUBLE" />
+		<result column="longitude" property="longitude" jdbcType="DOUBLE" />
+		<result column="recommed_status" property="recommedStatus"
+			jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="model_type" property="modelType" jdbcType="VARCHAR" />
+		<result column="version_number" property="versionNumber"
+			jdbcType="VARCHAR" />
+		<result column="ip" property="ip" jdbcType="VARCHAR" />
+	</resultMap>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.user.UserInfo">
+		insert into t_user_info
+		(user_id, nickname, avatar,
+		gender, province, city,
+		birthday, height,
+		weight,
+		push_chat_id, sig, moyou_id,
+		create_time, update_time)
+		values
+		(#{userId,jdbcType=INTEGER}, #{nickname,jdbcType=VARCHAR},
+		#{avatar,jdbcType=VARCHAR},
+		#{gender,jdbcType=INTEGER},
+		#{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR},
+		#{birthday,jdbcType=TIMESTAMP}, #{height,jdbcType=INTEGER},
+		#{weight,jdbcType=INTEGER},
+		#{pushChatId,jdbcType=VARCHAR},
+		#{sig,jdbcType=VARCHAR}, #{moyouId,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.user.UserInfo">
+		insert into t_user_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="nickname != null">
+				nickname,
+			</if>
+			<if test="avatar != null">
+				avatar,
+			</if>
+			<if test="gender != null">
+				gender,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="birthday != null">
+				birthday,
+			</if>
+			<if test="height != null">
+				height,
+			</if>
+			<if test="weight != null">
+				weight,
+			</if>
+			<if test="pushChatId != null">
+				push_chat_id,
+			</if>
+			<if test="sig != null">
+				sig,
+			</if>
+			<if test="moyouId != null">
+				moyou_id,
+			</if>
+			create_time,
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="nickname != null">
+				#{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="avatar != null">
+				#{avatar,jdbcType=VARCHAR},
+			</if>
+			<if test="gender != null">
+				#{gender,jdbcType=INTEGER},
+			</if>
+			<if test="province != null">
+				#{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				#{city,jdbcType=VARCHAR},
+			</if>
+			<if test="birthday != null">
+				#{birthday,jdbcType=TIMESTAMP},
+			</if>
+			<if test="height != null">
+				#{height,jdbcType=INTEGER},
+			</if>
+			<if test="weight != null">
+				#{weight,jdbcType=INTEGER},
+			</if>
+			<if test="pushChatId != null">
+				#{pushChatId,jdbcType=VARCHAR},
+			</if>
+			<if test="sig != null">
+				#{sig,jdbcType=VARCHAR},
+			</if>
+			<if test="moyouId != null">
+				#{moyouId,jdbcType=VARCHAR},
+			</if>
+			now(),
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectUserInfoByUserId" resultMap="BaseResultMap"
+		parameterType="com.moyou.moyouRms.model.user.UserInfo">
+		SELECT
+		tui.nickname,
+		tui.gender,
+		tui.sig,
+		tui.avatar,
+		tui.birthday,
+		tu.account_type,
+		tui.ip,
+		tui.city,
+		tui.moyou_id,
+		tu.account_type,
+		tui.push_chat_id,
+		tu.type,
+		tu.account,
+		tur.recommed_status,
+		tui.version_number,
+		tui.model_type,
+		tu.state
+		FROM
+		`t_user_info` tui
+		LEFT JOIN t_user
+		tu ON tu.user_id = tui.user_id
+		LEFT
+		JOIN t_user_recommend tur ON
+		tur.user_id = tui.user_id
+		where
+		tui.user_id=#{userId}
+	</select>
+	<!-- 查询假用户 -->
+	<select id="selectUserIdByMap" parameterType="java.util.HashMap"
+		resultType="com.moyou.moyouRms.model.user.UserInfo">
+		SELECT u.user_id as userId,ui.push_chat_id AS pushChatId
+		FROM t_user_info ui LEFT JOIN t_user u ON ui.user_id=u.user_id WHERE
+		TYPE =1
+	</select>
+	<!-- 查询假用户的ID以及环信ID -->
+	<select id="queryUserIdAndPushChatId" resultType="com.moyou.moyouRms.model.user.UserInfo"
+		parameterType="java.lang.Integer">
+		SELECT ui.push_chat_id AS
+		pushChatId,ui.user_id AS userId
+		FROM t_user_info
+		ui LEFT JOIN t_user u
+		ON ui.user_id=u.user_id WHERE
+		u.TYPE=1 and
+		u.user_id !=#{userId}
+	</select>
+	<!-- 群专用 假用户 -->
+	<select id="queryUserIdAndPushChatId2" resultType="com.moyou.moyouRms.model.user.UserInfo">
+		SELECT ui.push_chat_id AS
+		pushChatId,ui.user_id AS userId
+		FROM
+		t_user_info
+		ui LEFT JOIN t_user u
+		ON ui.user_id=u.user_id WHERE
+		u.TYPE=1
+		and
+		u.user_id !=#{param1} and
+		<!-- 群用户 1000 个的id 正式服 28394 -27392 测试服 10975 -11974 -->
+		${param2}
+	</select>
+	<!-- 根据用户ID获取用户的环信ID -->
+	<select id="queryPushChatId" parameterType="java.lang.Integer"
+		resultType="java.lang.String">
+		SELECT push_chat_id FROM t_user_info WHERE
+		user_id=#{userId}
+	</select>
+	<!-- 推送信息查询 -->
+	<select id="queryPushObject" resultType="com.moyou.moyouRms.model.notification.PushObject">
+		SELECT
+		ui.nickname AS
+		sendUserNickname,
+		(
+		SELECT
+		tui.push_chat_id
+		FROM
+		t_user tu, t_user_info tui
+		WHERE
+		tui.user_id = #{receiveUserId} AND tu.user_id=tui.user_id AND
+		tu.type=0
+		) AS pushId
+		FROM
+		t_user_info ui
+		WHERE
+		ui.user_id = #{sendUserId}
+	</select>
+	<!-- 根据用户Id查询用户昵称 -->
+	<select id="queryUserNickName" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.user.UserInfo">
+		SELECT
+		ui.nickname,
+		ui.push_chat_id AS pushChatId
+		FROM
+		t_user_info ui LEFT JOIN
+		t_user u ON
+		ui.user_id=u.user_id
+		WHERE
+		ui.user_id =#{userId} AND u.TYPE
+		!=1
+	</select>
+	<select id="selectUsreNickNameAndAvatar" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.user.UserInfo">
+		SELECT
+		tui.nickname,tui.avatar as avatar
+		FROM
+		`t_user_info`
+		tui
+		where
+		tui.user_id=#{userId}
+	</select>
+	<select id="queryContaninsMoyouId" resultType="String">
+		SELECT
+		moyou_id
+		FROM
+		t_user_info WHERE moyou_id=#{moyouId}
+	</select>
+	<!-- 查询所有真用户的环信ID -->
+	<select id="queryUserPushChatId" resultType="com.moyou.moyouRms.model.user.UserInfo">
+		SELECT
+		ui.push_chat_id AS pushChatId,
+		ui.nickname as nickname
+		FROM
+		t_user_info
+		ui LEFT JOIN
+		t_user u ON
+		ui.user_id=u.user_id
+		WHERE u.TYPE
+		=0
+	</select>
+	<!-- 根据用户Id查询用户昵称 -->
+	<select id="queryCrowdUserAndPushChatId" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.user.UserInfo">
+		SELECT
+		ui.push_chat_id AS pushChatId,
+		ui.user_id AS userId
+		FROM
+		t_user_info ui
+		LEFT JOIN
+		t_user u
+		ON ui.user_id = u.user_id
+		WHERE
+		u.user_id = #{userId}
+	</select>
+	<!-- 查询假用户性别为女的以及ID -->
+	<select id="querySexWoman" resultType="com.moyou.moyouRms.model.user.UserInfo">
+		SELECT
+		ui.gender,ui.user_id AS userId,ui.city AS city,ai.latitude AS
+		latitude,ai.longitude AS longitude
+		FROM t_user_info ui LEFT JOIN t_user
+		u ON ui.user_id=u.user_id LEFT JOIN t_user_active_info ai ON
+		u.user_id=ai.user_id WHERE
+		u.TYPE =1 AND ui.gender=1
+	</select>
+	<!-- 查询所有假用户性别男以及ID -->
+	<select id="queryMan" resultType="com.moyou.moyouRms.model.user.UserInfo">
+		SELECT ui.gender,ui.user_id AS
+		userId,ui.city AS city,ai.latitude AS
+		latitude,ai.longitude AS
+		longitude
+		FROM t_user_info ui LEFT JOIN t_user
+		u ON ui.user_id=u.user_id
+		LEFT JOIN t_user_active_info ai ON
+		u.user_id=ai.user_id WHERE
+		u.TYPE =1
+		AND ui.gender=0
+	</select>
+	<select id="queryUserMoyouIdCount2" resultMap="BaseResultMap">
+		select
+		moyou_id,count(*) as height from t_user_info group by moyou_id having
+		height>1
+	</select>
+	<select id="queryByMoyouId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		SELECT t.*,tu.type FROM t_user_info t LEFT JOIN t_user tu on
+		tu.user_id=t.user_id WHERE t.moyou_id=#{moyouId,jdbcType=VARCHAR}
+	</select>
+	<update id="updateMoyouId" parameterType="com.moyou.moyouRms.model.user.UserInfo">
+		UPDATE t_user_info set
+		moyou_id=#{moyouId} where user_id=#{userId}
+	</update>
+	<select id="selectFakeUserNotInRelat" resultMap="BaseResultMap">
+		SELECT
+		tu.account,
+		tu.user_id,
+		tui.push_chat_id
+		FROM
+		t_user tu
+		LEFT JOIN
+		t_user_info tui ON tui.user_id = tu.user_id
+		WHERE
+		tu.type = 1
+		AND NOT
+		EXISTS (
+		SELECT
+		sys_admin_relate_user.user_id
+		FROM
+		sys_admin_relate_user
+		where sys_admin_relate_user.user_id=tu.user_id
+		)
+		ORDER BY
+		tu.user_id DESC
+	</select>
+	<select id="selectUsreDetailInfo" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.user.UserMsgInfo">
+		SELECT
+		ui.push_chat_id AS pushChatId,
+		ui.nickname as
+		nickname,
+		ui.birthday,
+		ui.city,
+		ui.gender,
+		ui.avatar,
+		ui.user_id userId
+		FROM
+		t_user_info ui
+		WHERE ui.user_id=#{userId,jdbcType=INTEGER}
+	</select>
+	<select id="queryUserCity" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.user.UserInfo">
+		SELECT
+		ui.city
+		FROM
+		t_user_info ui
+		WHERE
+		ui.user_id=#{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectFakeUserNotInRelatLimit" resultType="com.moyou.moyouRms.model.user.UserInfo">
+		SELECT
+		ui.account,
+		ui.user_id userId,
+		tui.push_chat_id pushChatId
+		FROM
+		t_user ui
+		LEFT JOIN t_user_info tui ON tui.user_id = ui.user_id
+		WHERE
+		ui.type = 1
+		and
+		NOT EXISTS (SELECT u.account FROM t_user u WHERE
+		u.account=ui.account and
+		${param3} )
+		ORDER BY
+		ui.user_id
+		limit
+		#{param1},#{param2}
+	</select>
+	<select id="queryReallyUserIdAndPushChatId" resultType="com.moyou.moyouRms.model.user.UserInfo">
+		SELECT
+		ui.user_id userId,
+		tui.push_chat_id pushChatId
+		FROM
+		t_user ui
+		LEFT JOIN
+		t_user_info tui ON tui.user_id = ui.user_id
+		WHERE
+		ui.type = 0
+	</select>
+	<select id="selectAllUserByDeviceId" parameterType="java.lang.String"
+		resultType="com.moyou.moyouRms.model.user.UserInfo">
+		SELECT
+		tu.user_id userId,
+		tu.device_id deviceId,
+		tui.push_chat_id
+		pushChatId
+		FROM
+		`t_user_info` tui
+		LEFT JOIN t_user tu ON tu.user_id =
+		tui.user_id
+		<where>
+			<if test="deviceId != null">
+				tu.device_id=#{deviceId,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="queryReallyUserPushChatId" resultType="java.lang.String">
+		SELECT
+		tui.push_chat_id pushChatId
+		FROM
+		t_user ui
+		LEFT JOIN
+		t_user_info tui ON
+		tui.user_id = ui.user_id
+		WHERE
+		ui.type = 0
+	</select>
+	<update id="updateUserAvatar" parameterType="com.moyou.moyouRms.model.user.UserInfo">
+		UPDATE t_user_info
+		set
+		avatar=#{avatar} where user_id=#{userId}
+	</update>
+	<select id="selectFakeUserForBiuBiuBiu" resultMap="BaseResultMap">
+		SELECT
+		tui.user_id,
+		tui.city,
+		tuai.latitude,
+		tuai.longitude
+		FROM
+		t_user_info tui
+		LEFT JOIN t_user tu ON tu.user_id = tui.user_id
+		LEFT JOIN
+		t_user_active_info tuai on tuai.user_id=tui.user_id
+		WHERE
+		tu.type = 1
+	</select>
+	<select id="selectGoldConvertModel"
+		resultType="com.moyou.moyouRms.model.liveshow.UserGoldConvertModel"
+		parameterType="java.lang.Integer">
+		SELECT
+		tui.moyou_id moyouId,
+		tug.live_gold goldNum,
+		lui.weixin,
+		tui.nickname,
+		(
+		SELECT
+		IFNULL(sum(luc.gold_num), 0)
+		FROM
+		live_user_convert luc
+		WHERE
+		luc.user_id = lui.user_id
+		AND TO_DAYS(luc.create_time) = TO_DAYS(now())
+		) toDayGet
+		FROM
+		t_user_info tui
+		LEFT JOIN live_user_info lui ON lui.user_id = tui.user_id
+		LEFT JOIN t_user_gold tug on tug.user_id=tui.user_id
+		where tui.user_id = #{userId}
+	</select>
+</mapper>

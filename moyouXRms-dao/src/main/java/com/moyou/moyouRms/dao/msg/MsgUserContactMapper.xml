@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.msg.MsgUserContactMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.msg.MsgUserContact">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="send_user_id" property="sendUserId" jdbcType="VARCHAR" />
+		<result column="receive_user_id" property="receiveUserId"
+			jdbcType="VARCHAR" />
+		<result column="jpush_msg_id" property="jpushMsgId" jdbcType="VARCHAR" />
+		<result column="msg_send_type" property="msgSendType" jdbcType="VARCHAR" />
+		<result column="msg_content" property="msgContent" jdbcType="VARCHAR" />
+		<result column="msg_send_count" property="msgSendCount"
+			jdbcType="INTEGER" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, send_user_id, receive_user_id, jpush_msg_id,
+		msg_send_type,
+		msg_content, msg_send_count,
+		state, update_time,
+		create_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from t_msg_user_contact
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		t_msg_user_contact
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.msg.MsgUserContact">
+		insert into t_msg_user_contact
+		(id, send_user_id, receive_user_id,
+		jpush_msg_id, msg_send_type,
+		msg_content,
+		msg_send_count, state, update_time,
+		create_time)
+		values
+		(#{id,jdbcType=VARCHAR}, #{sendUserId,jdbcType=VARCHAR},
+		#{receiveUserId,jdbcType=VARCHAR},
+		#{jpushMsgId,jdbcType=VARCHAR},
+		#{msgSendType,jdbcType=VARCHAR}, #{msgContent,jdbcType=VARCHAR},
+		#{msgSendCount,jdbcType=INTEGER}, #{state,jdbcType=INTEGER},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{createTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.msg.MsgUserContact">
+		insert into t_msg_user_contact
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="sendUserId != null">
+				send_user_id,
+			</if>
+			<if test="receiveUserId != null">
+				receive_user_id,
+			</if>
+			<if test="jpushMsgId != null">
+				jpush_msg_id,
+			</if>
+			<if test="msgSendType != null">
+				msg_send_type,
+			</if>
+			<if test="msgContent != null">
+				msg_content,
+			</if>
+			<if test="msgSendCount != null">
+				msg_send_count,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="sendUserId != null">
+				#{sendUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="receiveUserId != null">
+				#{receiveUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="jpushMsgId != null">
+				#{jpushMsgId,jdbcType=VARCHAR},
+			</if>
+			<if test="msgSendType != null">
+				#{msgSendType,jdbcType=VARCHAR},
+			</if>
+			<if test="msgContent != null">
+				#{msgContent,jdbcType=VARCHAR},
+			</if>
+			<if test="msgSendCount != null">
+				#{msgSendCount,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.msg.MsgUserContact">
+		update t_msg_user_contact
+		<set>
+			<if test="sendUserId != null">
+				send_user_id = #{sendUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="receiveUserId != null">
+				receive_user_id = #{receiveUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="jpushMsgId != null">
+				jpush_msg_id = #{jpushMsgId,jdbcType=VARCHAR},
+			</if>
+			<if test="msgSendType != null">
+				msg_send_type = #{msgSendType,jdbcType=VARCHAR},
+			</if>
+			<if test="msgContent != null">
+				msg_content = #{msgContent,jdbcType=VARCHAR},
+			</if>
+			<if test="msgSendCount != null">
+				msg_send_count = #{msgSendCount,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.msg.MsgUserContact">
+		update
+		t_msg_user_contact
+		set send_user_id = #{sendUserId,jdbcType=VARCHAR},
+		receive_user_id = #{receiveUserId,jdbcType=VARCHAR},
+		jpush_msg_id =
+		#{jpushMsgId,jdbcType=VARCHAR},
+		msg_send_type =
+		#{msgSendType,jdbcType=VARCHAR},
+		msg_content =
+		#{msgContent,jdbcType=VARCHAR},
+		msg_send_count =
+		#{msgSendCount,jdbcType=INTEGER},
+		state = #{state,jdbcType=INTEGER},
+		update_time = #{updateTime,jdbcType=TIMESTAMP},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 查询极光推送回调 id , 用于判断是否需要覆盖推送 -->
+	<select id="queryMsgIdAndUpdateTime" resultType="java.util.Map">
+		SELECT
+		mc.jpush_msg_id AS jpushMsgId,
+		mc.update_time AS updateTime
+		FROM
+		t_msg_user_contact mc
+		WHERE
+		mc.send_user_id = #{msgUserContact.sendUserId,jdbcType=VARCHAR}
+		AND mc.msg_content =
+		#{msgUserContact.msgContent,jdbcType=VARCHAR}
+		AND mc.receive_user_id IN
+		<foreach collection="aliases" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+	</select>
+	
+	<!-- 覆盖推送 -->
+	<update id="updateByJpushMsgId" parameterType="com.moyou.moyouRms.model.msg.MsgUserContact">
+		UPDATE t_msg_user_contact m
+		SET m.update_time = #{updateTime,jdbcType=TIMESTAMP}
+		AND m.state = 0
+		AND m.msg_send_count = m.msg_send_count + 1
+		WHERE
+			m.jpush_msg_id = #{jpushMsgId,jdbcType=VARCHAR}
+		AND m.send_user_id = #{sendUserId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- list 插入 -->
+	<insert id="insertList" parameterType="java.util.List">
+		INSERT INTO t_msg_user_contact
+			(id, send_user_id, receive_user_id, jpush_msg_id, msg_send_type, msg_content,
+			msg_send_count, state, update_time, create_time)
+		VALUES
+		<foreach collection="list" item="list" open="(" close=")" separator=",">
+			#{list.id,jdbcType=VARCHAR}, 
+			#{list.sendUserId,jdbcType=VARCHAR},
+			#{list.receiveUserId,jdbcType=VARCHAR},
+			#{list.jpushMsgId,jdbcType=VARCHAR},
+			#{list.msgSendType,jdbcType=VARCHAR}, 
+			#{list.msgContent,jdbcType=VARCHAR},
+			#{list.msgSendCount,jdbcType=INTEGER}, 
+			#{list.state,jdbcType=INTEGER},
+			#{list.updateTime,jdbcType=TIMESTAMP},
+			#{list.createTime,jdbcType=TIMESTAMP}
+		</foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.gerrting.GerrtingMapper">
+	<!-- 添加一条祝福语记录 -->
+	<insert id="insertBlessingLog"
+		parameterType="com.moyou.moyouRms.model.gerrting.GreetingUserSendLog">
+		INSERT INTO
+		t_greeting_user_send_log(user_id,greeting_appellation,greeting_content,greeting_inscribe,
+		greeting_background,create_time)VALUES(#{userId},#{greetingAppellation},#{greetingContent},
+		#{greetingInscribe},#{greetingBackground},NOW())
+	</insert>
+	<!-- 添加祝福语 -->
+	<insert id="insertGerrting" parameterType="com.moyou.moyouRms.model.gerrting.GreetingAbstract">
+		INSERT INTO
+		t_greeting_user_send_log(user_id,greeting_appellation,greeting_content,greeting_inscribe,
+		greeting_background,create_time)VALUES(#{userId},#{greetingAppellation},#{greetingContent},
+		#{greetingInscribe},#{greetingBackground},NOW())
+	</insert>
+
+
+	<!-- 添加一条祝福语 -->
+	<insert id="insertBlessing"
+		parameterType="com.moyou.moyouRms.model.gerrting.GreetingUserSendLog">
+		INSERT INTO
+		t_greeting_content(greeting_appellation,greeting_content,greeting_inscribe,
+		greeting_background,create_time,update_time,state,greeting_abstract_id)VALUES(#{greetingAppellation},#{greetingContent},
+		#{greetingInscribe},#{greetingBackground},NOW(),NOW(),1,#{greetingAbstractId})
+	</insert>
+
+	<!-- 插入节日封面图片 -->
+	<insert id="insertGerrtingGreetingAbstractList" parameterType="com.moyou.moyouRms.model.gerrting.PicList">
+		INSERT INTO t_greeting_abstract
+		(festival_title,festival_content,festival_picture,festival_date,festival_date_text,cerate_time,update_time,state)
+		VALUES
+		<foreach collection="list" item="item" index="" open="" close=""
+			separator=",">
+			(#{item.festivalTitle},#{item.festivalContent},#{item.festivalPicture},#{item.festivalDate},#{item.festivalDateText},#{item.createTime},#{item.updateTime},#{item.state})
+		</foreach>
+	</insert>
+
+	<!-- 查询最近节日的祝福语跟图片 -->
+	<select id="queryBlessing" resultType="com.moyou.moyouRms.model.gerrting.GreetingAbstract">
+		SELECT
+		tg.id AS BlessingId,
+		tg.festival_title AS festivalTitle,
+		tg.festival_content AS
+		festivalContent,
+		tg.festival_picture AS festivalPicture
+		FROM
+		t_greeting_abstract tg
+		WHERE
+		tg.festival_date = (
+		SELECT
+		ga.festival_date
+		FROM
+		t_greeting_abstract ga
+		WHERE
+		ga.state = 1
+		ORDER BY
+		ABS(
+		TO_DAYS(NOW())
+		- TO_DAYS(ga.festival_date)
+		)
+		LIMIT 1
+		)
+	</select>
+	<!-- 根据祝福语的id查询卡片的内容 -->
+	<select id="queryBlessingDetails"
+		resultType="com.moyou.moyouRms.model.gerrting.GreetingUserSendLog"
+		parameterType="Integer">
+		SELECT
+		gc.id AS BlessingId,
+		gc.greeting_appellation AS
+		greetingAppellation,
+		gc.greeting_content AS greetingContent,
+		gc.greeting_inscribe AS greetingInscribe,
+		gc.greeting_background AS
+		greetingBackground
+		FROM
+		t_greeting_user_send_log gc WHERE
+		gc.id=#{BlessingId} 
+	</select>
+	<!-- 根据卡片的id查询 图片集合 -->
+	<select id="queryBlessingPicList" resultType="com.moyou.moyouRms.model.gerrting.PicList"
+		parameterType="Integer">
+		SELECT gc.greeting_background AS greetingBackground FROM
+		t_greeting_content gc WHERE
+		gc.greeting_abstract_id=#{greetingAbstractId}
+	</select>
+	<!-- 初始化祝福语管理 -->
+	<select id="queryGreetingAbstractList" parameterType="PageBean"
+		resultType="com.moyou.moyouRms.model.gerrting.GreetingAbstract">
+		SELECT
+		ga.id,
+		ga.festival_title AS festivalTitle,
+		ga.festival_date_text AS festivalDateText,
+		ga.festival_picture AS
+		festivalPicture,
+		gc.greeting_content AS greetingContent,
+		gc.greeting_appellation AS greetingAppellation,
+		ga.state
+		FROM
+		t_greeting_abstract ga
+		LEFT JOIN
+		t_greeting_content gc
+		ON ga.id =
+		gc.greeting_abstract_id GROUP BY ga.festival_title
+	</select>
+	<!-- 根据节日名查询节日封面图片和节日内容 -->
+	<select id="queryGreetingAbstractInfo" resultType="com.moyou.moyouRms.model.gerrting.GreetingAbstract"
+		parameterType="PageBean">
+		SELECT
+		gc.id AS id,
+		gc.greeting_appellation AS greetingAppellation,
+		gc.greeting_content AS greetingContent,
+		gc.state,
+		gc.use_count AS
+		useCount,
+		gc.create_time AS createTime
+		FROM
+		t_greeting_content gc
+		<if test="conditions.sortRule!=null and conditions.sortRule!= ''">
+			ORDER BY createTime ${conditions.sortRule}
+		</if>
+	</select>
+	<!--根据传入的封面图查询新增加封面图的ID -->
+	<select id="queryGreetingAbstracIdList" resultType="java.lang.Integer"
+		parameterType="java.lang.String">
+		SELECT id FROM t_greeting_abstract WHERE
+		festival_picture=#{festivalPicture}
+	</select>
+	<!-- 根据节日ID删除封面图片 -->
+	<update id="deleteGreeting" parameterType="com.moyou.moyouRms.model.gerrting.GreetingAbstract">
+		UPDATE
+		t_greeting_abstract ga SET ga.state=#{state} WHERE ga.id=#{id}
+	</update>
+	<!-- 根据节日ID删除封面图片 -->
+	<update id="deleteGreetingContent" parameterType="com.moyou.moyouRms.model.gerrting.GreetingAbstract">
+		UPDATE
+		t_greeting_content ga SET ga.state=#{state} WHERE ga.id=#{id}
+	</update>
+	<!-- 根据状态禁用或者启用 -->
+	<update id="updateGreetingState" parameterType="java.lang.Integer">
+		UPDATE
+		t_greeting_abstract ga SET ga.state=#{state}
+	</update>
+	<!-- 根据节日ID查询节日内容 -->
+	<select id="queryGreetingAbstract" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.gerrting.GreetingAbstract">
+		SELECT
+		greeting_appellation AS greetingAppellation,
+		greeting_content AS greetingContent,
+		state,
+		id
+		FROM
+		t_greeting_content
+		WHERE greeting_abstract_id=#{id}
+	</select>
+	<!-- 根据ID修改称呼和内容 -->
+	<update id="updateGreetingContent" parameterType="com.moyou.moyouRms.model.gerrting.GreetingAbstract">
+		UPDATE t_greeting_content SET
+		greeting_appellation=#{greetingAppellation},greeting_content=#{greetingContent}
+		WHERE id=#{id}
+	</update>
+	
+		<!-- 根据祝福语ID查询祝福语详情用于举报-->
+	<select id="queryBlessingById"
+		resultType="com.moyou.moyouRms.model.gerrting.GreetingUserSendLog"
+		parameterType="Integer">
+SELECT
+		gc.id AS BlessingId,
+		gc.greeting_appellation AS
+		greetingAppellation,
+		gc.greeting_content AS greetingContent,
+		gc.greeting_inscribe AS greetingInscribe,
+		gc.greeting_background AS
+		greetingBackground,
+	ui.avatar
+		FROM
+		t_greeting_user_send_log gc 
+	LEFT JOIN t_user_info ui ON gc.user_id = ui.user_id WHERE
+		gc.id=#{BlessingId} 
+	</select>
+	<select id="queryYesterdayGerrting"  resultType="com.moyou.moyouRms.model.statistics.MiniApps">
+	SELECT COUNT(id) AS yesterdayGerrting FROM t_greeting_user_send_log WHERE TO_DAYS( NOW( ) ) - TO_DAYS( create_time) = 1
+	</select>
+	<select id="queryCountGerrting"  resultType="com.moyou.moyouRms.model.statistics.MiniApps">
+	SELECT COUNT(id) AS countGerrting FROM t_greeting_user_send_log 
+	</select>
+</mapper>

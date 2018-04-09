@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo 
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd 
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+	<context:component-scan base-package="com.moyou.moyouRms">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<constructor-arg value="UTF-8" />
+			</bean>
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="objectMapper">
+					<bean class="com.moyou.moyouRms.util.NullToEmpty">
+						<property name="dateFormat">
+							<bean class="java.text.SimpleDateFormat">
+								<constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+							</bean>
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	<bean class="com.moyou.moyouRms.exception.ExceptionResolver"></bean>
+<!--  		    需要用户登录的请求拦截  -->
+<!--        <mvc:interceptors> -->
+<!-- 			<mvc:interceptor> -->
+<!-- 		   <mvc:mapping path="/h5token/**" /> -->
+<!-- 		   <bean class="com.moyou.moyouRms.intercept.H5TokenInterceptor"></bean> -->
+<!-- 		  </mvc:interceptor> -->
+<!-- 	</mvc:interceptors> -->
+
+<!-- 		 用户的资源拦截 -->
+<!-- 		<mvc:interceptors> -->
+<!-- 			<mvc:interceptor> -->
+<!-- 		 	<mvc:mapping path="/**"/>  -->
+<!-- 			<mvc:exclude-mapping path="/h5token/**"/> -->
+<!-- 			<mvc:exclude-mapping path="/system_login"/>   -->
+<!-- 			<mvc:exclude-mapping path="/system_memeory"/>   -->
+<!-- 			<mvc:exclude-mapping path="/system_logout"/>   -->
+<!-- <mvc:exclude-mapping path="/system_get_tree"/> -->
+<!-- 			<mvc:exclude-mapping path="/h5/**"/> -->
+<!-- 			<mvc:exclude-mapping path="/biz/**"/> -->
+<!-- 		   <bean class="com.moyou.moyouRms.intercept.AccountRoleInterceptor"></bean> -->
+<!-- 		  </mvc:interceptor> -->
+<!-- 	</mvc:interceptors> -->
+	<!-- 自定义拦截器 -->
+	<bean id="validInterceptor" class="com.moyou.moyouRms.intercept.ValidInterceptor"></bean>
+	<aop:config>
+		<!--切入点 -->
+		<aop:pointcut id="validPoint" expression="execution(public * com.moyou.moyouRms.controller..*.*(..))" />
+		<!--在该切入点使用自定义拦截器 -->
+		<aop:advisor pointcut-ref="validPoint" advice-ref="validInterceptor" order="1" />
+	</aop:config>
+	
+	<!-- 对静态资源文件的访问  restful-->     
+	<mvc:resources mapping="/static/**" location="/,/static/" />
+	<!--<mvc:resources mapping="/plugins/**" location="/,/plugins/" />
+	<mvc:resources mapping="/uploadFiles/**" location="/,/uploadFiles/" />  -->
+    
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
+		<property name="prefix" value="/WEB-INF/views/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=UTF-8</value>
+						<value>text/html;charset=UTF-8</value>
+						<value>text/json;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	<!-- 配置文件上传，如果没有使用文件上传可以不用配置，当然如果不配，那么配置文件中也不必引入上传组件包 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 默认编码 -->
+		<property name="defaultEncoding" value="utf-8" />
+		<!-- 文件大小最大值 -->
+		<property name="maxUploadSize" value="1048576000" />
+		<!-- 内存中的最大值 -->
+		<property name="maxInMemorySize" value="40960" />
+	</bean>
+	<!-- 声明式事物 -->
+	<import resource="spring-transaction.xml" />
+</beans>

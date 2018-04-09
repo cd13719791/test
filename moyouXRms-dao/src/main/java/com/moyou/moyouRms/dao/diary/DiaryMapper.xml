@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moyou.moyouRms.dao.diary.DiaryMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.diary.Diary">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="diary_title" jdbcType="VARCHAR" property="diaryTitle" />
+		<result column="city" jdbcType="VARCHAR" property="city" />
+		<result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+		<result column="praise_total" jdbcType="INTEGER" property="praiseTotal" />
+		<result column="comment_total" jdbcType="INTEGER" property="commentTotal" />
+		<result column="reward_total" jdbcType="INTEGER" property="rewardTotal" />
+		<result column="state" jdbcType="INTEGER" property="state" />
+		<result column="type" jdbcType="INTEGER" property="type" />
+		<result column="picTotal" jdbcType="INTEGER" property="picTotal" />
+		<result column="read_total" jdbcType="INTEGER" property="readTotal" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="creator_name" jdbcType="VARCHAR" property="creatorName" />
+		<result column="avatar" jdbcType="VARCHAR" property="avatar" />
+		<result column="search_content" jdbcType="VARCHAR" property="searchContent" />
+		<result column="recommed_status" jdbcType="INTEGER" property="recommedStatus" />
+		<result column="source_type" jdbcType="INTEGER" property="sourceType" />
+		<result column="h5_url" jdbcType="VARCHAR" property="h5Url" />
+		<result column="url_analysis_success" jdbcType="INTEGER"
+			property="urlAnalysisSuccess" />
+		<result column="reference_type" jdbcType="INTEGER" property="referenceType" />
+		<result column="share_app_name" jdbcType="VARCHAR" property="shareAppName" />
+		<result column="relate_diary_id" jdbcType="INTEGER" property="relateDiaryId" />
+		<result column="share_media" jdbcType="INTEGER" property="shareMedia" />
+		<result column="extend_data" jdbcType="VARCHAR" property="extendData" />
+		<result column="raw_url" jdbcType="VARCHAR" property="rawUrl" />
+		<result column="video_url" jdbcType="VARCHAR" property="videoUrl" />
+<result column="moyou_id" jdbcType="VARCHAR" property="moyouId" />
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, diary_title, city, creator_id,
+		praise_total,read_total,
+		comment_total,
+		reward_total, state, create_time
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		SELECT
+		td.id,
+		td.diary_title,
+		td.city,
+		td.creator_id,
+		td.praise_total,
+		td.comment_total,
+		td.reward_total,
+		td.read_total,
+		td.source_type,
+		td.h5_url,
+		td.search_content,
+		td.url_analysis_success,
+		td.state,
+		td.create_time,
+		td.video_url,
+		tui.avatar,
+		tui.nickname creator_name,
+		IFNULL(tdr.recommed_status, 1)
+		recommed_status,
+		tt.reference_type,
+		tui.moyou_id
+		FROM
+		t_diary td
+		LEFT JOIN t_user_info
+		tui ON tui.user_id = td.creator_id
+		LEFT JOIN t_diary_recommend tdr ON
+		tdr.diary_id = td.id
+		LEFT JOIN
+		t_talk tt on tt.reference_id= td.id and
+		tt.reference_type=1
+		where td.id
+		=
+		#{id,jdbcType=INTEGER}
+		GROUP BY td.id
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_diary
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<!-- insert Diary -->
+	<insert id="insertDiary" parameterType="com.moyou.moyouRms.model.diary.DiaryInsertDomain"
+		useGeneratedKeys="true" keyProperty="diaryId">
+		INSERT INTO t_diary (
+		diary_title,
+		city,
+		search_content,
+		creator_id,
+		praise_total,
+		comment_total,
+		reward_total,
+		pic_total,
+		state,
+		create_time
+		)
+		VALUES
+		(
+		#{diaryTitle},
+		#{city},
+		#{searchContent},
+		#{creatorId},
+		0,
+		0,
+		0,
+		#{picTotal},
+		1,
+		NOW()
+		)
+	</insert>
+	<!-- insert DiaryContent -->
+	<insert id="insertDiaryContent" parameterType="list">
+		INSERT INTO t_diary_content (
+		diary_id,
+		text_or_picture,
+		sorting,
+		conten_type,
+		create_time,
+		extend_data
+		)
+		VALUES
+		<foreach collection="list" item="content" open="" close=""
+			separator=",">
+			(
+			#{content.diaryId},
+			#{content.textOrPicture},
+			#{content.sorting},
+			#{content.contenType},
+			NOW(),
+			#{content.extendData}
+			)
+		</foreach>
+	</insert>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.diary.Diary"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_diary (id,
+		diary_title,
+		city, creator_id, praise_total,
+		comment_total,
+		reward_total, state,
+		create_time)
+		values
+		(#{id,jdbcType=INTEGER},
+		#{diaryFolderId,jdbcType=INTEGER},
+		#{diaryTitle,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR},
+		#{creatorId,jdbcType=INTEGER},
+		#{praiseTotal,jdbcType=INTEGER},
+		#{commentTotal,jdbcType=INTEGER},
+		#{rewardTotal,jdbcType=INTEGER},
+		#{state,jdbcType=INTEGER},
+		#{createTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.diary.Diary"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_diary
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="diaryTitle != null">
+				diary_title,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="creatorId != null">
+				creator_id,
+			</if>
+			<if test="praiseTotal != null">
+				praise_total,
+			</if>
+			<if test="commentTotal != null">
+				comment_total,
+			</if>
+			<if test="rewardTotal != null">
+				reward_total,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="picTotal !=null">
+				pic_total,
+			</if>
+			<if test="searchContent !=null">
+				search_content,
+			</if>
+			<if test="sourceType != null">
+				source_type,
+			</if>
+			<if test="h5Url != null">
+				h5_url,
+			</if>
+			<if test="videoUrl != null">
+				video_url,
+			</if>
+			<if test="urlAnalysisSuccess != null">
+				url_analysis_success,
+			</if>
+			<if test="shareMedia != null">
+				share_media,
+			</if>
+			<if test="extendData != null">
+				extend_data,
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="diaryTitle != null">
+				#{diaryTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				#{city,jdbcType=VARCHAR},
+			</if>
+			<if test="creatorId != null">
+				#{creatorId,jdbcType=INTEGER},
+			</if>
+			<if test="praiseTotal != null">
+				#{praiseTotal,jdbcType=INTEGER},
+			</if>
+			<if test="commentTotal != null">
+				#{commentTotal,jdbcType=INTEGER},
+			</if>
+			<if test="rewardTotal != null">
+				#{rewardTotal,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="picTotal !=null">
+				#{picTotal,jdbcType=INTEGER},
+			</if>
+			<if test="searchContent !=null">
+				#{searchContent,jdbcType=VARCHAR},
+			</if>
+			<if test="sourceType != null">
+				#{sourceType,jdbcType=INTEGER},
+			</if>
+			<if test="h5Url != null">
+				#{h5Url,jdbcType=VARCHAR},
+			</if>
+			<if test="videoUrl != null">
+				#{videoUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="urlAnalysisSuccess != null">
+				#{urlAnalysisSuccess,jdbcType=INTEGER},
+			</if>
+			<if test="shareMedia != null">
+				#{shareMedia,jdbcType=INTEGER},
+			</if>
+			<if test="extendData != null">
+				#{extendData,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.diary.Diary">
+		update t_diary
+		<set>
+			<if test="diaryTitle != null">
+				diary_title = #{diaryTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="creatorId != null">
+				creator_id = #{creatorId,jdbcType=INTEGER},
+			</if>
+			<if test="praiseTotal != null">
+				praise_total = #{praiseTotal,jdbcType=INTEGER},
+			</if>
+			<if test="commentTotal != null">
+				comment_total = #{commentTotal,jdbcType=INTEGER},
+			</if>
+			<if test="rewardTotal != null">
+				reward_total = #{rewardTotal,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="videoUrl != null">
+				video_url = #{videoUrl,jdbcType=VARCHAR},
+			</if>	
+			<if test="extendData != null">
+				extend_data = #{extendData,jdbcType=VARCHAR},
+			</if>						
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.diary.Diary">
+		update t_diary
+		set
+		diary_title =
+		#{diaryTitle,jdbcType=VARCHAR},
+		city =
+		#{city,jdbcType=VARCHAR},
+		creator_id = #{creatorId,jdbcType=INTEGER},
+		praise_total =
+		#{praiseTotal,jdbcType=INTEGER},
+		comment_total =
+		#{commentTotal,jdbcType=INTEGER},
+		reward_total =
+		#{rewardTotal,jdbcType=INTEGER},
+		state = #{state,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP}
+		where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据条件查询日记集合 -->
+	<select id="selectDiaryListBySelective" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		select
+		td.id, td.diary_title, td.city,
+		td.creator_id,
+		td.praise_total,
+		td.comment_total,
+		td.reward_total,
+		td.share_app_name,
+		td.source_type,
+		td.state,
+		td.relate_diary_id,
+		td.read_total as readTotal,
+		tu.type,
+		td.create_time,tui.avatar,tui.nickname creator_name
+		from
+		t_diary td
+		left
+		join t_user_info tui on tui.user_id=td.creator_id
+		left
+		join t_user tu on
+		tu.user_id=td.creator_id
+		<where>
+			td.state =1
+			<if test="conditions.diaryTitle != null and conditions.diaryTitle !=''">
+				and td.diary_title REGEXP #{conditions.diaryTitle}
+			</if>
+			<if test="conditions.creatorId != null and conditions.creatorId !=''">
+				and td.creator_id REGEXP #{conditions.creatorId}
+			</if>
+			<if
+				test="conditions.searchContent != null and conditions.searchContent !=''">
+				and td.search_content REGEXP #{conditions.searchContent}
+			</if>
+			<if test="conditions.creatorName !=null and conditions.creatorName !=''">
+				and tui.nickname REGEXP
+				#{conditions.creatorName,jdbcType=VARCHAR}
+			</if>
+			<if test="conditions.startTime != null and conditions.startTime !=''">
+     			 <![CDATA[
+     				 and td.create_time >= #{conditions.startTime,jdbcType=TIMESTAMP}
+      			 ]]>
+			</if>
+			<if test="conditions.endTime != null and conditions.endTime!=''">
+    			  <![CDATA[
+     				 and td.create_time <= #{conditions.endTime,jdbcType=TIMESTAMP}
+      			 ]]>
+			</if>
+		</where>
+		<if test="conditions.rand == true">
+			order by rand()
+		</if>
+		<if test="conditions.orderBy ==0">
+			order by td.create_time desc
+		</if>
+		<if test="conditions.orderBy ==1">
+			order by td.praise_total desc
+		</if>
+		<if test="conditions.orderBy ==2">
+			order by td.comment_total desc
+		</if>
+		<if test="conditions.orderBy ==3">
+			order by td.reward_total desc
+		</if>
+		<!-- 机器人添加阅读量专用 ↓ -->
+		<if test="conditions.orderBy == 4">
+			and td.read_total &lt; 1500
+			order by td.read_total ASC
+		</if>
+	</select>
+	<select id="selectDiaryCount" resultType="java.util.Map">
+		select COUNT(id)
+		new_diary,(SELECT count(id) from t_diary where state =1)
+		all_diary from
+		t_diary where
+		state =1 and
+		to_days(create_time) =
+		to_days(now())
+	</select>
+	<select id="queryCountDiary" resultType="java.util.Map">
+		SELECT
+		(
+		SELECT
+		COUNT(td.id)
+		FROM
+		t_diary td
+		LEFT JOIN t_user tu ON tu.user_id =
+		td.creator_id
+		WHERE
+		TO_DAYS(td.create_time) = TO_DAYS(NOW())
+		AND tu.type
+		= 0
+		AND td.state =
+		1
+		) toDayStory,
+		(
+		SELECT
+		COUNT(td.id)
+		FROM
+		t_diary td
+		LEFT
+		JOIN t_user tu ON tu.user_id = td.creator_id
+		WHERE
+		tu.type = 0
+		)
+		countStory,
+		(
+		SELECT
+		COUNT(td.id)
+		FROM
+		t_diary td
+		LEFT JOIN t_user tu ON
+		tu.user_id = td.creator_id
+		WHERE
+		TO_DAYS(td.create_time) =
+		TO_DAYS(NOW())
+		AND td.state = 1
+		) allToDayStory,
+		(
+		SELECT
+		COUNT(td.id)
+		FROM
+		t_diary td
+		LEFT JOIN t_user tu ON tu.user_id = td.creator_id
+		)
+		allCountStory
+	</select>
+	<update id="updateDiaryRewardTotal" parameterType="java.lang.Integer">
+		UPDATE t_diary
+		SET reward_total=reward_total+1 WHERE id=#{id}
+	</update>
+
+	<select id="selectDiaryListByUserId" resultMap="BaseResultMap"
+		parameterType="Pagebean">
+		SELECT
+		td.id,
+		td.diary_title,
+		td.city,
+		td.creator_id,
+		td.praise_total,
+		td.comment_total,
+		td.reward_total,
+		td.state,
+		td.create_time,
+		tui.nickname creator_name,
+		tui.avatar
+		FROM
+		t_diary td
+
+		LEFT
+		JOIN t_user_info tui ON tui.user_id = td.creator_id
+		WHERE
+		td.creator_id
+		=#{conditions.userId,jdbcType=INTEGER}
+		AND td.state = 1
+	</select>
+	<update id="updateDiaryCommentTotalJIA1" parameterType="java.lang.Integer">
+		UPDATE
+		t_diary
+		SET comment_total=comment_total+1 WHERE id=#{id}
+	</update>
+	<update id="updateDiaryReadCount" parameterType="com.moyou.moyouRms.model.diary.Diary">
+		UPDATE t_diary
+		SET read_total=read_total+#{readTotal} WHERE id=#{id};
+	</update>
+	<update id="updateDiaryPraisejia1" parameterType="java.lang.Integer">
+		UPDATE t_diary
+		SET praise_total=praise_total+1 WHERE id=#{id};
+	</update>
+	<update id="updateDiaryPraisejian1" parameterType="java.lang.Integer">
+		UPDATE t_diary
+		SET praise_total=praise_total-1 WHERE id=#{id};
+	</update>
+	<select id="queryPraiseState" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT state FROM `t_diary_praise`
+		where
+		user_id=#{userId}
+		and
+		diary_id=#{diaryId};
+	</select>
+	<select id="selectReallyUserDiary" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		<![CDATA[  
+    SELECT td.id,td.creator_id from t_diary td LEFT JOIN t_user tu on tu.user_id=td.creator_id 
+	where DATE_SUB(CURDATE(), INTERVAL #{time} DAY) <= date(td.create_time) and td.state = 1 and tu.type=0 
+  	 ]]>
+	</select>
+	<update id="updateh5UrlById" parameterType="com.moyou.moyouRms.model.diary.Diary">
+		UPDATE t_diary
+		SET
+		h5_url=#{h5Url} WHERE id=#{id};
+	</update>
+	<select id="selectReferenceDiary" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		select
+		td.id, td.diary_title, td.city,
+		td.creator_id,
+		td.praise_total,
+		td.comment_total,
+		td.reward_total,
+		td.state,
+		td.read_total as readTotal,
+		tu.type,
+		tt.create_time,tui.avatar,tui.nickname creator_name
+		from
+		t_diary td
+		left join t_user_info tui on tui.user_id=td.creator_id
+		left
+		join t_user tu on tu.user_id=td.creator_id
+		left JOIN t_talk tt on
+		tt.reference_id=td.id
+		<where>
+			td.state =1
+			<if test="conditions.diaryTitle != null and conditions.diaryTitle !=''">
+				and td.diary_title REGEXP #{conditions.diaryTitle}
+			</if>
+			<if
+				test="conditions.referenceType != null and conditions.referenceType !=''">
+				and tt.reference_type= #{conditions.referenceType}
+			</if>
+			<if
+				test="conditions.searchContent != null and conditions.searchContent !=''">
+				and td.search_content REGEXP #{conditions.searchContent}
+			</if>
+			<if test="conditions.creatorName !=null and conditions.creatorName !=''">
+				and tui.nickname REGEXP
+				#{conditions.creatorName,jdbcType=VARCHAR}
+			</if>
+			<if test="conditions.startTime != null and conditions.startTime !=''">
+     			 <![CDATA[
+     				 and tt.create_time >= #{conditions.startTime,jdbcType=TIMESTAMP}
+      			 ]]>
+			</if>
+			<if test="conditions.endTime != null and conditions.endTime!=''">
+    			  <![CDATA[
+     				 and tt.create_time <= #{conditions.endTime,jdbcType=TIMESTAMP}
+      			 ]]>
+			</if>
+		</where>
+		<if test="conditions.rand == true">
+			order by rand()
+		</if>
+		<if test="conditions.orderBy ==0">
+			order by td.create_time desc
+		</if>
+		<if test="conditions.orderBy ==1">
+			order by td.praise_total desc
+		</if>
+		<if test="conditions.orderBy ==2">
+			order by td.comment_total desc
+		</if>
+		<if test="conditions.orderBy ==3">
+			order by td.reward_total desc
+		</if>
+		<if test="conditions.orderBy ==4">
+			order by tt.create_time desc
+		</if>
+	</select>
+	<select id="selectDiaryIsExistByDiaryId" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+		select count(id) from t_diary where id=#{diaryId} and
+		state=1
+	</select>
+	<select id="selectDiaryUserCount" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+	 <![CDATA[	SELECT
+		count(a)
+		FROM
+		(
+		SELECT
+		count(id) a
+		FROM
+		t_diary td
+		LEFT JOIN t_user tu ON tu.user_id = td.creator_id
+		WHERE
+		DATE_SUB(CURDATE(), INTERVAL #{time} DAY) <= date(td.create_time)
+		AND
+		td.state = 1
+		AND tu.type = 0
+		GROUP BY
+		td.creator_id
+		) AS a	 ]]>
+	</select>
+	<select id="selectDiaryGroupByUser" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+			 <![CDATA[	
+			SELECT
+			td.id,
+			td.creator_id,
+		td.praise_total
+		FROM
+			t_diary td
+		LEFT JOIN t_user tu ON tu.user_id = td.creator_id
+		WHERE
+			DATE_SUB(CURDATE(), INTERVAL #{time} DAY) <= date(td.create_time)
+		AND td.state = 1
+		AND tu.type = 0 
+		GROUP BY
+			td.creator_id
+ 			]]>
+	</select>
+	<select id="selectExtendDataById"
+		resultType="com.moyou.moyouRms.dao.diary.resultmodel.DirayH5ResultModel"
+		parameterType="java.lang.Integer">
+		SELECT t_diary.diary_title
+		diaryTitle,t_diary.share_app_name
+		shareAppName,t_diary.extend_data
+		extendData FROM t_diary where
+		t_diary.id=#{id}
+	</select>
+	<update id="updateVideoUrl">
+		UPDATE
+		t_diary
+		SET
+		extend_data=#{videoUrl} WHERE
+		id=#{id}
+	</update>
+	<select id="selectExtendDataByvideoId" parameterType="java.lang.String"
+		resultType="com.moyou.moyouRms.dao.diary.resultmodel.DirayH5ResultModel">
+		SELECT t_diary.diary_title
+		diaryTitle,t_diary.share_app_name
+		shareAppName,t_diary.extend_data
+		extendData FROM t_diary where
+		t_diary.extend_data REGEXP #{videoId}
+
+	</select>
+	<select id="queryDiaryTitleOrContent" parameterType="int"
+		resultType="string">
+		SELECT
+		CASE
+		WHEN source_type = 2 THEN
+		diary_title
+		ELSE
+		search_content
+		END AS searchContent
+		FROM
+		t_diary
+		WHERE
+		id = #{diaryId}
+		LIMIT 1
+	</select>
+	<select id="selectUserReceiveDataAnalysis" resultMap="BaseResultMap"  >
+		SELECT
+		id,extend_data,video_url
+		FROM
+		t_diary
+		where ISNULL(video_url)
+		and share_media=1
+		AND
+		share_app_name='网易新闻'
+	</select>
+</mapper>

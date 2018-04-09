@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.diaryContentRobot.DiaryContentRobotMapper" >
+  <resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.diaryContentRobot.DiaryContentRobot" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="diary_robot_id" property="diaryRobotId" jdbcType="INTEGER" />
+    <result column="text_or_picture" property="textOrPicture" jdbcType="VARCHAR" />
+    <result column="sorting" property="sorting" jdbcType="INTEGER" />
+    <result column="conten_type" property="contenType" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+     <result column="text" property="text" jdbcType="VARCHAR" />
+      <result column="picture" property="picture" jdbcType="VARCHAR" />
+       <result column="extend_data" property="extendData" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, diary_robot_id, text_or_picture, sorting, conten_type, create_time,extend_data
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_diary_content_robot
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_diary_content_robot
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moyou.moyouRms.model.diaryContentRobot.DiaryContentRobot" >
+    insert into t_diary_content_robot (id, diary_robot_id, text_or_picture, 
+      sorting, conten_type, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{diaryRobotId,jdbcType=INTEGER}, #{textOrPicture,jdbcType=VARCHAR}, 
+      #{sorting,jdbcType=INTEGER}, #{contenType,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.moyou.moyouRms.model.diaryContentRobot.DiaryContentRobot" >
+    insert into t_diary_content_robot
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="diaryRobotId != null" >
+        diary_robot_id,
+      </if>
+      <if test="textOrPicture != null" >
+        text_or_picture,
+      </if>
+      <if test="sorting != null" >
+        sorting,
+      </if>
+      <if test="contenType != null" >
+        conten_type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="extendData != null" >
+        extend_data,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="diaryRobotId != null" >
+        #{diaryRobotId,jdbcType=INTEGER},
+      </if>
+      <if test="textOrPicture != null" >
+        #{textOrPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="sorting != null" >
+        #{sorting,jdbcType=INTEGER},
+      </if>
+      <if test="contenType != null" >
+        #{contenType,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+       <if test="extendData != null" >
+        #{extendData,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.diaryContentRobot.DiaryContentRobot" >
+    update t_diary_content_robot
+    <set >
+      <if test="diaryRobotId != null" >
+        diary_robot_id = #{diaryRobotId,jdbcType=INTEGER},
+      </if>
+      <if test="textOrPicture != null" >
+        text_or_picture = #{textOrPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="sorting != null" >
+        sorting = #{sorting,jdbcType=INTEGER},
+      </if>
+      <if test="contenType != null" >
+        conten_type = #{contenType,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.diaryContentRobot.DiaryContentRobot" >
+    update t_diary_content_robot
+    set diary_robot_id = #{diaryRobotId,jdbcType=INTEGER},
+      text_or_picture = #{textOrPicture,jdbcType=VARCHAR},
+      sorting = #{sorting,jdbcType=INTEGER},
+      conten_type = #{contenType,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByDiaryRobotId"  resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+	  select 
+	    <include refid="Base_Column_List" />
+	    from t_diary_content_robot tdcr
+	   where  tdcr.diary_robot_id=#{diaryRobotId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByDiaryRobotIdFirstResource"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+   		SELECT
+			tdc.text_or_picture text,
+			(
+				select tdc2.text_or_picture
+				FROM
+					t_diary_content_robot tdc2
+				WHERE
+					tdc2.diary_robot_id  =#{diaryRobotId,jdbcType=INTEGER}
+				AND tdc2.conten_type = 1
+				ORDER BY
+					tdc2.sorting
+				LIMIT 0,
+				1
+			)picture
+		FROM
+			t_diary_content_robot tdc
+		WHERE
+			tdc.diary_robot_id  =#{diaryRobotId,jdbcType=INTEGER}
+		AND tdc.conten_type = 0
+		ORDER BY
+			tdc.sorting
+		LIMIT 0,
+		 1 
+  </select>
+  <!-- insert DiaryContent -->
+	<insert id="insertDiaryContents" parameterType="list">
+		INSERT INTO t_diary_content_robot (
+			diary_robot_id,
+			text_or_picture,
+			sorting,
+			conten_type,
+			create_time,
+			extend_data
+		)
+		VALUES
+		<foreach collection="list" item="content" open="" close="" separator=",">
+			(
+				#{content.diaryId},
+				#{content.textOrPicture},
+				#{content.sorting},
+				#{content.contenType},
+				NOW(),
+				#{content.extendData}
+			)
+		</foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.user.UserCountMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.user.UserCount">
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="user_talk_count" property="userTalkCount"
+			jdbcType="INTEGER" />
+		<result column="user_story_folder_count" property="userStoryFolderCount"
+			jdbcType="INTEGER" />
+		<result column="user_interest_count" property="userInterestCount"
+			jdbcType="INTEGER" />
+		<result column="user_followers_count" property="userFollowersCount"
+			jdbcType="INTEGER" />
+		<result column="user_visit_count" property="userVisitCount"
+			jdbcType="INTEGER" />
+		<result column="user_serial_check_in_count" property="userSerialCheckInCount"
+			jdbcType="INTEGER" />
+		<result column="user_friends_count" property="userFriendsCount"
+			jdbcType="INTEGER" />
+		<result column="user_fans" property="userFans" jdbcType="INTEGER" />
+	</resultMap>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.user.UserCount">
+		insert into t_user_count
+		(user_id, user_talk_count,
+		user_story_folder_count,
+		user_interest_count, user_followers_count,
+		user_visit_count,
+		user_serial_check_in_count,
+		user_friends_count)
+		values
+		(#{userId,jdbcType=INTEGER}, #{userTalkCount,jdbcType=INTEGER},
+		#{userStoryFolderCount,jdbcType=INTEGER},
+		#{userInterestCount,jdbcType=INTEGER},
+		#{userFollowersCount,jdbcType=INTEGER},
+		#{userVisitCount,jdbcType=INTEGER},
+		#{userSerialCheckInCount,jdbcType=INTEGER},
+		#{userFriendsCount,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.user.UserCount">
+		insert into t_user_count
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="userTalkCount != null">
+				user_talk_count,
+			</if>
+			<if test="userStoryFolderCount != null">
+				user_story_folder_count,
+			</if>
+			<if test="userInterestCount != null">
+				user_interest_count,
+			</if>
+			<if test="userFollowersCount != null">
+				user_followers_count,
+			</if>
+			<if test="userVisitCount != null">
+				user_visit_count,
+			</if>
+			<if test="userSerialCheckInCount != null">
+				user_serial_check_in_count,
+			</if>
+			<if test="userFriendsCount != null">
+				user_friends_count,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="userTalkCount != null">
+				#{userTalkCount,jdbcType=INTEGER},
+			</if>
+			<if test="userStoryFolderCount != null">
+				#{userStoryFolderCount,jdbcType=INTEGER},
+			</if>
+			<if test="userInterestCount != null">
+				#{userInterestCount,jdbcType=INTEGER},
+			</if>
+			<if test="userFollowersCount != null">
+				#{userFollowersCount,jdbcType=INTEGER},
+			</if>
+			<if test="userVisitCount != null">
+				#{userVisitCount,jdbcType=INTEGER},
+			</if>
+			<if test="userSerialCheckInCount != null">
+				#{userSerialCheckInCount,jdbcType=INTEGER},
+			</if>
+			<if test="userFriendsCount != null">
+				#{userFriendsCount,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="queryUserCount" resultMap="BaseResultMap"
+		parameterType="com.moyou.moyouRms.model.user.UserCount">
+		select
+		user_id,user_talk_count,user_story_folder_count,user_interest_count,user_followers_count,user_visit_count,user_serial_check_in_count
+		from t_user_count where user_id=#{userId}
+	</select>
+	<!-- 减一操作 -->
+	<!-- 根据创建者Id,在删除一条说说的时候说说总量减一 -->
+	<update id="updateUserCountTalkJian1" parameterType="java.lang.Integer">
+		UPDATE t_user_count SET user_talk_count =user_talk_count -1 WHERE
+		user_id=#{creatorId}
+	</update>
+	<update id="updateUserCountDiaryJian1" parameterType="java.lang.Integer">
+		UPDATE t_user_count SET user_story_folder_count =user_story_folder_count -1
+		WHERE user_id=#{creatorId}
+	</update>
+	<update id="updateUserCountSecretJian1" parameterType="java.lang.Integer">
+		UPDATE t_user_count SET user_secret_count =user_secret_count -1 WHERE
+		user_id=#{creatorId}
+	</update>
+	<!-- 加一操作 -->
+	<!-- <update id="updateUserCountTalkJia1" parameterType="java.lang.Integer"> -->
+	<!-- UPDATE t_user_count SET user_talk_count =user_talk_count +1 WHERE user_id=#{creatorId} -->
+	<!-- </update> -->
+	<update id="updateUserCountDiaryJia1" parameterType="java.lang.Integer">
+		UPDATE t_user_count SET user_story_folder_count =user_story_folder_count +1
+		WHERE user_id=#{creatorId}
+	</update>
+	<update id="updateUserCountSecretJia1" parameterType="java.lang.Integer">
+		UPDATE t_user_count SET user_secret_count =user_secret_count +1 WHERE
+		user_id=#{creatorId}
+	</update>
+	<update id="updateInterestCountJIA1" parameterType="java.lang.Integer">
+		UPDATE
+		t_user_count SET user_interest_count =user_interest_count +1 WHERE
+		user_id=#{userId}
+	</update>
+	<update id="updateFollowersCountJIA1" parameterType="java.lang.Integer">
+		UPDATE t_user_count SET user_followers_count =user_followers_count +1 WHERE
+		user_id=#{userId}
+	</update>
+	<select id="selectUserCountByUserId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		SELECT
+		tuc.user_id,
+		tuc.user_talk_count,
+		tuc.user_story_folder_count,
+		tuc.user_interest_count,
+		tuc.user_followers_count,
+		tuc.user_visit_count,
+		tuc.user_serial_check_in_count,
+		tuc.user_friends_count,
+		tuc.user_secret_count,
+		tuc.user_info_count,
+		tuc.live_seconds,
+		tuc.live_count,
+		tuc.live_total_gold,
+		tuc.live_send_total_gold,
+		tuc.lock_version
+		FROM
+		t_user_count AS tuc
+		<!-- where tuc.user_id={userId} -->
+
+	</select>
+</mapper>

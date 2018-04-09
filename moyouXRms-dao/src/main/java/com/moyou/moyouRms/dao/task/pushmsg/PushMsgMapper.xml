@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.task.pushmsg.PushMsgMapper">
+	<!-- 添加一条运营推送 -->
+	<insert id="insertPushMsg" parameterType="com.moyou.moyouRms.model.jpush.pushmsg.PushMsg"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+		sys_push_msg_robot(msg_title,msg_content,msg_image,
+		push_time,state,create_time,update_time,type)VALUES(#{msgTitle},#{msgContent},#{msgImage},
+		#{pushTime},1,NOW(),NOW(),2)
+	</insert>
+	<!--根据Id删除一条运营推送 -->
+	<update id="deletePushMsg" parameterType="com.moyou.moyouRms.model.jpush.pushmsg.PushMsg">
+		update
+		sys_push_msg_robot set state=#{state} where id=#{id}
+	</update>
+	<!-- 初始化运营推送所有数据 -->
+	<select id="queryPushMsgList" resultType="com.moyou.moyouRms.model.jpush.pushmsg.PushMsg"
+		parameterType="pageBean">
+		SELECT
+		id,
+		msg_content AS msgContent,
+		msg_image AS msgImage,
+		push_time AS
+		pushTime,
+		TYPE,
+	        state
+		FROM
+		sys_push_msg_robot  WHERE state=1 ORDER BY pushTime DESC
+	</select>
+	<!-- 根据Id查询状态 -->
+	<select id="queryPushMsgState" resultType="java.lang.Integer"
+		parameterType="java.lang.Integer">
+		SELECT
+		state
+		FROM
+		sys_push_msg_robot
+		WHERE id=#{id}
+	</select>
+	<!-- 根据id修改推送状态 -->
+	<update id="updatePushMsgType" parameterType="java.lang.Integer">
+		update sys_push_msg
+		set type=1 where id=#{id}
+	</update>
+</mapper>

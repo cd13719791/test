@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.sysBaseRole.SysBaseRoleMapper">
+	<resultMap id="BaseResultMap"
+		type="com.moyou.moyouRms.model.sysBaseRole.SysBaseRole">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="orgId" property="orgid" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="isValid" property="isvalid" jdbcType="INTEGER" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, orgId, name, isValid, description, createTime, updateTime
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from sys_base_role
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from sys_base_role
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.sysBaseRole.SysBaseRole">
+		insert into sys_base_role (id, orgId, name,
+		isValid, description, createTime,
+		updateTime)
+		values (#{id,jdbcType=VARCHAR}, #{orgid,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{isvalid,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP},
+		#{updatetime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.sysBaseRole.SysBaseRole">
+		insert into sys_base_role
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="orgid != null">
+				orgId,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="isvalid != null">
+				isValid,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="createtime != null">
+				createTime,
+			</if>
+			<if test="updatetime != null">
+				updateTime,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="orgid != null">
+				#{orgid,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="isvalid != null">
+				#{isvalid,jdbcType=INTEGER},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				#{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatetime != null">
+				#{updatetime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.sysBaseRole.SysBaseRole">
+		update sys_base_role
+		<set>
+			<if test="orgid != null">
+				orgId = #{orgid,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="isvalid != null">
+				isValid = #{isvalid,jdbcType=INTEGER},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				createTime = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatetime != null">
+				updateTime = #{updatetime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.sysBaseRole.SysBaseRole">
+		update sys_base_role
+		set orgId = #{orgid,jdbcType=VARCHAR},
+		name = #{name,jdbcType=VARCHAR},
+		isValid = #{isvalid,jdbcType=INTEGER},
+		description = #{description,jdbcType=VARCHAR},
+		createTime = #{createtime,jdbcType=TIMESTAMP},
+		updateTime = #{updatetime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<select id="querySysBaseRoleByPageBean" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		SELECT
+		sbr.id,
+		sbr.`name`,
+		sbr.isValid,
+		sbr.description
+		FROM
+		sys_base_role AS sbr
+		<where>
+		<if test="conditions.isvalid != null and conditions.isvalid !=''">
+			sbr.isValid=#{conditions.isvalid,jdbcType=INTEGER}
+		</if>
+		</where>
+	</select>
+</mapper>

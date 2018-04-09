@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.usercrowd.UserCrowdRecommendMapper" >
+  <resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.usercrowd.UserCrowdRecommend" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="mode_type" property="modeType" jdbcType="SMALLINT" />
+    <result column="crowed_id" property="crowedId" jdbcType="INTEGER" />
+    <result column="recommed_status" property="recommedStatus" jdbcType="SMALLINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="recommend_sort" property="recommendSort" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, mode_type, crowed_id, recommed_status, create_time, update_time, recommend_sort
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_user_crowd_recommend
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="getUserCrowdRecommend" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from t_user_crowd_recommend
+    where crowed_id = #{crowedId} AND mode_type=#{modeType}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_user_crowd_recommend
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowdRecommend" >
+    insert into t_user_crowd_recommend (id, mode_type, crowed_id, 
+      recommed_status, create_time, update_time, 
+      recommend_sort)
+    values (#{id,jdbcType=INTEGER}, #{modeType,jdbcType=SMALLINT}, #{crowedId,jdbcType=INTEGER}, 
+      #{recommedStatus,jdbcType=SMALLINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{recommendSort,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowdRecommend" >
+    insert into t_user_crowd_recommend
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="modeType != null" >
+        mode_type,
+      </if>
+      <if test="crowedId != null" >
+        crowed_id,
+      </if>
+      <if test="recommedStatus != null" >
+        recommed_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="recommendSort != null" >
+        recommend_sort,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="modeType != null" >
+        #{modeType,jdbcType=SMALLINT},
+      </if>
+      <if test="crowedId != null" >
+        #{crowedId,jdbcType=INTEGER},
+      </if>
+      <if test="recommedStatus != null" >
+        #{recommedStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recommendSort != null" >
+        #{recommendSort,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowdRecommend" >
+    update t_user_crowd_recommend
+    <set >
+      <if test="modeType != null" >
+        mode_type = #{modeType,jdbcType=SMALLINT},
+      </if>
+      <if test="crowedId != null" >
+        crowed_id = #{crowedId,jdbcType=INTEGER},
+      </if>
+      <if test="recommedStatus != null" >
+        recommed_status = #{recommedStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recommendSort != null" >
+        recommend_sort = #{recommendSort,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowdRecommend" >
+    update t_user_crowd_recommend
+    set mode_type = #{modeType,jdbcType=SMALLINT},
+      crowed_id = #{crowedId,jdbcType=INTEGER},
+      recommed_status = #{recommedStatus,jdbcType=SMALLINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      recommend_sort = #{recommendSort,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryUserCrowdRecommendList" resultMap="BaseResultMap"
+		parameterType="com.moyou.moyouRms.model.usercrowd.UserCrowdRecommend">
+			SELECT 	<include refid="Base_Column_List" />
+			FROM t_user_crowd_recommend uc 
+		<where>
+		<if test="recommedStatus !=null and recommedStatus != ''">
+				AND uc.recommed_status=#{recommedStatus}
+			</if>
+		
+		</where>
+	</select>
+	<update id="updateRecomenstateToNo">
+	 update t_user_crowd_recommend
+		    set 
+		      recommed_status =0
+	</update>
+	<update id="updateRecomenstateToNoByCrowdId">
+	 update t_user_crowd_recommend
+		    set 
+		      recommed_status =0
+		      where  crowed_id=#{crowedId,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moyou.moyouRms.dao.nearbyrank.NearbyRankDao">
+    <!-- NearbyRank的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_NearbyRank_Map" type="com.moyou.moyouRms.model.nearbyrank.NearbyRank">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="gold" property="gold" />
+        <result column="update_time" property="updateTime" />
+        <result column="city" property="city" />
+    </resultMap>
+
+	   <!-- Assist用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="Assist">
+        <where>
+            <foreach collection="require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+	   <!-- updateAssist用于更新数据的使用它拓展自Assist,用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="updateAssist">
+        <where>
+            <foreach collection="assist.require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+    <!-- 数据库中表名为:t_nearby_rank的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="t_nearby_rank_Column">
+        t_nearby_rank.id as id
+        ,t_nearby_rank.user_id as user_id
+        ,t_nearby_rank.gold as gold
+        ,t_nearby_rank.update_time as update_time
+        ,t_nearby_rank.city as city
+    </sql>
+
+    <!--获得类名为:NearbyRank对应的数据库表的数据总行数 -->
+    <select id="getNearbyRankRowCount" parameterType="com.moyou.moyouRms.interceptor.Assist" resultType="java.lang.Long">
+        select count(id) from t_nearby_rank
+        <if test="require!=null"><include refid="Assist" /></if>
+    </select>
+    <!-- 获得类名为:NearbyRank对应数据库中表的数据集合 -->
+    <select id="selectNearbyRank" parameterType="com.moyou.moyouRms.interceptor.Assist"  resultMap="result_NearbyRank_Map">
+        select  <if test="distinct !=null">${distinct}</if>
+        <choose>
+            <when test="resultColumn!=null">${resultColumn}</when>
+            <otherwise>
+        <include refid="t_nearby_rank_Column" /> 
+            </otherwise>
+        </choose>
+        from t_nearby_rank
+        <choose>
+            <when test="rowSize ==null">
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+            </when>
+            <otherwise>
+                inner join
+                (
+                SELECT id as primary_key FROM t_nearby_rank
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+                <choose>
+                    <when test="startRow !=null and rowSize !=null">LIMIT #{startRow},#{rowSize} </when>
+                    <when test="rowSize !=null">LIMIT #{rowSize}</when>
+                 </choose>
+                 ) as tmp
+                 on tmp.primary_key=t_nearby_rank.id
+            </otherwise>
+        </choose>
+    </select> 
+
+    <!-- 获得一个NearbyRank对象,以参数NearbyRank对象中不为空的属性作为条件进行查询-->
+    <select id="selectNearbyRankByObj" parameterType="com.moyou.moyouRms.model.nearbyrank.NearbyRank" resultMap="result_NearbyRank_Map">
+        select 
+            <include refid="t_nearby_rank_Column" /> 
+        from t_nearby_rank
+        <where>
+            <if test="city != null "> and t_nearby_rank.city = #{city}</if>
+            <if test="updateTime != null "> and t_nearby_rank.update_time = #{updateTime}</if>
+            <if test="gold != null "> and t_nearby_rank.gold = #{gold}</if>
+            <if test="userId != null "> and t_nearby_rank.user_id = #{userId}</if>
+            <if test="id != null "> and t_nearby_rank.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过NearbyRank的id获得对应数据库中表的数据对象-->
+    <select id="selectNearbyRankById" parameterType="java.lang.String" resultMap="result_NearbyRank_Map">
+        select 
+            <include refid="t_nearby_rank_Column" /> 
+        from t_nearby_rank
+        where t_nearby_rank.id = #{id}
+    </select> 
+
+    <!-- 将NearbyRank插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertNearbyRank" parameterType="com.moyou.moyouRms.model.nearbyrank.NearbyRank">
+        insert into t_nearby_rank(id,user_id,gold,update_time,city) 
+        values(#{id},#{userId},#{gold},#{updateTime},#{city})
+    </insert>
+
+    <!-- 将NearbyRank中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyNearbyRank" parameterType="com.moyou.moyouRms.model.nearbyrank.NearbyRank">
+        insert into t_nearby_rank
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="gold != null">gold,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="city != null">city,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="userId != null"> #{userId},</if>
+            <if test="gold != null"> #{gold},</if>
+            <if test="updateTime != null"> #{updateTime},</if>
+            <if test="city != null"> #{city},</if>
+        </trim>
+    </insert>
+
+    <!-- 通过NearbyRank的id将数据库表中对应的数据删除-->
+    <delete id="deleteNearbyRankById" parameterType="java.lang.String">
+        delete from t_nearby_rank
+        where id = #{id}
+    </delete>
+
+    <!-- 通过辅助工具Assist中的条件将NearbyRank对应的数据库表的数据删除-->
+    <delete id="deleteNearbyRank" parameterType="com.moyou.moyouRms.interceptor.Assist">
+        delete from t_nearby_rank
+        <if test="require!=null"><include refid="Assist" /></if>
+    </delete>
+
+    <!-- 通过NearbyRank的id将NearbyRank的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateNearbyRankById" parameterType="com.moyou.moyouRms.model.nearbyrank.NearbyRank">
+        update t_nearby_rank set
+            user_id=#{userId}
+            ,gold=#{gold}
+            ,update_time=#{updateTime}
+            ,city=#{city}
+        where id=#{id}
+    </update>
+
+    <!-- 通过NearbyRank的id将NearbyRank中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyNearbyRankById" parameterType="com.moyou.moyouRms.model.nearbyrank.NearbyRank">
+        update t_nearby_rank
+        <set>
+            <if test="userId != null">
+                user_id=#{userId},
+            </if>
+            <if test="gold != null">
+                gold=#{gold},
+            </if>
+            <if test="updateTime != null">
+                update_time=#{updateTime},
+            </if>
+            <if test="city != null">
+                city=#{city},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将NearbyRank中的数据更新到数据库对应的表中,包括值为null的数据-->
+    <update id="updateNearbyRank" parameterType="map">
+        update t_nearby_rank
+        <set>
+                id=#{enti.id},
+                user_id=#{enti.userId},
+                gold=#{enti.gold},
+                update_time=#{enti.updateTime},
+                city=#{enti.city},
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将NearbyRank中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyNearbyRank" parameterType="map">
+        update t_nearby_rank
+        <set>
+            <if test="enti.id != null">
+                id=#{enti.id},
+            </if>
+            <if test="enti.userId != null">
+                user_id=#{enti.userId},
+            </if>
+            <if test="enti.gold != null">
+                gold=#{enti.gold},
+            </if>
+            <if test="enti.updateTime != null">
+                update_time=#{enti.updateTime},
+            </if>
+            <if test="enti.city != null">
+                city=#{enti.city},
+            </if>
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+</mapper>

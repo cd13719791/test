@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.banner.LifeMomentMapper">
+	<select id="queryBanner" resultType="com.moyou.moyouRms.model.banner.Banner">
+		SELECT
+		t.id as id,
+		t.banner_name AS bannerName,
+		t.banner_picture AS
+		bannerPicture,
+		t.banner_type AS bannerType,
+		t.event_source_url AS
+		eventSourceUrl,
+		t.state as state,
+		t.banner_del as bannerDel,
+		t.order_no
+		as orderNo
+		FROM
+		t_banner t
+		WHERE
+		t.banner_del=1
+		and
+		t.banner_type
+		&lt;= 3
+		ORDER BY
+		t.order_no ASC
+	</select>
+	<select id="queryAdSupplyBanner" resultType="com.moyou.moyouRms.model.banner.Banner">
+		SELECT
+		t.id AS id,
+		t.banner_name AS bannerName,
+		t.banner_picture AS bannerPicture,
+		t.banner_type AS bannerType,
+		t.event_source_url AS eventSourceUrl,
+		t.state AS state,
+		t.banner_del AS bannerDel,
+		t.order_no AS orderNo
+		FROM
+		t_banner t
+		WHERE
+		(
+		t.banner_del = 1
+		AND t.banner_type = 4
+		)
+		OR (
+		t.banner_del = 1
+		AND t.banner_type = 5
+		)
+		OR (
+		t.banner_del = 1
+		AND t.banner_type = 6
+		)
+		ORDER BY
+		t.order_no ASC
+	</select>
+	<update id="deleteBanner" parameterType="java.lang.Integer">
+		UPDATE t_banner SET
+		banner_del=0 WHERE id=#{id}
+	</update>
+	<insert id="insertBanner" parameterType="com.moyou.moyouRms.model.banner.Banner">
+		insert into t_banner
+		(id,banner_name,
+		banner_type,
+		event_source_url,
+		event_source_id,
+		banner_picture,
+		state,order_no,
+		create_time,update_time,banner_del)
+		values (#{id,jdbcType=INTEGER},
+		#{bannerName,jdbcType=VARCHAR},
+		#{bannerType,jdbcType=INTEGER},
+		#{eventSourceUrl,jdbcType=VARCHAR},
+		#{eventSourceId,jdbcType=INTEGER},
+		#{bannerPicture,jdbcType=VARCHAR},
+		#{state,jdbcType=INTEGER},
+		#{orderNo,jdbcType=INTEGER},
+		#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP},#{bannerDel,jdbcType=INTEGER})
+	</insert>
+	<!-- 启用/禁用banner -->
+	<update id="updateState" parameterType="com.moyou.moyouRms.model.banner.Banner">
+		UPDATE t_banner SET
+		state=#{state} WHERE id=#{id}
+	</update>
+	<select id="queryBannerInfo" parameterType="java.lang.Integer"
+		resultType="com.moyou.moyouRms.model.banner.Banner">
+		SELECT banner_picture as bannerPicture,event_source_url as
+		eventSourceUrl
+		FROM t_banner where id=#{id}
+	</select>
+	<update id="updateOrderNo" parameterType="com.moyou.moyouRms.model.banner.Banner">
+		UPDATE t_banner SET
+		order_no=#{orderNo},update_time=#{updateTime} WHERE id=#{id}
+	</update>
+	<select id="queryBannerState" resultType="java.lang.Integer">
+		SELECT COUNT(id) FROM
+		t_banner WHERE state=1
+	</select>
+	<select id="queryOrderNo" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+		SELECT order_no FROM t_banner WHERE id=#{id} AND state=1
+	</select>
+		<select id="queryLiveBanner" resultType="com.moyou.moyouRms.model.banner.Banner">
+		SELECT
+		t.id AS id,
+		t.banner_name AS bannerName,
+		t.banner_picture AS bannerPicture,
+		t.banner_type AS bannerType,
+		t.event_source_url AS eventSourceUrl,
+		t.state AS state,
+		t.banner_del AS bannerDel,
+		t.order_no AS orderNo
+		FROM
+		t_banner t
+		WHERE
+		(
+		t.banner_del = 1
+		AND t.banner_type = 7
+		)
+		ORDER BY
+		t.order_no ASC
+	</select>
+</mapper>

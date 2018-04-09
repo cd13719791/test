@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<typeAliases>
+		<!-- <package name="com.immouo.moyou.model" /> -->
+		<typeAlias alias="PageBean" type="com.moyou.moyouRms.interceptor.PageBean"/>
+		<typeAlias alias="Assist" type="com.moyou.moyouRms.interceptor.Assist"/>
+	</typeAliases>
+	<plugins>
+		<plugin interceptor="com.moyou.moyouRms.interceptor.MySqlDataInterceptor">
+		</plugin>
+		<!-- com.github.pagehelper为PageHelper类所在包名 -->
+	</plugins>
+</configuration>

@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.moyou.moyouRms.dao.sysTalkManagerInfo.SysTalkManagerInfoMapper">
+	<resultMap id="BaseResultMap"
+		type="com.moyou.moyouRms.model.sysTalkManagerInfo.SysTalkManagerInfo">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="talk_number" property="talkNumber" jdbcType="INTEGER" />
+		<result column="user_number" property="userNumber" jdbcType="INTEGER" />
+		<result column="time_sum" property="timeSum" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="account_id" property="accountId" jdbcType="VARCHAR" />
+		<result column="loginName" property="loginName" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="sumTime" property="sumTime" jdbcType="INTEGER" />
+		<result column="sumUser" property="sumUser" jdbcType="INTEGER" />
+		<result column="sumTalk" property="sumTalk" jdbcType="INTEGER" />
+		<result column="thisDayUser" property="thisDayUser" jdbcType="INTEGER" />
+		<result column="thisDayTalk" property="thisDayTalk" jdbcType="INTEGER" />
+		<result column="accountCount" property="accountCount" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="online_type" property="onlineType" jdbcType="INTEGER" />
+		<result column="user_off_line_chat_count" property="offLineChatCount"
+			jdbcType="INTEGER" />
+		<result column="extend_data" property="extendData" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, talk_number, user_number, time_sum, create_time,
+		account_id,userId
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from sys_talk_manager_info
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		sys_talk_manager_info
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.moyou.moyouRms.model.sysTalkManagerInfo.SysTalkManagerInfo">
+		insert into sys_talk_manager_info (id, talk_number,
+		user_number,
+		time_sum, create_time, account_id,user_id
+		)
+		values
+		(#{id,jdbcType=INTEGER}, #{talkNumber,jdbcType=INTEGER},
+		#{userNumber,jdbcType=INTEGER},
+		#{timeSum,jdbcType=INTEGER},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{accountId,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.moyou.moyouRms.model.sysTalkManagerInfo.SysTalkManagerInfo">
+		insert into sys_talk_manager_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="talkNumber != null">
+				talk_number,
+			</if>
+			<if test="userNumber != null">
+				user_number,
+			</if>
+			<if test="timeSum != null">
+				time_sum,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="accountId != null">
+				account_id,
+			</if>
+			<if test="userId != null">
+				user_id
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="talkNumber != null">
+				#{talkNumber,jdbcType=INTEGER},
+			</if>
+			<if test="userNumber != null">
+				#{userNumber,jdbcType=INTEGER},
+			</if>
+			<if test="timeSum != null">
+				#{timeSum,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="accountId != null">
+				#{accountId,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER}
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.moyou.moyouRms.model.sysTalkManagerInfo.SysTalkManagerInfo">
+		update sys_talk_manager_info
+		<set>
+			<if test="talkNumber != null">
+				talk_number = #{talkNumber,jdbcType=INTEGER},
+			</if>
+			<if test="userNumber != null">
+				user_number = #{userNumber,jdbcType=INTEGER},
+			</if>
+			<if test="timeSum != null">
+				time_sum = #{timeSum,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="accountId != null">
+				account_id = #{accountId,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				user_id=#{userId,jdbcType=INTEGER}
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.moyou.moyouRms.model.sysTalkManagerInfo.SysTalkManagerInfo">
+		update sys_talk_manager_info
+		set talk_number =
+		#{talkNumber,jdbcType=INTEGER},
+		user_number =
+		#{userNumber,jdbcType=INTEGER},
+		time_sum = #{timeSum,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		account_id =
+		#{accountId,jdbcType=VARCHAR},
+		user_id=#{userId,jdbcType=INTEGER}
+		where
+		id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selecTalkAccountInfoByAccount" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		SELECT
+		sba.loginName,
+		sba.NAME,
+		sba.id account_id,
+		IFNULL(sba.extend_data,"0_0")extend_data,
+		(SELECT IFNULL(sum(sa.user_off_line_chat_count),0) from sys_admin_relate_user
+		sa where sa.account_id=sba.id)user_off_line_chat_count,
+		(
+		SELECT
+		IFNULL(sum(ssm2.online_time), 0)
+		FROM
+		sys_session_manager ssm2
+		WHERE
+		ssm2.login_name = sba.loginName
+		AND DATE_FORMAT(ssm2.create_time, '%Y%m') =
+		DATE_FORMAT(CURDATE(), '%Y%m')
+		) sumTime,
+		(
+		SELECT
+		IFNULL(sum(stmi2.user_number), 0)
+		FROM
+		sys_talk_manager_info stmi2
+		WHERE
+		stmi2.account_id = sba.id
+		) sumUser,
+		(
+		SELECT
+		IFNULL(sum(stmi2.talk_number), 0)
+		FROM
+		sys_talk_manager_info stmi2
+		WHERE
+		stmi2.account_id = sba.id
+		) sumTalk,
+		(
+		SELECT
+		IFNULL(sum(stmi2.user_number), 0)
+		FROM
+		sys_talk_manager_info stmi2
+		WHERE
+		to_days(stmi2.create_time) = to_days(now())
+		AND stmi2.account_id = sba.id
+		) thisDayUser,
+		(
+		SELECT
+		IFNULL(sum(stmi2.talk_number), 0)
+		FROM
+		sys_talk_manager_info stmi2
+		WHERE
+		to_days(stmi2.create_time) = to_days(now())
+		AND stmi2.account_id = sba.id
+		) thisDayTalk,
+		IFNULL(ssm.online_type, 0) online_type,
+		(
+		SELECT
+		count(saru.user_id)
+		FROM
+		sys_admin_relate_user saru
+		WHERE
+		saru.account_id = sba.id
+		) accountCount
+		FROM
+		sys_base_account sba
+		LEFT JOIN sys_talk_manager_info stmi ON sba.id = stmi.account_id
+		LEFT JOIN sys_session_manager ssm ON ssm.login_name = sba.loginName
+		AND to_days(ssm.create_time) = to_days(now())
+		WHERE
+		sba.type = #{conditions.type,jdbcType=INTEGER}
+		GROUP BY
+		sba.id
+	</select>
+	<select id="selectAccountCount" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT
+		IFNULL(
+		(
+		SELECT
+		sum(stmi1.talk_number)
+		FROM
+		sys_talk_manager_info stmi1
+		WHERE
+		to_days(stmi1.create_time) =
+		to_days(now())
+		),
+		0
+		) todayTalkSum,
+		IFNULL(( SELECT
+		sum(stmi1.user_number)
+		FROM
+		sys_talk_manager_info stmi1
+		WHERE
+		to_days(stmi1.create_time) =
+		to_days(now())
+		),0)todayUserSum
+		FROM
+		sys_talk_manager_info stmi
+		where
+		stmi.account_id=#{accountId}
+	</select>
+	<update id="updateTalkCountJIA1"
+		parameterType="com.moyou.moyouRms.model.sysTalkManagerInfo.SysTalkManagerInfo">
+		update sys_talk_manager_info
+		set talk_number
+		=talk_number+1
+		,
+		create_time=now()
+		where user_id =
+		#{userId,jdbcType=INTEGER} and
+		account_id =
+		#{accountId,jdbcType=VARCHAR}
+	</update>
+	<select id="selectSysTalkManagerInfoByUserAndAccountId"
+		parameterType="com.moyou.moyouRms.model.sysTalkManagerInfo.SysTalkManagerInfo"
+		resultMap="BaseResultMap">
+		SELECT
+		stmi.id AS a,
+		stmi.talk_number,
+		stmi.user_number,
+		stmi.time_sum,
+		stmi.create_time,
+		stmi.user_id,
+		stmi.account_id
+		FROM
+		sys_talk_manager_info AS stmi
+		WHERE
+		stmi.user_id
+		=#{userId,jdbcType=INTEGER} AND
+		stmi.account_id =
+		#{accountId,jdbcType=VARCHAR}
+
+	</select>
+	<select id="selectAccountTalkInfo" parameterType="com.moyou.moyouRms.model.po.system.account.Account"
+		resultType="java.util.Map">
+		SELECT
+		(
+		SELECT
+		count(user_id)
+		FROM
+		sys_admin_relate_user
+		WHERE
+		account_id =
+		#{accountId}
+		) sumUser,
+		(
+		SELECT
+		IFNULL(sum(stmi.talk_number), 0)
+		FROM
+		sys_talk_manager_info stmi
+		WHERE
+		stmi.account_id = #{accountId}
+		AND
+		to_days(stmi.create_time) = to_days(now())
+		<!-- GROUP BY -->
+		<!-- stmi.user_id -->
+		)
+		thisDayTalk,
+		(
+		SELECT
+		IFNULL(sum(stmi.user_number), 0)
+		FROM
+		sys_talk_manager_info stmi
+		WHERE
+		stmi.account_id = #{accountId}
+		AND to_days(stmi.create_time) = to_days(now())
+		<!-- GROUP BY -->
+		<!-- stmi.user_id -->
+		) thisDayUser,
+		ssm.login_name loginName,
+		ssm.online_time sumTime
+		FROM
+		sys_session_manager ssm
+		WHERE
+		ssm.login_name = #{loginName}
+		AND
+		to_days(ssm.create_time) = to_days(now())
+	</select>
+	<select id="querySysTalkManagerInfoByAccountNameAndId" resultMap="BaseResultMap">
+		SELECT
+	(
+		SELECT
+			sum(
+				sdru.user_off_line_chat_count
+			)
+		FROM
+			sys_admin_relate_user sdru
+		WHERE
+			sdru.account_id = #{param2}
+	) user_off_line_chat_count,
+	(
+		SELECT
+			sum(ssm.online_time)
+		FROM
+			sys_session_manager ssm
+		WHERE
+			ssm.login_name = #{param1}
+		AND DATE_FORMAT(ssm.create_time, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')
+	) sumTime,
+	(
+		SELECT
+			IFNULL(sum(stmi2.user_number), 0)
+		FROM
+			sys_talk_manager_info stmi2
+		WHERE
+			stmi2.account_id = #{param2}
+	) sumUser,
+	(
+		SELECT
+			IFNULL(sum(stmi2.talk_number), 0)
+		FROM
+			sys_talk_manager_info stmi2
+		WHERE
+			stmi2.account_id = #{param2}
+	) sumTalk,
+	(
+		SELECT
+			IFNULL(sum(stmi2.user_number), 0)
+		FROM
+			sys_talk_manager_info stmi2
+		WHERE
+			to_days(stmi2.create_time) = to_days(now())
+		AND stmi2.account_id = #{param2}
+	) thisDayUser,
+	(
+		SELECT
+			IFNULL(sum(stmi2.talk_number), 0)
+		FROM
+			sys_talk_manager_info stmi2
+		WHERE
+			to_days(stmi2.create_time) = to_days(now())
+		AND stmi2.account_id =#{param2}
+	) thisDayTalk,
+	(
+		SELECT
+			count(saru.user_id)
+		FROM
+			sys_admin_relate_user saru
+		WHERE
+			saru.account_id = #{param2}
+	) accountCount,
+	(
+		SELECT
+			ssm.online_type
+		FROM
+			sys_session_manager ssm
+		WHERE
+			ssm.login_name = #{param1}
+		AND to_days(ssm.create_time) = to_days(now())
+	) online_type
+	</select>
+</mapper>

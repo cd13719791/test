@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moyou.moyouRms.dao.liveshow.LiveUserInfoDao">
+	<!-- LiveUserInfo的resultMap,column是给数据库列起的别名,它对应property类的属性 -->
+	<resultMap id="result_LiveUserInfo_Map"
+		type="com.moyou.moyouRms.model.liveshow.LiveUserInfo">
+		<id column="user_id" property="userId" />
+		<result column="user_state" property="userState" />
+		<result column="live_grade" property="liveGrade" />
+		<result column="operation_user" property="operationUser" />
+		<result column="operation_time" property="operationTime" />
+		<result column="operation_remark" property="operationRemark" />
+		<result column="update_time" property="updateTime" />
+		<result column="create_time" property="createTime" />
+		<result column="weixin" property="weixin" />
+		<result column="recommend_time" property="recommendTime" />
+		<result column="recommend_state" property="recommendState" />
+		<result column="recommend_sort" property="recommendSort" />
+	</resultMap>
+
+	<!-- Assist用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+	<sql id="Assist">
+		<where>
+			<foreach collection="require" item="req" separator=" ">
+				${req.require} #{req.value}
+				<if test="req.suffix != null"> ${req.suffix}</if>
+			</foreach>
+		</where>
+	</sql>
+
+	<!-- updateAssist用于更新数据的使用它拓展自Assist,用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+	<sql id="updateAssist">
+		<where>
+			<foreach collection="assist.require" item="req" separator=" ">
+				${req.require} #{req.value}
+				<if test="req.suffix != null"> ${req.suffix}</if>
+			</foreach>
+		</where>
+	</sql>
+
+	<!-- 数据库中表名为:live_user_info的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+	<sql id="live_user_info_Column">
+		live_user_info.user_id as user_id
+		,live_user_info.user_state as user_state
+		,live_user_info.live_grade as live_grade
+		,live_user_info.operation_user as operation_user
+		,live_user_info.operation_time as operation_time
+		,live_user_info.operation_remark as operation_remark
+		,live_user_info.update_time as update_time
+		,live_user_info.create_time as create_time
+		,live_user_info.weixin as weixin
+		,live_user_info.recommend_time as recommend_time
+		,live_user_info.recommend_state as recommend_state
+		,live_user_info.recommend_sort as recommend_sort
+	</sql>
+
+	<!--获得类名为:LiveUserInfo对应的数据库表的数据总行数 -->
+	<select id="getLiveUserInfoRowCount" parameterType="com.moyou.moyouRms.interceptor.Assist"
+		resultType="java.lang.Long">
+		select count(user_id) from live_user_info
+		<if test="require!=null">
+			<include refid="Assist" />
+		</if>
+	</select>
+	<!-- 获得类名为:LiveUserInfo对应数据库中表的数据集合 -->
+	<select id="selectLiveUserInfo" parameterType="com.moyou.moyouRms.interceptor.Assist"
+		resultMap="result_LiveUserInfo_Map">
+		select
+		<if test="distinct !=null">${distinct}</if>
+		<choose>
+			<when test="resultColumn!=null">${resultColumn}</when>
+			<otherwise>
+				<include refid="live_user_info_Column" />
+			</otherwise>
+		</choose>
+		from live_user_info
+		<choose>
+			<when test="rowSize ==null">
+				<if test="require!=null">
+					<include refid="Assist" />
+				</if>
+				<if test="order !=null">${order}</if>
+			</when>
+			<otherwise>
+				inner join
+				(
+				SELECT user_id as primary_key FROM live_user_info
+				<if test="require!=null">
+					<include refid="Assist" />
+				</if>
+				<if test="order !=null">${order}</if>
+				<choose>
+					<when test="startRow !=null and rowSize !=null">LIMIT #{startRow},#{rowSize} </when>
+					<when test="rowSize !=null">LIMIT #{rowSize}</when>
+				</choose>
+				) as tmp
+				on tmp.primary_key=live_user_info.user_id
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 获得一个LiveUserInfo对象,以参数LiveUserInfo对象中不为空的属性作为条件进行查询 -->
+	<select id="selectLiveUserInfoByObj" parameterType="com.moyou.moyouRms.model.liveshow.LiveUserInfo"
+		resultMap="result_LiveUserInfo_Map">
+		select
+		<include refid="live_user_info_Column" />
+		from live_user_info
+		<where>
+			<if test="recommendSort != null "> and live_user_info.recommend_sort = #{recommendSort}
+			</if>
+			<if test="recommendState != null "> and live_user_info.recommend_state = #{recommendState}
+			</if>
+			<if test="recommendTime != null "> and live_user_info.recommend_time = #{recommendTime}
+			</if>
+			<if test="weixin != null "> and live_user_info.weixin = #{weixin}</if>
+			<if test="createTime != null "> and live_user_info.create_time = #{createTime}</if>
+			<if test="updateTime != null "> and live_user_info.update_time = #{updateTime}</if>
+			<if test="operationRemark != null "> and live_user_info.operation_remark = #{operationRemark}
+			</if>
+			<if test="operationTime != null "> and live_user_info.operation_time = #{operationTime}
+			</if>
+			<if test="operationUser != null "> and live_user_info.operation_user = #{operationUser}
+			</if>
+			<if test="liveGrade != null "> and live_user_info.live_grade = #{liveGrade}</if>
+			<if test="userState != null "> and live_user_info.user_state = #{userState}</if>
+			<if test="userId != null "> and live_user_info.user_id = #{userId}</if>
+		</where>
+	</select>
+
+	<!-- 通过LiveUserInfo的id获得对应数据库中表的数据对象 -->
+	<select id="selectLiveUserInfoById" parameterType="java.lang.Integer"
+		resultMap="result_LiveUserInfo_Map">
+		select
+		<include refid="live_user_info_Column" />
+		from live_user_info
+		where live_user_info.user_id = #{id}
+	</select>
+
+	<!-- 将LiveUserInfo插入到对应数据库的表中,包括属性值为null的数据 -->
+
+	<insert id="insertLiveUserInfo" parameterType="com.moyou.moyouRms.model.liveshow.LiveUserInfo">
+		insert into
+		live_user_info(user_id,user_state,live_grade,operation_user,operation_time,operation_remark,update_time,create_time,weixin,recommend_time,recommend_state,recommend_sort)
+		values(#{userId},#{userState},#{liveGrade},#{operationUser},#{operationTime},#{operationRemark},#{updateTime},#{createTime},#{weixin},#{recommendTime},#{recommendState},#{recommendSort})
+	</insert>
+
+	<!-- 将LiveUserInfo中属性值不为null的数据,插入到对应数据库的表中 -->
+	<insert id="insertNonEmptyLiveUserInfo" parameterType="com.moyou.moyouRms.model.liveshow.LiveUserInfo">
+		insert into live_user_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">user_id,</if>
+			<if test="userState != null">user_state,</if>
+			<if test="liveGrade != null">live_grade,</if>
+			<if test="operationUser != null">operation_user,</if>
+			<if test="operationTime != null">operation_time,</if>
+			<if test="operationRemark != null">operation_remark,</if>
+			<if test="updateTime != null">update_time,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="weixin != null">weixin,</if>
+			<if test="recommendTime != null">recommend_time,</if>
+			<if test="recommendState != null">recommend_state,</if>
+			<if test="recommendSort != null">recommend_sort,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null"> #{userId},</if>
+			<if test="userState != null"> #{userState},</if>
+			<if test="liveGrade != null"> #{liveGrade},</if>
+			<if test="operationUser != null"> #{operationUser},</if>
+			<if test="operationTime != null"> #{operationTime},</if>
+			<if test="operationRemark != null"> #{operationRemark},</if>
+			<if test="updateTime != null"> #{updateTime},</if>
+			<if test="createTime != null"> #{createTime},</if>
+			<if test="weixin != null"> #{weixin},</if>
+			<if test="recommendTime != null"> #{recommendTime},</if>
+			<if test="recommendState != null"> #{recommendState},</if>
+			<if test="recommendSort != null"> #{recommendSort},</if>
+		</trim>
+	</insert>
+
+	<!-- 通过LiveUserInfo的id将数据库表中对应的数据删除 -->
+	<delete id="deleteLiveUserInfoById" parameterType="java.lang.Integer">
+		delete from live_user_info
+		where user_id = #{id}
+	</delete>
+
+	<!-- 通过辅助工具Assist中的条件将LiveUserInfo对应的数据库表的数据删除 -->
+	<delete id="deleteLiveUserInfo" parameterType="com.moyou.moyouRms.interceptor.Assist">
+		delete from live_user_info
+		<if test="require!=null">
+			<include refid="Assist" />
+		</if>
+	</delete>
+
+	<!-- 通过LiveUserInfo的id将LiveUserInfo的数据更新到数据库中对应的表,包括值null的数据 -->
+	<update id="updateLiveUserInfoById" parameterType="com.moyou.moyouRms.model.liveshow.LiveUserInfo">
+		update live_user_info set
+		user_state=#{userState}
+		,live_grade=#{liveGrade}
+		,operation_user=#{operationUser}
+		,operation_time=#{operationTime}
+		,operation_remark=#{operationRemark}
+		,update_time=#{updateTime}
+		,create_time=#{createTime}
+		,weixin=#{weixin}
+		,recommend_time=#{recommendTime}
+		,recommend_state=#{recommendState}
+		,recommend_sort=#{recommendSort}
+		where user_id=#{userId}
+	</update>
+
+	<!-- 通过LiveUserInfo的id将LiveUserInfo中属性值不为null的数据更新到数据库对应的表中 -->
+	<update id="updateNonEmptyLiveUserInfoById" parameterType="com.moyou.moyouRms.model.liveshow.LiveUserInfo">
+		update live_user_info
+		<set>
+			<if test="userState != null">
+				user_state=#{userState},
+			</if>
+			<if test="liveGrade != null">
+				live_grade=#{liveGrade},
+			</if>
+			<if test="operationUser != null">
+				operation_user=#{operationUser},
+			</if>
+			<if test="operationTime != null">
+				operation_time=#{operationTime},
+			</if>
+			<if test="operationRemark != null">
+				operation_remark=#{operationRemark},
+			</if>
+			<if test="updateTime != null">
+				update_time=#{updateTime},
+			</if>
+			<if test="createTime != null">
+				create_time=#{createTime},
+			</if>
+			<if test="weixin != null">
+				weixin=#{weixin},
+			</if>
+			<if test="recommendTime != null">
+				recommend_time=#{recommendTime},
+			</if>
+			<if test="recommendState != null">
+				recommend_state=#{recommendState},
+			</if>
+			<if test="recommendSort != null">
+				recommend_sort=#{recommendSort},
+			</if>
+		</set>
+		where user_id=#{userId}
+	</update>
+
+	<!-- 通过辅助工具Assist中的条件将LiveUserInfo中的数据更新到数据库对应的表中,包括值为null的数据 -->
+	<update id="updateLiveUserInfo" parameterType="map">
+		update live_user_info
+		<set>
+			user_id=#{enti.userId},
+			user_state=#{enti.userState},
+			live_grade=#{enti.liveGrade},
+			operation_user=#{enti.operationUser},
+			operation_time=#{enti.operationTime},
+			operation_remark=#{enti.operationRemark},
+			update_time=#{enti.updateTime},
+			create_time=#{enti.createTime},
+			weixin=#{enti.weixin},
+			recommend_time=#{enti.recommendTime},
+			recommend_state=#{enti.recommendState},
+			recommend_sort=#{enti.recommendSort},
+		</set>
+		<if test="assist.require!=null">
+			<include refid="updateAssist" />
+		</if>
+	</update>
+
+	<!-- 通过辅助工具Assist中的条件将LiveUserInfo中属性值不为null的数据更新到数据库对应的表中 -->
+	<update id="updateNonEmptyLiveUserInfo" parameterType="map">
+		update live_user_info
+		<set>
+			<if test="enti.userId != null">
+				user_id=#{enti.userId},
+			</if>
+			<if test="enti.userState != null">
+				user_state=#{enti.userState},
+			</if>
+			<if test="enti.liveGrade != null">
+				live_grade=#{enti.liveGrade},
+			</if>
+			<if test="enti.operationUser != null">
+				operation_user=#{enti.operationUser},
+			</if>
+			<if test="enti.operationTime != null">
+				operation_time=#{enti.operationTime},
+			</if>
+			<if test="enti.operationRemark != null">
+				operation_remark=#{enti.operationRemark},
+			</if>
+			<if test="enti.updateTime != null">
+				update_time=#{enti.updateTime},
+			</if>
+			<if test="enti.createTime != null">
+				create_time=#{enti.createTime},
+			</if>
+			<if test="enti.weixin != null">
+				weixin=#{enti.weixin},
+			</if>
+			<if test="enti.recommendTime != null">
+				recommend_time=#{enti.recommendTime},
+			</if>
+			<if test="enti.recommendState != null">
+				recommend_state=#{enti.recommendState},
+			</if>
+			<if test="enti.recommendSort != null">
+				recommend_sort=#{enti.recommendSort},
+			</if>
+		</set>
+		<if test="assist.require!=null">
+			<include refid="updateAssist" />
+		</if>
+	</update>
+	<select id="selectLiveUserList" parameterType="PageBean"
+		resultType="com.moyou.moyouRms.model.liveshow.LiveUserListResult">
+		SELECT
+		lui.user_id AS id,
+		tui.nickname AS nickName,
+		tui.moyou_id AS
+		moyouId,
+		tui.avatar AS avatar,
+		tui.real_name AS realName,
+		tui.gender AS
+		sex,
+		tui.birthday,
+		tui.real_phone phone,
+		lui.live_grade AS levelGrade,
+		tuf.user_fund AS userFund,
+		tug.live_gold AS gold,
+		lui.create_time AS
+		createTime,
+		tuc.live_seconds AS onlineTime,
+		lui.user_state AS state,
+		lui.weixin AS weixin,
+		tuc.live_total_gold allEarnings,
+		lui.recommend_state recommendState,
+		lui.recommend_sort recommendSort,
+		lui.recommend_time recommendTime
+		FROM
+		live_user_info AS lui
+		LEFT JOIN
+		t_user_info tui ON tui.user_id = lui.user_id
+		LEFT JOIN
+		t_user_fund tuf
+		ON tuf.user_id = lui.user_id
+		LEFT JOIN t_user_count tuc
+		ON tuc.user_id =
+		lui.user_id
+		LEFT JOIN t_user_gold tug ON tug.user_id =
+		lui.user_id
+		<where>
+			<if test="conditions.startTime != null">
+				and lui.recommend_time >=#{conditions.startTime}
+			</if>
+			<if test="conditions.endTime != null">
+				and lui.recommend_time &lt;=#{conditions.endTime}
+			</if>
+			<if test="conditions.nickName != null">
+				tui.nickname regexp #{conditions.nickName}
+			</if>
+			<if test="conditions.roomName != null">
+				lui.room_name regexp #{conditions.roomName}
+			</if>
+			<if test="conditions.sex != null">
+				and tui.gender =#{conditions.sex}
+			</if>
+			<if test="conditions.levelGrade != null">
+				and lui.live_grade =#{conditions.levelGrade}
+			</if>
+			<if test="conditions.state != null">
+				and lui.user_state =#{conditions.state}
+			</if>
+			<if test="conditions.recommendState != null">
+				and lui.recommend_state =#{conditions.recommendState}
+			</if>
+		</where>
+		order by lui.user_id DESC
+	</select>
+	<select id="selectLiveUserCount" resultType="java.util.Map">
+		SELECT
+		(
+		SELECT
+		COUNT(user_id)
+		FROM
+		live_user_info
+		) AS allCount,
+		(
+		(
+		SELECT
+		COUNT(user_id)
+		FROM
+		live_user_info
+		WHERE
+		to_days(create_time) = to_days(now())
+		)
+		) AS
+		todayCount
+	</select>
+	<select id="selectliveUserInfo"
+		resultType="com.moyou.moyouRms.model.liveshow.LiveUserListResult"
+		parameterType="java.lang.Integer">
+		SELECT
+		lui.user_id AS id,
+		tui.nickname AS nickName,
+		tui.moyou_id AS moyouId,
+		tui.real_name AS realName,
+		tui.gender AS sex,
+		tui.birthday,
+		tui.real_phone phone,
+		lui.live_grade AS levelGrade,
+		tuf.user_fund AS userFund,
+		tug.live_gold AS gold,
+		lui.create_time AS
+		createTime,
+		tuc.live_seconds AS onlineTime,
+		lui.user_state AS state,
+		lui.operation_remark operationRemark,
+		lui.operation_user operationUser,
+		lui.operation_time operationTime
+		FROM
+		live_user_info AS lui
+		LEFT JOIN
+		t_user_info tui ON tui.user_id = lui.user_id
+		LEFT JOIN t_user_fund tuf
+		ON tuf.user_id = lui.user_id
+		LEFT JOIN t_user_count tuc ON tuc.user_id
+		= lui.user_id
+		LEFT JOIN t_user_gold tug ON tug.user_id = lui.user_id
+		where
+		lui.user_id=#{userId}
+	</select>
+	<select id="checkIsLiveUser" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+		select count(user_id) from live_user_info where
+		user_state=1 and
+		user_id=#{userId}
+	</select>
+	<select id="selectRecommentCount" resultType="java.lang.Integer">
+		select
+		count(user_id) from live_user_info where recommend_state=1
+	</select>
+	<select id="selectLiveUserRecommentNumber" resultType="java.lang.Integer">
+		select recommend_sort from live_user_info where recommend_state=1
+	</select>
+	<select id="queryH5ShareLiveShow" resultType="com.moyou.moyouRms.model.liveshow.H5LiveShow">
+		SELECT
+		lr.id,
+		lr.room_name roomName,
+		tui.avatar,
+		tui.moyou_id moyouId,
+		lr.cover
+		FROM
+		live_room lr
+		LEFT JOIN t_user_info tui ON tui.user_id = lr.user_id
+		where lr.id=#{id}
+	</select>
+</mapper>

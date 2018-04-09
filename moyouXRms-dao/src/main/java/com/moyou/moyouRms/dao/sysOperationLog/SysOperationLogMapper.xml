@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.sysOperationLog.SysOperationLogDao">
+	<resultMap id="BaseResultMap"
+		type="com.moyou.moyouRms.model.sysOperationLog.SysOperationLog">
+		<id column="logID" property="logid" jdbcType="INTEGER" />
+		<result column="logMethod" property="logmethod" jdbcType="VARCHAR" />
+		<result column="logDescription" property="logdescription" jdbcType="VARCHAR" />
+		<result column="logUserName" property="logusername" jdbcType="VARCHAR" />
+		<result column="logPath" property="logpath" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="log_enum_value" property="logEnumValue" jdbcType="INTEGER" />
+		<result column="logParam" property="logParam" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		logID, logMethod, logDescription, logUserName, logPath,
+		create_time,logEnumValue,logParam
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from sys_operation_log
+		where logID = #{logid,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sys_operation_log
+		where logID = #{logid,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.moyou.moyouRms.model.sysOperationLog.SysOperationLog">
+		insert into sys_operation_log (logID, logMethod, logDescription,
+		logUserName, logPath, create_time,log_enum_value,logParam
+		)
+		values (#{logid,jdbcType=INTEGER}, #{logmethod,jdbcType=VARCHAR},
+		#{logdescription,jdbcType=VARCHAR},
+		#{logusername,jdbcType=VARCHAR}, #{logpath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},#{logEnumValue,jdbcType=INTEGER},#{logParam,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.moyou.moyouRms.model.sysOperationLog.SysOperationLog">
+		insert into sys_operation_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="logid != null">
+				logID,
+			</if>
+			<if test="logmethod != null">
+				logMethod,
+			</if>
+			<if test="logdescription != null">
+				logDescription,
+			</if>
+			<if test="logusername != null">
+				logUserName,
+			</if>
+			<if test="logpath != null">
+				logPath,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="logEnumValue !=null logEnumValue !='' ">
+			log_enum_value,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="logid != null">
+				#{logid,jdbcType=INTEGER},
+			</if>
+			<if test="logmethod != null">
+				#{logmethod,jdbcType=VARCHAR},
+			</if>
+			<if test="logdescription != null">
+				#{logdescription,jdbcType=VARCHAR},
+			</if>
+			<if test="logusername != null">
+				#{logusername,jdbcType=VARCHAR},
+			</if>
+			<if test="logpath != null">
+				#{logpath,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="logEnumValue !=null logEnumValue!= '' ">
+				#{logEnumValue,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.moyou.moyouRms.model.sysOperationLog.SysOperationLog">
+		update sys_operation_log
+		<set>
+			<if test="logmethod != null">
+				logMethod = #{logmethod,jdbcType=VARCHAR},
+			</if>
+			<if test="logdescription != null">
+				logDescription = #{logdescription,jdbcType=VARCHAR},
+			</if>
+			<if test="logusername != null">
+				logUserName = #{logusername,jdbcType=VARCHAR},
+			</if>
+			<if test="logpath != null">
+				logPath = #{logpath,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where logID = #{logid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.moyou.moyouRms.model.sysOperationLog.SysOperationLog">
+		update sys_operation_log
+		set logMethod = #{logmethod,jdbcType=VARCHAR},
+		logDescription = #{logdescription,jdbcType=VARCHAR},
+		logUserName = #{logusername,jdbcType=VARCHAR},
+		logPath = #{logpath,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP}
+		where logID = #{logid,jdbcType=INTEGER}
+	</update>
+	<select id="querySysOperationLog" resultMap="BaseResultMap" parameterType="PageBean">
+		SELECT
+		sys_operation_log.logID,
+		sys_operation_log.logUserName,
+		sys_operation_log.logPath,
+		sys_operation_log.create_time
+		FROM `sys_operation_log` 
+		where sys_operation_log.log_enum_value=2
+			<if test="conditions.logUserName != null and conditions.logUserName !=''">
+				and sys_operation_log.logUserName =#{conditions.logUserName,jdbcType=VARCHAR}
+			</if>
+			<if test="conditions.startTime != null and conditions.startTime !=''">
+				and sys_operation_log.create_time > =#{conditions.startTime,jdbcType=VARCHAR}
+			</if>
+			<if test="conditions.endTime != null and conditions.endTime !=''">
+				and sys_operation_log.create_time 	&lt; =#{conditions.endTime,jdbcType=VARCHAR}
+			</if>
+			<if test="conditions.logUserName != null and conditions.logUserName !=''">
+				and sys_operation_log.logUserName =#{conditions.logUserName,jdbcType=VARCHAR}
+			</if>
+			order by sys_operation_log.create_time desc
+	</select>
+</mapper>

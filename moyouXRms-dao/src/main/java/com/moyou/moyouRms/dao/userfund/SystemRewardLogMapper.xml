@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.userfund.SystemRewardLogMapper">
+	<resultMap id="BaseResultMap"
+		type="com.moyou.moyouRms.model.userfund.SystemRewardLog">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="user_id_get" property="userIdGet" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="fund" property="fund" jdbcType="INTEGER" />
+		<result column="user_fund" property="userFund" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="mode_id" property="modeId" jdbcType="INTEGER" />
+		<result column="reward_id" property="rewardId" jdbcType="INTEGER" />
+		<result column="moyou_id" property="moyouId" jdbcType="VARCHAR" />
+		<result column="moyou_id_get" property="moyouIdGet" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="SMALLINT" />
+		<result column="push_time" property="pushTime" jdbcType="TIMESTAMP" />
+		<result column="last_data" property="lastData" jdbcType="SMALLINT" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, user_id_get, type, fund, user_fund,
+		create_time,
+		mode_id,reward_id,state,push_time,last_data
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from sys_reward_log
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		sys_reward_log
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.moyou.moyouRms.model.userfund.SystemRewardLog">
+		insert into sys_reward_log
+		(id, user_id, user_id_get,
+		type, fund, user_fund,
+		create_time,
+		mode_id,reward_id)
+		values (#{id,jdbcType=INTEGER},
+		#{userId,jdbcType=VARCHAR},
+		#{userIdGet,jdbcType=VARCHAR},
+		#{type,jdbcType=INTEGER}, #{fund,jdbcType=INTEGER},
+		#{userFund,jdbcType=INTEGER},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{modeId,jdbcType=INTEGER},#{rewardId,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.moyou.moyouRms.model.userfund.SystemRewardLog">
+		insert into sys_reward_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="userIdGet != null">
+				user_id_get,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="fund != null">
+				fund,
+			</if>
+			<if test="userFund != null">
+				user_fund,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modeId != null">
+				mode_id,
+			</if>
+			<if test="rewardId != null">
+				reward_id,
+			</if>
+			<if test="pushTime != null">
+				push_time,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="lastData != null">
+				last_data,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="userIdGet != null">
+				#{userIdGet,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="fund != null">
+				#{fund,jdbcType=INTEGER},
+			</if>
+			<if test="userFund != null">
+				#{userFund,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modeId != null">
+				#{modeId,jdbcType=INTEGER},
+			</if>
+			<if test="rewardId != null">
+				#{rewardId,jdbcType=INTEGER},
+			</if>
+			<if test="pushTime != null">
+				#{pushTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=SMALLINT},
+			</if>
+			<if test="lastData != null">
+				#{lastData,jdbcType=SMALLINT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.userfund.SystemRewardLog">
+		update sys_reward_log
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="userIdGet != null">
+				user_id_get = #{userIdGet,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="fund != null">
+				fund = #{fund,jdbcType=INTEGER},
+			</if>
+			<if test="userFund != null">
+				user_fund = #{userFund,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modeId != null">
+				mode_id = #{modeId,jdbcType=INTEGER},
+			</if>
+			<if test="rewardId != null">
+				reward_id= #{rewardId,jdbcType=INTEGER},
+			</if>
+			<if test="pushTime != null">
+				push_time=#{pushTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="state != null">
+				state=#{state,jdbcType=SMALLINT},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.userfund.SystemRewardLog">
+		update
+		sys_reward_log
+		set user_id = #{userId,jdbcType=VARCHAR},
+		user_id_get =
+		#{userIdGet,jdbcType=VARCHAR},
+		type = #{type,jdbcType=INTEGER},
+		fund =
+		#{fund,jdbcType=INTEGER},
+		user_fund = #{userFund,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		mode_id =
+		#{modeId,jdbcType=INTEGER},
+		reward_id= #{rewardId,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectByRewardId" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		SELECT
+		srl.id,
+		srl.reward_id,
+		srl.type,
+		srl.fund,
+		srl.user_fund,
+		srl.push_time,
+		srl.mode_id,
+		tui.moyou_id,
+		tui2.moyou_id moyou_id_get
+		FROM
+		sys_reward_log srl
+		LEFT JOIN t_user_info tui ON tui.user_id =
+		srl.user_id
+		LEFT JOIN
+		t_user_info tui2 ON tui2.user_id = srl.user_id_get
+		WHERE
+		srl.reward_id = #{id,jdbcType=INTEGER} and srl.state=1
+	</select>
+	<select id="selectOneHourNeedDoingData" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		sys_reward_log
+		WHERE 
+		push_time &lt;=date_add(now(), INTERVAL 1 HOUR)
+		and state =0
+	</select>
+</mapper>

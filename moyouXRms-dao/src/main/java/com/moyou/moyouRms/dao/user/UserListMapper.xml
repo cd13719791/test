@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.user.UserListMapper">
+	<resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.user.UserList">
+		<result column="id" property="userId" jdbcType="VARCHAR" />
+		<result column="nickname" property="nickname" jdbcType="VARCHAR" />
+		<result column="moyou_id" property="moyouId" jdbcType="BIGINT" />
+		<result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+		<result column="score_total" property="scoreTotal" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="avatar" property="avatar" jdbcType="VARCHAR" />
+		<result column="constellation" property="constellation"
+			jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="longitude" property="longitude" jdbcType="DOUBLE" />
+		<result column="latitude" property="latitude" jdbcType="DOUBLE" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="online_state" property="onlineState" jdbcType="INTEGER" />
+		<result column="account_type" property="accountType" jdbcType="INTEGER" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="user_talk_count" property="userTalkCount"
+			jdbcType="INTEGER" />
+		<result column="user_story_folder_count" property="userStoryFolderCount"
+			jdbcType="INTEGER" />
+		<result column="user_fund" property="userFund" jdbcType="DECIMAL" />
+		<result column="user_gold" property="userGold" jdbcType="INTEGER" />
+		<result column="user_secret_count" property="userSecretCount"
+			jdbcType="INTEGER" />
+		<result column="mode_type" property="modeType" jdbcType="INTEGER" />
+		<result column="recommed_status" property="recommedStatus"
+			jdbcType="INTEGER" />
+			<result column="model_type" property="modelType" jdbcType="VARCHAR" />
+			<result column="version_number" property="versionNumber" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 用户列表初始化所有信息 -->
+	<select id="selectUserListALL" resultMap="BaseResultMap"
+		parameterType="PageBean">
+		SELECT
+		u.user_id id,
+		i.nickname,
+		i.moyou_id,
+		u.account,
+		u.create_time,
+		i.gender,
+		u.account_type,
+		i.province,
+		i.birthday,
+		tuc.user_friends_count userFriendsCount,
+		tuc.user_secret_count,
+		i.avatar,
+		u.state,
+		i.city,
+		<choose>
+			<when test="conditions.state == 0">
+<!-- 		限制时间 -->
+				u.update_time,
+			</when>
+			<otherwise>
+<!-- 			登录时间 -->
+				tuai.update_time,
+			</otherwise>
+		</choose>
+		tuc.user_talk_count,
+		tuc.user_story_folder_count,
+		tuf.user_fund,
+		tug.user_gold,
+		tur.mode_type,
+		tur.recommed_status,
+		u.type
+		FROM
+		t_user u
+		LEFT JOIN t_user_info i ON u.user_id = i.user_id
+		LEFT JOIN t_user_count tuc ON u.user_id = tuc.user_id
+		left JOIN t_user_active_info tuai on tuai.user_id=u.user_id
+		left Join t_user_fund tuf on u.user_id=tuf.user_id
+		left join t_user_gold tug on tug.user_id=u.user_id
+		left JOIN t_user_recommend tur ON tur.user_id = u.user_id
+		<where>
+			u.state=#{conditions.state} and u.type=#{conditions.type}
+
+			<if test="conditions.gender !=null and conditions.gender != ''">
+				AND i.gender =#{conditions.gender}
+			</if>
+			<if test="conditions.moyouId !=null and conditions.moyouId!= ''">
+				AND i.moyou_id  regexp #{conditions.moyouId}
+			</if>
+			<if test="conditions.city !=null and conditions.city!= ''">
+				AND i.city regexp #{conditions.city}
+				
+			</if>
+			<if test="conditions.phoneNumber !=null and conditions.phoneNumber!= ''">
+				AND u.account regexp
+				#{conditions.phoneNumber} 
+			</if>
+			<if test="conditions.nickName !=null and conditions.nickName!= ''">
+				AND i.nickname regexp #{conditions.nickName}
+			</if>
+			<if test="conditions.provicne !=null and conditions.provicne != ''">
+				AND i.province regexp #{conditions.provicne} 
+			</if>
+			<if test="conditions.birthday !=null and conditions.birthday != ''">
+				AND
+				date_format(i.birthday,'%Y-%m-%d')=#{conditions.birthday}
+			</if>
+
+			<if
+				test="conditions.onlineStartTime != null and conditions.onlineStartTime!= ''">
+	<![CDATA[   and DATE_FORMAT(tuai.update_time, '%Y-%m-%d')>=  DATE_FORMAT(#{conditions.onlineStartTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if
+				test="conditions.onlineEndTime !=null and conditions.onlineEndTime!=''">
+		<![CDATA[  and DATE_FORMAT(tuai.update_time, '%Y-%m-%d') <= DATE_FORMAT(#{conditions.onlineEndTime}, '%Y-%m-%d')    ]]>
+			</if>
+			<if test="conditions.starttime != null and conditions.starttime!= ''">
+	<![CDATA[   and DATE_FORMAT(u.create_time, '%Y-%m-%d')>=  DATE_FORMAT(#{conditions.starttime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="conditions.endtime!=null and conditions.endtime!=''">
+		<![CDATA[  and DATE_FORMAT(u.create_time, '%Y-%m-%d') <= DATE_FORMAT(#{conditions.endtime}, '%Y-%m-%d')    ]]>
+			</if>
+			<if test="conditions.startage != null and conditions.startage!= ''">
+	<![CDATA[   AND DATE_FORMAT(NOW(),'%Y') - DATE_FORMAT(i.birthday,'%Y')>=#{conditions.startage}     ]]>
+			</if>
+			<if test="conditions.endage!=null and conditions.endage!=''">
+		<![CDATA[  AND DATE_FORMAT(NOW(),'%Y') - DATE_FORMAT(i.birthday,'%Y') <=#{conditions.endage}   ]]>
+			</if>
+			<if test="conditions.account !=null and conditions.account!= ''">
+				AND u.account REGEXP #{conditions.account} and account_type=1
+			</if>
+		</where>
+		ORDER BY
+		<!-- 初始化排序 根据注册时间 -->
+		<if test="conditions.order ==0 ">
+			u.create_time DESC
+		</if>
+		<!-- 根据最近登录时间 -->
+		<if test="conditions.order ==1 ">
+			tuai.update_time DESC
+		</if>
+		<if test="conditions.order ==2 ">
+			tuai.update_time
+		</if>
+		<!-- 说说数量 -->
+		<if test="conditions.order ==3 ">
+			tuc.user_talk_count DESC
+		</if>
+		<if test="conditions.order ==4 ">
+			tuc.user_talk_count
+		</if>
+		<!-- 故事数量 -->
+		<if test="conditions.order ==5 ">
+			tuc.user_story_folder_count DESC
+		</if>
+		<if test="conditions.order ==6 ">
+			tuc.user_story_folder_count
+		</if>
+		<!-- 秘密数量 -->
+		<if test="conditions.order ==7 ">
+			tuc.user_secret_count DESC
+		</if>
+		<if test="conditions.order ==8">
+			tuc.user_secret_count
+		</if>
+		<!-- 金钱数量 -->
+		<if test="conditions.order ==9">
+			tuf.user_fund DESC
+		</if>
+		<if test="conditions.order ==10">
+			tuf.user_fund
+		</if>
+		<!-- 金币数量 -->
+		<if test="conditions.order ==11">
+			tug.user_gold DESC
+		</if>
+		<if test="conditions.order ==12">
+			tug.user_gold
+		</if>
+		<if test="conditions.order ==13">
+			u.update_time desc
+		</if>
+	</select>
+
+	<!-- 初始化推荐用户 -->
+	<select id="queryUserRecommend" parameterType="PageBean"
+		resultMap="BaseResultMap">
+		SELECT
+		tui.user_id id,
+		tui.nickname,
+		tui.avatar,
+		tui.moyou_id,
+		tui.gender,
+		tui.city,
+		tur.create_time,
+		tur.update_time,
+		tuc.user_secret_count,
+		tuc.user_talk_count,
+		tuc.user_story_folder_count,
+		tuf.user_fund,
+		tug.user_gold,
+		tu.account_type,
+		tu.account,
+		tur.mode_type
+		FROM
+		`t_user_info` tui
+		RIGHT JOIN t_user_recommend tur ON tur.user_id =
+		tui.user_id
+		LEFT JOIN t_user_active_info tuai ON tuai.user_id =
+		tui.user_id
+		LEFT JOIN t_user_count tuc ON tuc.user_id = tui.user_id
+		LEFT JOIN t_user_fund tuf ON tuf.user_id = tui.user_id
+		LEFT JOIN
+		t_user_gold tug ON tug.user_id = tui.user_id
+		left join t_user tu on
+		tu.user_id=tui.user_id
+		<where>
+			tur.recommed_status=#{conditions.state}
+			<!-- 不屏蔽假用户 and tu.type=0 -->
+
+			<if test="conditions.gender !=null and conditions.gender != ''">
+				AND tui.gender =#{conditions.gender}
+			</if>
+			<if test="conditions.moyouId !=null and conditions.moyouId!= ''">
+				AND tui.moyou_id regexp
+				#{conditions.moyouId} 
+			</if>
+			<if test="conditions.city !=null and conditions.city!= ''">
+				AND tui.city regexp
+				#{conditions.city} 
+			</if>
+			<if test="conditions.nickName !=null and conditions.nickName!= ''">
+				AND tui.nickname regexp
+				#{conditions.nickName} 
+			</if>
+			<if
+				test="conditions.onlineStartTime != null and conditions.onlineStartTime!= ''">
+		<![CDATA[   and DATE_FORMAT(tur.update_time, '%Y-%m-%d')>=  DATE_FORMAT(#{conditions.onlineStartTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if
+				test="conditions.onlineEndTime !=null and conditions.onlineEndTime!=''">
+		<![CDATA[  and DATE_FORMAT(tur.update_time, '%Y-%m-%d') <= DATE_FORMAT(#{conditions.onlineEndTime}, '%Y-%m-%d')    ]]>
+			</if>
+			<if test="conditions.startTime != null and conditions.startTime!= ''">
+		<![CDATA[   and DATE_FORMAT(tur.update_time, '%Y-%m-%d')>=  DATE_FORMAT(#{conditions.startTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="conditions.endTime!=null and conditions.endTime!=''">
+		<![CDATA[  and DATE_FORMAT(tur.update_time, '%Y-%m-%d') <= DATE_FORMAT(#{conditions.endTime}, '%Y-%m-%d')    ]]>
+			</if>
+		</where>
+		ORDER BY
+		tur.update_time desc
+	</select>
+</mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moyou.moyouRms.dao.user.GenerateNumberRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.moyou.moyouRms.model.user.GenerateNumberRecord" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="start_number" property="startNumber" jdbcType="INTEGER" />
+    <result column="end_number" property="endNumber" jdbcType="INTEGER" />
+    <result column="register_count" property="registerCount" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, start_number, end_number, create_time,register_count
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_generate_number_record
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_generate_number_record
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.moyou.moyouRms.model.user.GenerateNumberRecord" >
+    insert into t_generate_number_record (id, start_number, end_number, 
+      create_time,register_count)
+    values (#{id,jdbcType=VARCHAR}, #{startNumber,jdbcType=INTEGER}, #{endNumber,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP},#{registerCount,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.moyou.moyouRms.model.user.GenerateNumberRecord" >
+    insert into t_generate_number_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="startNumber != null" >
+        start_number,
+      </if>
+      <if test="endNumber != null" >
+        end_number,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="registerCount != null" >
+        register_ount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="startNumber != null" >
+        #{startNumber,jdbcType=INTEGER},
+      </if>
+      <if test="endNumber != null" >
+        #{endNumber,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registerCount != null" >
+        #{registerCount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moyou.moyouRms.model.user.GenerateNumberRecord" >
+    update t_generate_number_record
+    <set >
+      <if test="startNumber != null" >
+        start_number = #{startNumber,jdbcType=INTEGER},
+      </if>
+      <if test="endNumber != null" >
+        end_number = #{endNumber,jdbcType=INTEGER},
+      </if>
+      <if test="registerCount != null" >
+        register_count = #{registerCount,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moyou.moyouRms.model.user.GenerateNumberRecord" >
+    update t_generate_number_record
+    set start_number = #{startNumber,jdbcType=INTEGER},
+      end_number = #{endNumber,jdbcType=INTEGER},
+      register_count = #{registerCount,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 查询moyouId取值范围 -->
+  <select id="queryRangeOfMoyouId" resultMap="BaseResultMap">
+  	SELECT
+		<include refid="Base_Column_List" />
+	FROM
+		t_generate_number_record
+	ORDER BY
+		create_time DESC
+	LIMIT 1
+  </select>
+</mapper>
