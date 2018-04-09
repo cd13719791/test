@@ -59,7 +59,6 @@ public class UserServiceImpl implements UserService {
 		Assert.notNull(po, "账户不存在");
 //		Assert.state(po.getStatus() != Const.STATUS_CLOSED, "您的账户已被封禁");
 		Assert.state(StringUtils.equals(po.getPassword(), password), "密码错误");
-
 		po.setLastLogin(Calendar.getInstance().getTime());
 		userDao.save(po);
 		u = BeanMapUtils.copyPassport(po);
